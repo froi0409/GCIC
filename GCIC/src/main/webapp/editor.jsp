@@ -31,7 +31,7 @@
         <%@include file ="barra-herramientas.html" %>
         <br><br>
         <!-- Se crea el div que contendrá al edito de texto -->
-        <form action="ExportarArchivo" method="POST">
+        <form action="AnalizarEntrada" method="POST">
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">
