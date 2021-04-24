@@ -1,3 +1,6 @@
+package com.froi.pruebas.gramaticas;
+
+import java_cup.runtime.*;
 
 class EtiquetadoParser;
 
@@ -5,6 +8,19 @@ parser code {:
 
     public EtiquetadoParser(EtiquetadoLexer lexer) {
         super(lexer);
+    }
+    public void report_error(String message, Object info) {
+        System.out.println("reporterror");;
+    }
+    public void report_fatal_error(String message, Object info) {
+        System.out.println("reportfatal " + info);
+    }
+    @Override
+    public void syntax_error(Symbol s) {
+        System.out.println("linea: " + s.left + "   columna: " + s.right + "   token: " + symbl_name_from_id(s.sym));
+    }
+    protected int error_sync_size() {
+        return 1;
     }
 
 :}
@@ -29,15 +45,33 @@ terminal OR, AND, NOT;
 /* OPERADORES ARITMETICOS */
 terminal SUMA, RESTA, MULTIPLICACION, DIVISION;
 /* SIMBOLOS ESPECIALES */
-terminal IGUAL, BARRA, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA, PUNTOS, COM_SIMP, IDENTIFICADOR;
+terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA, PUNTOS, COM_SIMP, IDENTIFICADOR;
 /* COMODINES */
-terminales ALFANUMERICO;
+terminal ALFANUMERICO;
 
 //Declaración de símbolos no terminales
-non terminal inicio;
+non terminal inicio, cabecera, cuerpo;
+
+/* no terminales de cuerpo */
+non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo;
 
 //Símbolo inicial de la gramática
 start with inicio;
 
 //Reglas de Producción
-inicio ::=  
+inicio ::=  MENOR_QUE GCIC MAYOR_QUE cuerpo_gcic MENOR_QUE DIVISION GCIC MAYOR_QUE              {:System.out.println("Se ha llegado al final del reconocimiento");:}
+            ;
+
+cuerpo_gcic ::= cabecera cuerpo
+                ;
+
+cabecera ::=    MENOR_QUE HEAD MAYOR_QUE cuerpo_cabecera MENOR_QUE DIVISION HEAD MAYOR_QUE
+                ;
+
+cuerpo ::=  MENOR_QUE BODY MAYOR_QUE cuerpo_cuerpo MENOR_QUE DIVISION BODY MAYOR_QUE
+            ;
+
+cuerpo_cabecera ::= ;
+
+cuerpo_cuerpo ::=   ;
+

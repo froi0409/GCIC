@@ -1,4 +1,7 @@
 //Sección de Importaciones
+package com.froi.pruebas.gramaticas;
+import java_cup.runtime.*;
+import static com.froi.pruebas.gramaticas.EtiquetadoParserSym.*;
 
 %%
 %public
@@ -129,6 +132,7 @@ DIVISION = "/"
 /* SIMBOLOS ESPECIALES */
 IGUAL = "="
 BARRA = "|"
+DIAGONAL = "/"
 PARA = "("
 PARC = ")"
 CORA = "["
@@ -142,7 +146,7 @@ IDENTIFICADOR = ({ALFANUMERICO} | [_] | [-] | [$])
 
 //COMENTARIO = ["!!"][^'\n']*
 //FALTA LA IMPLEMENTACIÓN DEL COMENTARIO DE LINEA MULTIPLE 
-COMENTARIO_LINEA = "!!" [^\r\n] {TerminacionLinea}?
+COMENTARIO_LINEA = "!!" [^\r\n]*
 COMENTARIO_BLOQUE = "<!--" [^-] ~"-->" | "<!--" "-"+ ">"
 COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
 
@@ -150,6 +154,7 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
 
 <YYINITIAL> {
 
+    {COMENTARIO}                {/* IGNORAR */}
     /* SIGNOS FUNDAMENTALES */
 
 
@@ -215,7 +220,7 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
 
     /* LENGUAJE DE ALTO NIVEL EMBEBIDO */
     {ON_LOAD}                   {return new Symbol(ON_LOAD, yyline+1, yycolumn+1, yytext());}
-    {PROCESS}                  {return new Symbol(PROCESS, yyline+1, yycolumn+1, yytext());}
+    {PROCESS}                   {return new Symbol(PROCESS, yyline+1, yycolumn+1, yytext());}
 
     /* TIPOS DE DATOS */    
     {INTEGER}                   {return new Symbol(INTEGER, yyline+1, yycolumn+1, yytext());}
@@ -269,7 +274,6 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     /* COMODINES */
     {ALFANUMERICO}              {return new Symbol(ALFANUMERICO, yyline+1, yycolumn+1, yytext());}
 
-    {COMENTARIO}                {/* IGNORAR */}
     {Ignore}                    {/* IGNORAR */}
 }
 
