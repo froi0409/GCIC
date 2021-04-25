@@ -30,6 +30,12 @@ parser code {:
 terminal GCIC, HEAD, TITLE, LINK, BODY, SPAM, INPUT, TEXTAREA, SELECT, OPTION, DIV, IMG, BR, BUTTON, H1, P, SCRIPTING;
 /* PARAMETROS DE ETIQUETAS */
 terminal HREF, BACKGROUND, COLOR, FONTSIZE, FONTFAMILY, TEXTALIGN, TYPE, ID, NAME, COLS, ROWS, CLASS, SRC, WIDTH, HEIGHT, ALT, ONCLICK;
+/* PALABRAS DE LOS PARAMETROS */
+terminal BLACK, OLIVE, TEAL, RED, BLUE, MAROON, NAVY, GRAY, LIME, FUCHSIA, GREEN, WHITE, PURPLE, SILVER, YELLOW, AQUA, HEXADECIMAL;
+terminal PIXELES, PORCENTAJE;
+terminal COURIER, VERDANA, ARIAL, GENEVA, SANS_SERIF;
+terminal LEFT, RIGHT, CENTER, JUSTIFY;
+terminal TEXT, NUMBER, RADIO, CHECKBOX, ROW, COLUMN;
 /* FUNCIONES ESPECIALES DE CLC */
 terminal ASC, DESC, LETPAR_NUM, LETIMPAR_NUM, REVERSE, CARACTER_ALEATORIO, NUM_ALEATORIO, ALERT_INFO, EXIT, GETBYID, INIT, END, IF, THEN, ELSE, REPEAT, HUNTIL, WHILE, THENWHILE, INSERT;
 /* LENGUAJE DE ALTO NIVEL EMBEBIDO */
@@ -54,7 +60,7 @@ non terminal inicio, cabecera, cuerpo;
 
 /* no terminales de cuerpo */
 non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo, cuerpo_title;
-non terminal etiquetas_cabecera, etiquetas_cuerpo;
+non terminal etiquetas_cabecera, etiquetas_cuerpo, etiqueta_option;
 non terminal texto;
 
 non terminal cuerpo_spam;
@@ -67,6 +73,7 @@ non terminal cuerpo_br;
 non terminal cuerpo_button;
 non terminal cuerpo_h1;
 non terminal cuerpo_p;
+non terminal cuerpo_texto;
 
 //Símbolo inicial de la gramática
 start with inicio;
@@ -104,15 +111,15 @@ cuerpo_cuerpo ::=   cuerpo_cuerpo etiquetas_cuerpo
                     | etiquetas_cuerpo
                     ;
 
-etiquetas_cuerpo ::=    MENOR_QUE SPAM MAYOR_QUE cuerpo_spam MENOR_QUE DIVISION SPAM MAYOR_QUE
-                        | MENOR_QUE INPUT MAYOR_QUE cuerpo_input MENOR_QUE DIVISION INPUT MAYOR_QUE
-                        | MENOR_QUE TEXTAREA MAYOR_QUE cuerpo_textarea MENOR_QUE DIVISION TEXTAREA MAYOR_QUE
+etiquetas_cuerpo ::=    MENOR_QUE SPAM MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION SPAM MAYOR_QUE
+                        | MENOR_QUE INPUT MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION INPUT MAYOR_QUE
+                        | MENOR_QUE TEXTAREA MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION TEXTAREA MAYOR_QUE
                         | MENOR_QUE SELECT MAYOR_QUE cuerpo_select MENOR_QUE DIVISION SELECT MAYOR_QUE
                         | MENOR_QUE DIV MAYOR_QUE cuerpo_div MENOR_QUE DIVISION DIV MAYOR_QUE
-                        | MENOR_QUE IMG MAYOR_QUE cuerpo_img MENOR_QUE DIVISION IMG MAYOR_QUE
+                        | MENOR_QUE IMG MAYOR_QUE MENOR_QUE DIVISION IMG MAYOR_QUE
                         | MENOR_QUE BR MAYOR_QUE
-                        | MENOR_QUE BUTTON MAYOR_QUE cuerpo_button MENOR_QUE DIVISION BUTTON MAYOR_QUE
-                        | MENOR_QUE H1 MAYOR_QUE cuerpo_h1 MENOR_QUE DIVISION H1 MAYOR_QUE
+                        | MENOR_QUE BUTTON MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION BUTTON MAYOR_QUE
+                        | MENOR_QUE H1 MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION H1 MAYOR_QUE
                         | MENOR_QUE P MAYOR_QUE cuerpo_p MENOR_QUE DIVISION P MAYOR_QUE
                         ;
 
@@ -122,7 +129,16 @@ cuerpo_input ::=    ;
 
 cuerpo_textarea ::= ;
 
-cuerpo_select ::=   ;
+cuerpo_select ::=   cuerpo_select etiqueta_option
+                    | etiqueta_option
+                    ;
+
+etiqueta_option ::=     MENOR_QUE OPTION MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION OPTION MAYOR_QUE
+                        ;
+
+cuerpo_texto ::=    cuerpo_texto texto
+                    |
+                    ;
 
 cuerpo_div ::=      cuerpo_div etiquetas_cuerpo
                     |

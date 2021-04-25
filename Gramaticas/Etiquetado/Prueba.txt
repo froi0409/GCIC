@@ -11,7 +11,10 @@
         <C_SPAM></C_SPAM>
         <C_INPUT></C_INPUT>
         <C_TEXTAREA></C_TEXTAREA>
-        <C_SELECT></C_SELECT>
+        <C_SELECT>
+            <C_OPTION>hola</C_OPTION>
+            <C_OPTION>adios</C_OPTION>
+        </C_SELECT>
         <C_DIV>
             <C_INPUT></C_INPUT>
             <C_SPAM></C_SPAM>
@@ -22,3 +25,16 @@
         <C_P></C_P>
     </C_BODY>
 </C_GCIC>
+
+
+
+
+
+
+
+
+<C_P>
+    <C_H1>
+        HOLA
+    </C_H1>
+</C_P>

@@ -69,6 +69,47 @@ HEIGHT = "height"
 ALT = "alt"
 ONCLICK = "onclick"
 
+/* PALABRAS DE LOS PARAMETROS */
+BLACK = "black"
+OLIVE = "olive"
+TEAL = "teal"
+RED = "red"
+BLUE = "blue"
+MAROON = "maroon"
+NAVY = "navy"
+GRAY = "gray"
+LIME = "lime"
+FUCHSIA = "fuchsia"
+GREEN = "green"
+WHITE = "white"
+PURPLE = "purple"
+SILVER = "silver"
+YELLOW = "yellow"
+AQUA = "aqua"
+//FALTA AGREGAR EXPRESIÓN EN HEXADECIMAL
+
+PIXELES = {DIGITO} {WS}* [pP][xX]
+PORCENTAJE = {DIGITO} {WS}* "%"
+
+COURIER = "Courier"
+VERDANA = "Verdana"
+ARIAL = "Arial"
+GENEVA = "Geneva"
+SANS_SERIF = "sans-serif"
+
+LEFT = "left"
+RIGHT = "right"
+CENTER = "center"
+JUSTIFY = "justify"
+
+TEXT = "text"
+NUMBER = "number"
+RADIO = "radio"
+CHECKBOX = "checkbox"
+ROW = "row"
+COLUMN = "column"
+
+
 /* FUNCIONES ESPECIALES DE CLC */
 ASC = "ASC"
 DESC = "DESC"
@@ -195,6 +236,46 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {ALT}                       {return new Symbol(ALT, yyline+1, yycolumn+1, yytext());}
     {ONCLICK}                   {return new Symbol(ONCLICK, yyline+1, yycolumn+1, yytext());}
 
+    /* PALABRAS DE LOS PARAMETROS */
+    {BLACK}                     {return new Symbol(BLACK, yyline+1, yycolumn+1, yytext());}
+    {OLIVE}                     {return new Symbol(OLIVE, yyline+1, yycolumn+1, yytext());}
+    {TEAL}                      {return new Symbol(TEAL, yyline+1, yycolumn+1, yytext());}
+    {RED}                       {return new Symbol(RED, yyline+1, yycolumn+1, yytext());}
+    {BLUE}                      {return new Symbol(BLUE, yyline+1, yycolumn+1, yytext());}
+    {MAROON}                    {return new Symbol(MAROON, yyline+1, yycolumn+1, yytext());}
+    {NAVY}                      {return new Symbol(NAVY, yyline+1, yycolumn+1, yytext());}
+    {GRAY}                      {return new Symbol(GRAY, yyline+1, yycolumn+1, yytext());}
+    {LIME}                      {return new Symbol(LIME, yyline+1, yycolumn+1, yytext());}
+    {FUCHSIA}                   {return new Symbol(FUCHSIA, yyline+1, yycolumn+1, yytext());}
+    {GREEN}                     {return new Symbol(GREEN, yyline+1, yycolumn+1, yytext());}
+    {WHITE}                     {return new Symbol(WHITE, yyline+1, yycolumn+1, yytext());}
+    {PURPLE}                    {return new Symbol(PURPLE, yyline+1, yycolumn+1, yytext());}
+    {SILVER}                    {return new Symbol(SILVER, yyline+1, yycolumn+1, yytext());}
+    {YELLOW}                    {return new Symbol(YELLOW, yyline+1, yycolumn+1, yytext());}
+    {AQUA}                      {return new Symbol(AQUA, yyline+1, yycolumn+1, yytext());}
+    //{HEXADECIMAL}                 
+
+    {PIXELES}                   {return new Symbol(PIXELES, yyline+1, yycolumn+1, yytext());}
+    {PORCENTAJE}                {return new Symbol(PORCENTAJE, yyline+1, yycolumn+1, yytext());}
+
+    {COURIER}                   {return new Symbol(COURIER, yyline+1, yycolumn+1, yytext());}
+    {VERDANA}                   {return new Symbol(VERDANA, yyline+1, yycolumn+1, yytext());}
+    {ARIAL}                     {return new Symbol(ARIAL, yyline+1, yycolumn+1, yytext());}
+    {GENEVA}                    {return new Symbol(GENEVA, yyline+1, yycolumn+1, yytext());}
+    {SANS_SERIF}                {return new Symbol(SANS_SERIF, yyline+1, yycolumn+1, yytext());}
+
+    {LEFT}                      {return new Symbol(LEFT, yyline+1, yycolumn+1, yytext());}
+    {RIGHT}                     {return new Symbol(RIGHT, yyline+1, yycolumn+1, yytext());}
+    {CENTER}                    {return new Symbol(CENTER, yyline+1, yycolumn+1, yytext());}
+    {JUSTIFY}                   {return new Symbol(JUSTIFY, yyline+1, yycolumn+1, yytext());}
+    
+    {TEXT}                      {return new Symbol(TEXT, yyline+1, yycolumn+1, yytext());}
+    {NUMBER}                    {return new Symbol(NUMBER, yyline+1, yycolumn+1, yytext());}
+    {RADIO}                     {return new Symbol(RADIO, yyline+1, yycolumn+1, yytext());}
+    {CHECKBOX}                  {return new Symbol(CHECKBOX, yyline+1, yycolumn+1, yytext());}
+    {ROW}                       {return new Symbol(ROW, yyline+1, yycolumn+1, yytext());}
+    {COLUMN}                    {return new Symbol(COLUMN, yyline+1, yycolumn+1, yytext());}
+
     /* FUNCIONES ESPECIALES DE CLC */
     {ASC}                       {return new Symbol(ASC, yyline+1, yycolumn+1, yytext());}
     {DESC}                      {return new Symbol(DESC, yyline+1, yycolumn+1, yytext());}
@@ -276,7 +357,7 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     
 
     /* TEXTO */
-    {TEXTO}                     {return new Symbol(TEXTO, yyline+1, yycolumn+1, yytext());}
+    //{TEXTO}                     {return new Symbol(TEXTO, yyline+1, yycolumn+1, yytext());}
 
     {Ignore}                    {/* IGNORAR */}
 }
