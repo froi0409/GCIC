@@ -1,0 +1,24 @@
+<!-- Mi primer captcha
+     en el curso de Organización de Lenguajes y Compiladores 1
+ -->
+<C_GCIC>
+    !! El encabezado de la página que tendrá mi captcha
+    <C_HEAD>
+        <C_LINK> </C_LINK>
+        <C_TITLE>Hola Mundo</C_TITLE>
+    </C_HEAD>
+    <C_BODY>
+        <C_SPAM></C_SPAM>
+        <C_INPUT></C_INPUT>
+        <C_TEXTAREA></C_TEXTAREA>
+        <C_SELECT></C_SELECT>
+        <C_DIV>
+            <C_INPUT></C_INPUT>
+            <C_SPAM></C_SPAM>
+        </C_DIV>
+        <C_IMG></C_IMG>
+        <C_BR>
+        <C_H1></C_H1>
+        <C_P></C_P>
+    </C_BODY>
+</C_GCIC>

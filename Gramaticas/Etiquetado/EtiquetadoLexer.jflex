@@ -29,6 +29,7 @@ ALFABETICO = [a-zA-Z]+
 ALFANUMERICO = ([a-zA-Z] | [0-9])+
 DIGITO = ( [0-9] | [1-9][0-9]+ ) //No acepta cadenas como 0000
 NUMERO = [-]? {DIGITO} ([.] ([0]*) ( [1-9] | [1-9][0-9]+ )? )?
+TEXTO = ( {IDENTIFICADOR} | {ALFANUMERICO} | [^"<" ">" \n " " "!!" "</"] ) ( {Ignore} | {IDENTIFICADOR} | {ALFANUMERICO} | [^"<" ">"] )+
 
 /* ETIQUETAS GCIC */
 GCIC = [cC][_][gG][cC][iI][cC]
@@ -144,8 +145,7 @@ PUNTOS = ":"
 COM_SIMP = ("'" | "‘" | "’")
 IDENTIFICADOR = ({ALFANUMERICO} | [_] | [-] | [$])
 
-//COMENTARIO = ["!!"][^'\n']*
-//FALTA LA IMPLEMENTACIÓN DEL COMENTARIO DE LINEA MULTIPLE 
+//Comentarios
 COMENTARIO_LINEA = "!!" [^\r\n]*
 COMENTARIO_BLOQUE = "<!--" [^-] ~"-->" | "<!--" "-"+ ">"
 COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
@@ -156,7 +156,6 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
 
     {COMENTARIO}                {/* IGNORAR */}
     /* SIGNOS FUNDAMENTALES */
-
 
     /* PALABRAS RESERVADAS DE ETIQUETAS GCIC */
     {GCIC}                      {return new Symbol(GCIC, yyline+1, yycolumn+1, yytext());}
@@ -257,6 +256,9 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {MULTIPLICACION}            {return new Symbol(MULTIPLICACION, yyline+1, yycolumn+1, yytext());}
     {DIVISION}                  {return new Symbol(DIVISION, yyline+1, yycolumn+1, yytext());}
 
+    /* COMODINES */
+    {ALFANUMERICO}              {return new Symbol(ALFANUMERICO, yyline+1, yycolumn+1, yytext());}
+    
     /* SIMBOLOS ESPECIALES */
     {IGUAL}                     {return new Symbol(IGUAL, yyline+1, yycolumn+1, yytext());}
     {BARRA}                     {return new Symbol(BARRA, yyline+1, yycolumn+1, yytext());}
@@ -271,8 +273,10 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {COM_SIMP}                  {return new Symbol(COM_SIMP, yyline+1, yycolumn+1, yytext());}
     {IDENTIFICADOR}             {return new Symbol(IDENTIFICADOR, yyline+1, yycolumn+1, yytext());}
 
-    /* COMODINES */
-    {ALFANUMERICO}              {return new Symbol(ALFANUMERICO, yyline+1, yycolumn+1, yytext());}
+    
+
+    /* TEXTO */
+    {TEXTO}                     {return new Symbol(TEXTO, yyline+1, yycolumn+1, yytext());}
 
     {Ignore}                    {/* IGNORAR */}
 }

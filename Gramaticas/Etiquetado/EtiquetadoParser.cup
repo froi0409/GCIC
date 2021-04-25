@@ -17,7 +17,7 @@ parser code {:
     }
     @Override
     public void syntax_error(Symbol s) {
-        System.out.println("linea: " + s.left + "   columna: " + s.right + "   token: " + symbl_name_from_id(s.sym));
+        System.out.println("linea: " + s.left + "   columna: " + s.right + "   token: " + symbl_name_from_id(s.sym) + "     texto: " + s.value);
     }
     protected int error_sync_size() {
         return 1;
@@ -47,13 +47,26 @@ terminal SUMA, RESTA, MULTIPLICACION, DIVISION;
 /* SIMBOLOS ESPECIALES */
 terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA, PUNTOS, COM_SIMP, IDENTIFICADOR;
 /* COMODINES */
-terminal ALFANUMERICO;
+terminal ALFANUMERICO, TEXTO;
 
 //Declaración de símbolos no terminales
 non terminal inicio, cabecera, cuerpo;
 
 /* no terminales de cuerpo */
-non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo;
+non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo, cuerpo_title;
+non terminal etiquetas_cabecera, etiquetas_cuerpo;
+non terminal texto;
+
+non terminal cuerpo_spam;
+non terminal cuerpo_input;
+non terminal cuerpo_textarea;
+non terminal cuerpo_select;
+non terminal cuerpo_div;
+non terminal cuerpo_img;
+non terminal cuerpo_br;
+non terminal cuerpo_button;
+non terminal cuerpo_h1;
+non terminal cuerpo_p;
 
 //Símbolo inicial de la gramática
 start with inicio;
@@ -71,7 +84,54 @@ cabecera ::=    MENOR_QUE HEAD MAYOR_QUE cuerpo_cabecera MENOR_QUE DIVISION HEAD
 cuerpo ::=  MENOR_QUE BODY MAYOR_QUE cuerpo_cuerpo MENOR_QUE DIVISION BODY MAYOR_QUE
             ;
 
-cuerpo_cabecera ::= ;
+cuerpo_cabecera ::= cuerpo_cabecera etiquetas_cabecera 
+                    | etiquetas_cabecera
+                    ;
 
-cuerpo_cuerpo ::=   ;
+etiquetas_cabecera ::=  MENOR_QUE LINK MAYOR_QUE MENOR_QUE DIVISION LINK MAYOR_QUE
+                        | MENOR_QUE TITLE MAYOR_QUE cuerpo_title:ct MENOR_QUE DIVISION TITLE MAYOR_QUE      {:System.out.println("El titulo es: " + ct.toString().trim());:}
+                        ;
 
+cuerpo_title ::=    cuerpo_title:ct texto:ent   {:RESULT= ct.toString() + " " + ent.toString();:}
+                    |                           {:RESULT="";:}
+                    ;
+
+texto ::=   ALFANUMERICO:ent        {:RESULT=ent.toString();:}
+            | IDENTIFICADOR:ent     {:RESULT=ent.toString();:}
+            ;
+
+cuerpo_cuerpo ::=   cuerpo_cuerpo etiquetas_cuerpo
+                    | etiquetas_cuerpo
+                    ;
+
+etiquetas_cuerpo ::=    MENOR_QUE SPAM MAYOR_QUE cuerpo_spam MENOR_QUE DIVISION SPAM MAYOR_QUE
+                        | MENOR_QUE INPUT MAYOR_QUE cuerpo_input MENOR_QUE DIVISION INPUT MAYOR_QUE
+                        | MENOR_QUE TEXTAREA MAYOR_QUE cuerpo_textarea MENOR_QUE DIVISION TEXTAREA MAYOR_QUE
+                        | MENOR_QUE SELECT MAYOR_QUE cuerpo_select MENOR_QUE DIVISION SELECT MAYOR_QUE
+                        | MENOR_QUE DIV MAYOR_QUE cuerpo_div MENOR_QUE DIVISION DIV MAYOR_QUE
+                        | MENOR_QUE IMG MAYOR_QUE cuerpo_img MENOR_QUE DIVISION IMG MAYOR_QUE
+                        | MENOR_QUE BR MAYOR_QUE
+                        | MENOR_QUE BUTTON MAYOR_QUE cuerpo_button MENOR_QUE DIVISION BUTTON MAYOR_QUE
+                        | MENOR_QUE H1 MAYOR_QUE cuerpo_h1 MENOR_QUE DIVISION H1 MAYOR_QUE
+                        | MENOR_QUE P MAYOR_QUE cuerpo_p MENOR_QUE DIVISION P MAYOR_QUE
+                        ;
+
+cuerpo_spam ::=     ;
+
+cuerpo_input ::=    ;
+
+cuerpo_textarea ::= ;
+
+cuerpo_select ::=   ;
+
+cuerpo_div ::=      cuerpo_div etiquetas_cuerpo
+                    |
+                    ;
+
+cuerpo_img ::=      ;
+
+cuerpo_button ::=   ;
+
+cuerpo_h1 ::=       ;
+
+cuerpo_p ::=        ;

@@ -20,6 +20,7 @@ public class EtiquetadoParserSym {
   public static final int DIAGONAL = 85;
   public static final int ASC = 36;
   public static final int NAME = 27;
+  public static final int TEXTO = 97;
   public static final int INIT = 46;
   public static final int ALT = 34;
   public static final int COM_SIMP = 94;
@@ -202,7 +203,8 @@ public class EtiquetadoParserSym {
   "PUNTOS",
   "COM_SIMP",
   "IDENTIFICADOR",
-  "ALFANUMERICO"
+  "ALFANUMERICO",
+  "TEXTO"
   };
 }
 
