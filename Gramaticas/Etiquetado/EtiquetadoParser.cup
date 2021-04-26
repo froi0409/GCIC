@@ -53,7 +53,7 @@ terminal SUMA, RESTA, MULTIPLICACION, DIVISION;
 /* SIMBOLOS ESPECIALES */
 terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA, PUNTOS, COM_SIMP, IDENTIFICADOR;
 /* COMODINES */
-terminal ALFANUMERICO, TEXTO;
+terminal ALFANUMERICO, TEXTO, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
 
 //Declaración de símbolos no terminales
 non terminal inicio, cabecera, cuerpo;
@@ -61,7 +61,7 @@ non terminal inicio, cabecera, cuerpo;
 /* no terminales de cuerpo */
 non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo, cuerpo_title;
 non terminal etiquetas_cabecera, etiquetas_cuerpo, etiqueta_option;
-non terminal texto;
+non terminal texto, texto_comillas_complete, fondos, colores, font_family, alineaciones, clases, tamaños, parametros_textuales, tipos_input;
 
 non terminal cuerpo_spam;
 non terminal cuerpo_input;
@@ -75,11 +75,25 @@ non terminal cuerpo_h1;
 non terminal cuerpo_p;
 non terminal cuerpo_texto;
 
+/* Parametros de etiquetas */
+non terminal cuerpo_parametros_gcic, parametros_gcic;
+non terminal cuerpo_parametros_link, parametros_link;
+non terminal cuerpo_parametros_body, parametros_body;
+non terminal cuerpo_parametros_spam, parametros_spam;
+non terminal cuerpo_parametros_input, parametros_input;
+non terminal cuerpo_parametros_textarea, parametros_textarea;
+non terminal cuerpo_parametros_select, parametros_select;
+non terminal cuerpo_parametros_div, parametros_div;
+non terminal cuerpo_parametros_img, parametros_img;
+non terminal cuerpo_parametros_button, parametros_button;
+non terminal cuerpo_parametros_h1, parametros_h1;
+non terminal cuerpo_parametros_p, parametros_p;
+
 //Símbolo inicial de la gramática
 start with inicio;
 
 //Reglas de Producción
-inicio ::=  MENOR_QUE GCIC MAYOR_QUE cuerpo_gcic MENOR_QUE DIVISION GCIC MAYOR_QUE              {:System.out.println("Se ha llegado al final del reconocimiento");:}
+inicio ::=  MENOR_QUE GCIC cuerpo_parametros_gcic MAYOR_QUE cuerpo_gcic MENOR_QUE DIVISION GCIC MAYOR_QUE              {:System.out.println("Se ha llegado al final del reconocimiento");:}
             ;
 
 cuerpo_gcic ::= cabecera cuerpo
@@ -88,14 +102,14 @@ cuerpo_gcic ::= cabecera cuerpo
 cabecera ::=    MENOR_QUE HEAD MAYOR_QUE cuerpo_cabecera MENOR_QUE DIVISION HEAD MAYOR_QUE
                 ;
 
-cuerpo ::=  MENOR_QUE BODY MAYOR_QUE cuerpo_cuerpo MENOR_QUE DIVISION BODY MAYOR_QUE
+cuerpo ::=  MENOR_QUE BODY cuerpo_parametros_body MAYOR_QUE cuerpo_cuerpo MENOR_QUE DIVISION BODY MAYOR_QUE
             ;
 
 cuerpo_cabecera ::= cuerpo_cabecera etiquetas_cabecera 
                     | etiquetas_cabecera
                     ;
 
-etiquetas_cabecera ::=  MENOR_QUE LINK MAYOR_QUE MENOR_QUE DIVISION LINK MAYOR_QUE
+etiquetas_cabecera ::=  MENOR_QUE LINK cuerpo_parametros_link MAYOR_QUE MENOR_QUE DIVISION LINK MAYOR_QUE
                         | MENOR_QUE TITLE MAYOR_QUE cuerpo_title:ct MENOR_QUE DIVISION TITLE MAYOR_QUE      {:System.out.println("El titulo es: " + ct.toString().trim());:}
                         ;
 
@@ -111,23 +125,17 @@ cuerpo_cuerpo ::=   cuerpo_cuerpo etiquetas_cuerpo
                     | etiquetas_cuerpo
                     ;
 
-etiquetas_cuerpo ::=    MENOR_QUE SPAM MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION SPAM MAYOR_QUE
-                        | MENOR_QUE INPUT MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION INPUT MAYOR_QUE
-                        | MENOR_QUE TEXTAREA MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION TEXTAREA MAYOR_QUE
-                        | MENOR_QUE SELECT MAYOR_QUE cuerpo_select MENOR_QUE DIVISION SELECT MAYOR_QUE
-                        | MENOR_QUE DIV MAYOR_QUE cuerpo_div MENOR_QUE DIVISION DIV MAYOR_QUE
-                        | MENOR_QUE IMG MAYOR_QUE MENOR_QUE DIVISION IMG MAYOR_QUE
+etiquetas_cuerpo ::=    MENOR_QUE SPAM cuerpo_parametros_spam MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION SPAM MAYOR_QUE
+                        | MENOR_QUE INPUT cuerpo_parametros_input MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION INPUT MAYOR_QUE
+                        | MENOR_QUE TEXTAREA cuerpo_parametros_textarea MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION TEXTAREA MAYOR_QUE
+                        | MENOR_QUE SELECT cuerpo_parametros_select MAYOR_QUE cuerpo_select MENOR_QUE DIVISION SELECT MAYOR_QUE
+                        | MENOR_QUE DIV cuerpo_parametros_div MAYOR_QUE cuerpo_div MENOR_QUE DIVISION DIV MAYOR_QUE
+                        | MENOR_QUE IMG cuerpo_parametros_img MAYOR_QUE MENOR_QUE DIVISION IMG MAYOR_QUE
                         | MENOR_QUE BR MAYOR_QUE
-                        | MENOR_QUE BUTTON MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION BUTTON MAYOR_QUE
-                        | MENOR_QUE H1 MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION H1 MAYOR_QUE
-                        | MENOR_QUE P MAYOR_QUE cuerpo_p MENOR_QUE DIVISION P MAYOR_QUE
+                        | MENOR_QUE BUTTON cuerpo_parametros_button MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION BUTTON MAYOR_QUE
+                        | MENOR_QUE H1 cuerpo_parametros_h1 MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION H1 MAYOR_QUE
+                        | MENOR_QUE P cuerpo_parametros_p MAYOR_QUE cuerpo_p MENOR_QUE DIVISION P MAYOR_QUE
                         ;
-
-cuerpo_spam ::=     ;
-
-cuerpo_input ::=    ;
-
-cuerpo_textarea ::= ;
 
 cuerpo_select ::=   cuerpo_select etiqueta_option
                     | etiqueta_option
@@ -144,10 +152,157 @@ cuerpo_div ::=      cuerpo_div etiquetas_cuerpo
                     |
                     ;
 
-cuerpo_img ::=      ;
-
-cuerpo_button ::=   ;
-
 cuerpo_h1 ::=       ;
 
 cuerpo_p ::=        ;
+
+/* Parametros de etiquetas */
+cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic parametros_gcic
+                            |
+                            ;
+
+parametros_gcic ::= CORA ID IGUAL ALLCHARNOSPACE CORC
+                    | CORA NAME IGUAL texto_comillas_complete CORC
+                    ;
+
+cuerpo_parametros_link ::=  cuerpo_parametros_link parametros_link
+                            |
+                            ;
+
+parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE CORC
+                        ;
+
+texto_comillas_complete ::= ALLCHAR
+                            | ALLCHARNOSPACE
+                            ;
+
+cuerpo_parametros_body ::=  cuerpo_parametros_body parametros_body
+                            |
+                            ;
+
+parametros_body ::= CORA BACKGROUND IGUAL colores CORC
+                    ;
+
+cuerpo_parametros_spam ::=  cuerpo_parametros_spam parametros_spam
+                            |
+                            ;
+
+parametros_spam ::= parametros_textuales
+                    ;
+
+cuerpo_parametros_input ::= cuerpo_parametros_input parametros_input
+                            |
+                            ;
+
+parametros_input ::=    CORA TYPE IGUAL tipos_input CORC
+                        | parametros_textuales
+                        ;
+
+cuerpo_parametros_textarea ::=  cuerpo_parametros_textarea parametros_textarea
+                                |
+                                ;
+
+parametros_textarea ::= CORA FONTSIZE IGUAL PIXELES CORC
+                        | CORA FONTFAMILY IGUAL font_family CORC
+                        | CORA TEXTALIGN IGUAL alineaciones CORC
+                        | CORA ID IGUAL ALLCHARNOSPACE CORC
+                        | CORA COLS IGUAL DIGITO_COM CORC
+                        | CORA ROWS IGUAL DIGITO_COM CORC
+                        ;
+
+cuerpo_parametros_select ::=    cuerpo_parametros_select parametros_select
+                                |
+                                ;
+
+parametros_select ::=   parametros_textuales
+                        ;
+
+cuerpo_parametros_div ::=   cuerpo_parametros_div parametros_div
+                            |
+                            ;
+
+parametros_div ::=  parametros_textuales
+                    | CORA CLASS IGUAL clases CORC
+                    | CORA BACKGROUND IGUAL colores CORC
+                    ;
+
+cuerpo_parametros_img ::=   cuerpo_parametros_img parametros_img
+                            |
+                            ;
+
+parametros_img ::=  CORA SRC IGUAL ALLCHARNOSPACE CORC
+                    | CORA WIDTH IGUAL tamaños CORC
+                    | CORA HEIGHT IGUAL tamaños CORC
+                    | CORA ALT IGUAL texto_comillas_complete CORC
+                    | CORA ID IGUAL ALLCHARNOSPACE CORC
+                    ;
+
+cuerpo_parametros_button ::=    cuerpo_parametros_button parametros_button 
+                                |
+                                ;
+
+parametros_button ::=   parametros_textuales
+                        ;
+
+cuerpo_parametros_h1 ::=    cuerpo_parametros_h1 parametros_h1
+                            |
+                            ;
+
+parametros_h1 ::=   parametros_textuales
+                    ;
+
+cuerpo_parametros_p ::= cuerpo_parametros_p parametros_p
+                        |
+                        ;
+
+parametros_p ::=    parametros_textuales
+                    ;
+
+
+
+parametros_textuales ::=    CORA FONTSIZE IGUAL PIXELES CORC
+                            | CORA FONTFAMILY IGUAL font_family CORC
+                            | CORA TEXTALIGN IGUAL alineaciones CORC
+                            | CORA ID IGUAL ALLCHARNOSPACE CORC
+                            | CORA COLOR IGUAL colores CORC
+                            ;
+
+/* COMODINES */
+colores ::=  BLACK
+            | OLIVE
+            | TEAL
+            | RED
+            | BLUE
+            | MAROON
+            | NAVY
+            | GRAY
+            | LIME
+            | FUCHSIA
+            | GREEN
+            | WHITE
+            | PURPLE
+            | SILVER
+            | YELLOW
+            | AQUA
+            ;
+
+font_family ::= COURIER
+                | VERDANA
+                | ARIAL
+                | GENEVA
+                | SANS_SERIF
+                ;
+
+alineaciones ::=    LEFT
+                    | RIGHT
+                    | CENTER
+                    | JUSTIFY
+                    ;
+
+clases ::=  ROW
+            | COLUMN
+            ;
+
+tamaños ::= PIXELES
+            | PORCENTAJE
+            ;

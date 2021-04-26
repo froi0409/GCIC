@@ -1,28 +1,28 @@
 <!-- Mi primer captcha
      en el curso de Organización de Lenguajes y Compiladores 1
  -->
-<C_GCIC>
+<C_GCIC [id= "captcha_matematico_1"] [name= "Captcha Matemático 1"]>
     !! El encabezado de la página que tendrá mi captcha
     <C_HEAD>
-        <C_LINK> </C_LINK>
+        <C_LINK [href="www.animeflv.com"]> </C_LINK>
         <C_TITLE>Hola Mundo</C_TITLE>
     </C_HEAD>
-    <C_BODY>
-        <C_SPAM></C_SPAM>
-        <C_INPUT></C_INPUT>
-        <C_TEXTAREA></C_TEXTAREA>
-        <C_SELECT>
+    <C_BODY [background="black"]>
+        <C_SPAM [color="olive"] [font-size="20px"]></C_SPAM>
+        <C_INPUT [font-family="Arial" ] [ text-align = " left " ]></C_INPUT>
+        <C_TEXTAREA [id="hola_mundo"] [ cols = "20" ] [rows="5"]></C_TEXTAREA>
+        <C_SELECT [id="hola"] [ color   = "green" ] >
             <C_OPTION>hola</C_OPTION>
             <C_OPTION>adios</C_OPTION>
         </C_SELECT>
-        <C_DIV>
+        <C_DIV [class="row"] [background="red"] >
             <C_INPUT></C_INPUT>
             <C_SPAM></C_SPAM>
         </C_DIV>
-        <C_IMG></C_IMG>
+        <C_IMG [src="www.google.com"] [id="holis"] [width="30%"] [ heigth="20%" ] [alt="Mensaje aleatorio"]></C_IMG>
         <C_BR>
-        <C_H1></C_H1>
-        <C_P></C_P>
+        <C_H1 [text-align="center"] ></C_H1>
+        <C_P [font-size="20px"] ></C_P>
     </C_BODY>
 </C_GCIC>
 

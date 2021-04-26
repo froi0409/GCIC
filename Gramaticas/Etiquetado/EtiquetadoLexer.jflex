@@ -25,11 +25,15 @@ WS = [ \t\f]
 Ignore = {TerminacionLinea} | [ \t\f]
 
 /* COMODINES */
-ALFABETICO = [a-zA-Z]+
-ALFANUMERICO = ([a-zA-Z] | [0-9])+
+VOCALES_ESPECIALES = [áÁ] | [éÉ] | [íÍ] | [óÓ] | [úÚ] | [üÚ]
+ALFABETICO = ([a-zA-Z] | {VOCALES_ESPECIALES} )+
+ALFANUMERICO = ([a-zA-Z] | [0-9] | {VOCALES_ESPECIALES})+
 DIGITO = ( [0-9] | [1-9][0-9]+ ) //No acepta cadenas como 0000
 NUMERO = [-]? {DIGITO} ([.] ([0]*) ( [1-9] | [1-9][0-9]+ )? )?
-TEXTO = ( {IDENTIFICADOR} | {ALFANUMERICO} | [^"<" ">" \n " " "!!" "</"] ) ( {Ignore} | {IDENTIFICADOR} | {ALFANUMERICO} | [^"<" ">"] )+
+TEXTO = ( {IDENTIFICADOR} | {ALFANUMERICO} | {VOCALES_ESPECIALES} | [^"<" ">" \n " " "!!" "</"] ) ( {Ignore} | {IDENTIFICADOR} | {ALFANUMERICO} | [^"<" ">"] )+
+DIGITO_COM = "\""{WS}*{DIGITO}{WS}*"\""
+ALLCHAR = "\"" [^\"]+ "\""
+ALLCHARNOSPACE = "\"" [^\" " " "\n"]+ "\""
 
 /* ETIQUETAS GCIC */
 GCIC = [cC][_][gG][cC][iI][cC]
@@ -65,49 +69,49 @@ ROWS = "rows"
 CLASS = "class"
 SRC = "src"
 WIDTH = "width"
-HEIGHT = "height"
+HEIGHT = "heigth"
 ALT = "alt"
 ONCLICK = "onclick"
 
 /* PALABRAS DE LOS PARAMETROS */
-BLACK = "black"
-OLIVE = "olive"
-TEAL = "teal"
-RED = "red"
-BLUE = "blue"
-MAROON = "maroon"
-NAVY = "navy"
-GRAY = "gray"
-LIME = "lime"
-FUCHSIA = "fuchsia"
-GREEN = "green"
-WHITE = "white"
-PURPLE = "purple"
-SILVER = "silver"
-YELLOW = "yellow"
-AQUA = "aqua"
+BLACK = "\""{WS}*"black"{WS}*"\""
+OLIVE = "\""{WS}*"olive"{WS}*"\""
+TEAL = "\""{WS}*"teal"{WS}*"\""
+RED = "\""{WS}*"red"{WS}*"\""
+BLUE = "\""{WS}*"blue"{WS}*"\""
+MAROON = "\""{WS}*"maroon"{WS}*"\""
+NAVY = "\""{WS}*"navy"{WS}*"\""
+GRAY = "\""{WS}*"gray"{WS}*"\""
+LIME = "\""{WS}*"lime"{WS}*"\""
+FUCHSIA = "\""{WS}*"fuchsia"{WS}*"\""
+GREEN = "\""{WS}*"green"{WS}*"\""
+WHITE = "\""{WS}*"white"{WS}*"\""
+PURPLE = "\""{WS}*"purple"{WS}*"\""
+SILVER = "\""{WS}*"silver"{WS}*"\""
+YELLOW = "\""{WS}*"yellow"{WS}*"\""
+AQUA = "\""{WS}*"aqua"{WS}*"\""
 //FALTA AGREGAR EXPRESIÓN EN HEXADECIMAL
 
-PIXELES = {DIGITO} {WS}* [pP][xX]
-PORCENTAJE = {DIGITO} {WS}* "%"
+PIXELES = "\""{WS}* {DIGITO} {WS}* [pP][xX] {WS}* "\""
+PORCENTAJE = "\""{WS}*{DIGITO} {WS}* "%"{WS}* "\""
 
-COURIER = "Courier"
-VERDANA = "Verdana"
-ARIAL = "Arial"
-GENEVA = "Geneva"
-SANS_SERIF = "sans-serif"
+COURIER = "\""{WS}*"Courier"{WS}*"\""
+VERDANA = "\""{WS}*"Verdana"{WS}*"\""
+ARIAL = "\""{WS}*"Arial"{WS}*"\""
+GENEVA = "\""{WS}*"Geneva"{WS}*"\""
+SANS_SERIF = "\""{WS}*"sans-serif"{WS}*"\""
 
-LEFT = "left"
-RIGHT = "right"
-CENTER = "center"
-JUSTIFY = "justify"
+LEFT = "\""{WS}*"left"{WS}*"\""
+RIGHT = "\""{WS}*"right"{WS}*"\""
+CENTER = "\""{WS}*"center"{WS}*"\""
+JUSTIFY = "\""{WS}*"justify"{WS}*"\""
 
-TEXT = "text"
-NUMBER = "number"
-RADIO = "radio"
-CHECKBOX = "checkbox"
-ROW = "row"
-COLUMN = "column"
+TEXT = "\""{WS}*"text"{WS}*"\""
+NUMBER = "\""{WS}*"number"{WS}*"\""
+RADIO = "\""{WS}*"radio"{WS}*"\""
+CHECKBOX = "\""{WS}*"checkbox"{WS}*"\""
+ROW = "\""{WS}*"row"{WS}*"\""
+COLUMN = "\""{WS}*"column"{WS}*"\""
 
 
 /* FUNCIONES ESPECIALES DE CLC */
@@ -184,7 +188,7 @@ LLAC = "}"
 PUNTO_COMA = ";"
 PUNTOS = ":"
 COM_SIMP = ("'" | "‘" | "’")
-IDENTIFICADOR = ({ALFANUMERICO} | [_] | [-] | [$])
+IDENTIFICADOR = ({ALFANUMERICO} | [_] | [-] | [$])+
 
 //Comentarios
 COMENTARIO_LINEA = "!!" [^\r\n]*
@@ -255,6 +259,7 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {AQUA}                      {return new Symbol(AQUA, yyline+1, yycolumn+1, yytext());}
     //{HEXADECIMAL}                 
 
+    {DIGITO_COM}                {return new Symbol(DIGITO_COM, yyline+1, yycolumn+1, yytext());}
     {PIXELES}                   {return new Symbol(PIXELES, yyline+1, yycolumn+1, yytext());}
     {PORCENTAJE}                {return new Symbol(PORCENTAJE, yyline+1, yycolumn+1, yytext());}
 
@@ -338,6 +343,8 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {DIVISION}                  {return new Symbol(DIVISION, yyline+1, yycolumn+1, yytext());}
 
     /* COMODINES */
+    {ALLCHARNOSPACE}            {return new Symbol(ALLCHARNOSPACE, yyline+1, yycolumn+1, yytext());}
+    {ALLCHAR}                   {return new Symbol(ALLCHAR, yyline+1, yycolumn+1, yytext());}
     {ALFANUMERICO}              {return new Symbol(ALFANUMERICO, yyline+1, yycolumn+1, yytext());}
     
     /* SIMBOLOS ESPECIALES */
