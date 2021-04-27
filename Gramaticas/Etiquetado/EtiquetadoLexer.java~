@@ -1781,7 +1781,7 @@ public class EtiquetadoLexer implements java_cup.runtime.Scanner {
             // fall through
           case 165: break;
           case 34:
-            { return new Symbol(DIGITO_COM, yyline+1, yycolumn+1, yytext(height));
+            { return new Symbol(DIGITO_COM, yyline+1, yycolumn+1, yytext());
             }
             // fall through
           case 166: break;

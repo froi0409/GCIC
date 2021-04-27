@@ -56,7 +56,7 @@ terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA,
 terminal ALFANUMERICO, TEXTO, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
 
 //Declaración de símbolos no terminales
-non terminal inicio, cabecera, cuerpo;
+non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, variables, modo, strings;
 
 /* no terminales de cuerpo */
 non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo, cuerpo_title;
@@ -74,6 +74,7 @@ non terminal cuerpo_button;
 non terminal cuerpo_h1;
 non terminal cuerpo_p;
 non terminal cuerpo_texto;
+non terminal cuerpo_scripting;
 
 /* Parametros de etiquetas */
 non terminal cuerpo_parametros_gcic, parametros_gcic;
@@ -88,6 +89,13 @@ non terminal cuerpo_parametros_img, parametros_img;
 non terminal cuerpo_parametros_button, parametros_button;
 non terminal cuerpo_parametros_h1, parametros_h1;
 non terminal cuerpo_parametros_p, parametros_p;
+non terminal cuerpo_parametros_proceso, parametros_proceso;
+
+non terminal parametros_scripting;
+non terminal cuerpo_process, parametros_process;
+non terminal cuerpo_onload, parametros_onload;
+
+//Precedencia
 
 //Símbolo inicial de la gramática
 start with inicio;
@@ -97,6 +105,9 @@ inicio ::=  MENOR_QUE GCIC cuerpo_parametros_gcic MAYOR_QUE cuerpo_gcic MENOR_QU
             ;
 
 cuerpo_gcic ::= cabecera cuerpo
+                /*| scripting cabecera cuerpo
+                | cabecera scripting cuerpo
+                | cabecera cuerpo scripting*/
                 ;
 
 cabecera ::=    MENOR_QUE HEAD MAYOR_QUE cuerpo_cabecera MENOR_QUE DIVISION HEAD MAYOR_QUE
@@ -111,6 +122,7 @@ cuerpo_cabecera ::= cuerpo_cabecera etiquetas_cabecera
 
 etiquetas_cabecera ::=  MENOR_QUE LINK cuerpo_parametros_link MAYOR_QUE MENOR_QUE DIVISION LINK MAYOR_QUE
                         | MENOR_QUE TITLE MAYOR_QUE cuerpo_title:ct MENOR_QUE DIVISION TITLE MAYOR_QUE      {:System.out.println("El titulo es: " + ct.toString().trim());:}
+                        | MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_QUE DIVISION SCRIPTING MAYOR_QUE
                         ;
 
 cuerpo_title ::=    cuerpo_title:ct texto:ent   {:RESULT= ct.toString() + " " + ent.toString();:}
@@ -135,6 +147,7 @@ etiquetas_cuerpo ::=    MENOR_QUE SPAM cuerpo_parametros_spam MAYOR_QUE cuerpo_t
                         | MENOR_QUE BUTTON cuerpo_parametros_button MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION BUTTON MAYOR_QUE
                         | MENOR_QUE H1 cuerpo_parametros_h1 MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION H1 MAYOR_QUE
                         | MENOR_QUE P cuerpo_parametros_p MAYOR_QUE cuerpo_p MENOR_QUE DIVISION P MAYOR_QUE
+                        | MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_QUE DIVISION SCRIPTING MAYOR_QUE
                         ;
 
 cuerpo_select ::=   cuerpo_select etiqueta_option
@@ -284,6 +297,7 @@ colores ::=  BLACK
             | SILVER
             | YELLOW
             | AQUA
+            | HEXADECIMAL
             ;
 
 font_family ::= COURIER
@@ -305,4 +319,37 @@ clases ::=  ROW
 
 tamaños ::= PIXELES
             | PORCENTAJE
+            ;
+
+
+
+/* SCRIPTING */
+scripting ::=   MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_QUE DIVISION SCRIPTING MAYOR_QUE
+                ;
+
+cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
+                        |
+                        ;
+
+parametros_scripting ::=    PROCESS PARA PARC CORA cuerpo_parametros_proceso CORC
+                            | ON_LOAD PARA PARC CORA cuerpo_parametros_proceso CORC
+                            ;             
+
+cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
+                                |
+                                ;
+
+parametros_proceso ::=  variables PUNTO_COMA
+                        ;
+
+variables ::=   INTEGER modo IDENTIFICADOR IGUAL D_INTEGER
+                | STRING modo IDENTIFICADOR IGUAL strings
+                ;
+
+modo ::=    GLOBAL
+            |
+            ;
+
+strings ::= ALLCHAR
+            | D_STRING
             ;

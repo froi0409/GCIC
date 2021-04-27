@@ -1,14 +1,16 @@
-<!-- Mi primer captcha
+<!-- -Mi primer captcha
      en el curso de Organización de Lenguajes y Compiladores 1
  -->
 <C_GCIC [id= "captcha_matematico_1"] [name= "Captcha Matemático 1"]>
     !! El encabezado de la página que tendrá mi captcha
     <C_HEAD>
-        <C_LINK [href="www.animeflv.com"]> </C_LINK>
+        <C_LINK [href="www.facebook.com"]> </C_LINK>
         <C_TITLE>Hola Mundo</C_TITLE>
+        <C_SCRIPTING></C_SCRIPTING>
+        <C_SCRIPTING></C_SCRIPTING>
     </C_HEAD>
     <C_BODY [background="black"]>
-        <C_SPAM [color="olive"] [font-size="20px"]></C_SPAM>
+        <C_SPAM [color="#00cd38"] [font-size="20px"]></C_SPAM>
         <C_INPUT [font-family="Arial" ] [ text-align = " left " ]></C_INPUT>
         <C_TEXTAREA [id="hola_mundo"] [ cols = "20" ] [rows="5"]></C_TEXTAREA>
         <C_SELECT [id="hola"] [ color   = "green" ] >
@@ -23,18 +25,20 @@
         <C_BR>
         <C_H1 [text-align="center"] ></C_H1>
         <C_P [font-size="20px"] ></C_P>
+        <C_SCRIPTING>
+            PROCESS_ADIOS() [
+
+            ]
+        </C_SCRIPTING>
+        <C_SCRIPTING>
+            ON_LOAD()[
+                integer hola_mundo = 5;
+                integer @global xd_nt = 10;
+                string adios_mundo = "adios mundo";
+            ]
+            PROCESS_HOLA()[
+
+            ]
+        </C_SCRIPTING>
     </C_BODY>
 </C_GCIC>
-
-
-
-
-
-
-
-
-<C_P>
-    <C_H1>
-        HOLA
-    </C_H1>
-</C_P>

@@ -90,7 +90,7 @@ PURPLE = "\""{WS}*"purple"{WS}*"\""
 SILVER = "\""{WS}*"silver"{WS}*"\""
 YELLOW = "\""{WS}*"yellow"{WS}*"\""
 AQUA = "\""{WS}*"aqua"{WS}*"\""
-//FALTA AGREGAR EXPRESIÓN EN HEXADECIMAL
+HEXADECIMAL = "\""{WS}*"#"[a-fA-F0-9]+{WS}*"\""
 
 PIXELES = "\""{WS}* {DIGITO} {WS}* [pP][xX] {WS}* "\""
 PORCENTAJE = "\""{WS}*{DIGITO} {WS}* "%"{WS}* "\""
@@ -257,7 +257,7 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {SILVER}                    {return new Symbol(SILVER, yyline+1, yycolumn+1, yytext());}
     {YELLOW}                    {return new Symbol(YELLOW, yyline+1, yycolumn+1, yytext());}
     {AQUA}                      {return new Symbol(AQUA, yyline+1, yycolumn+1, yytext());}
-    //{HEXADECIMAL}                 
+    {HEXADECIMAL}               {return new Symbol(HEXADECIMAL, yyline+1, yycolumn+1, yytext());}
 
     {DIGITO_COM}                {return new Symbol(DIGITO_COM, yyline+1, yycolumn+1, yytext());}
     {PIXELES}                   {return new Symbol(PIXELES, yyline+1, yycolumn+1, yytext());}
