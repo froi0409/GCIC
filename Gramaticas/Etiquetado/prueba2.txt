@@ -51,16 +51,16 @@
                 IF(1 == 2) THEN 
                     INIT {:
                         booleano_1 = false;
-                        IF() THEN
+                        IF(XD_NT == 5) THEN
                             INIT {:
                                 booleano_2 = true;
                             :} END
                     :} END
-                ELSE IF() THEN
+                ELSE IF(hola_mundo == 3) THEN
                     INIT {:
                     
                     :} END
-                ELSE IF() THEN
+                ELSE IF(adios_mundo != 3) THEN
                     INIT {:
                     
                     :} END
@@ -70,9 +70,9 @@
                     :} END
                 
                 !! IF de una sola instruccion
-                IF() THEN
+                IF(3 == 3 && (5+5)- 3 > HOLA_MUNDO) THEN
                     hola_mundo = "hola mundo";
-                ELSE IF () THEN
+                ELSE IF (1 < 3) THEN
                     hola_mundo = "adios mundo";
                 ELSE 
                     hola_mundo = "hola_bello_mundo";
@@ -84,14 +84,14 @@
                         hola_mundo = "adios";
                     :} END
 
-                WHILE () THENWHILE
+                WHILE (2 >= 4) THENWHILE
                     INIT {:
                         HOLA_MUNDO_BELLO = "ADIOS MUNDO BELLO";
                     :} END
 
             ]
             PROCESS_HOLA()[
-                integer hola-mundo_1;
+                integer hola_mundo_1;
             ]
         </C_SCRIPTING>
     </C_BODY>

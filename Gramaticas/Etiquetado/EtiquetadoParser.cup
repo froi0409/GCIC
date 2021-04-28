@@ -49,7 +49,7 @@ terminal IGUAL_IGUAL, DIFERENTE_IGUAL, MENOR_QUE, MENOR_IGUAL, MAYOR_QUE, MAYOR_
 /* OPERADORES LOGICOS */
 terminal OR, AND, NOT;
 /* OPERADORES ARITMETICOS */
-terminal SUMA, RESTA, MULTIPLICACION, DIVISION;
+terminal SUMA, RESTA, MULTIPLICACION, DIVISION, UNARY;
 /* SIMBOLOS ESPECIALES */
 terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA, PUNTOS, COM_SIMP, IDENTIFICADOR, COMA;
 /* COMODINES */
@@ -107,6 +107,7 @@ non terminal condicion_else;
 non terminal asignacion_valor;
 
 non terminal condicion;
+non terminal valor_condicion;
 
 
 non terminal valores_de_asignacion;
@@ -115,9 +116,19 @@ non terminal igual_string;
 non terminal igual_boolean;
 non terminal igual_char;
 non terminal igual_decimal;
+non terminal Double expresion_aritmetica;
+non terminal valor_numerico;
 
 non terminal cuerpo_identificadores;
+
 //Precedencia
+precedence left SUMA, RESTA;
+precedence left MULTIPLICACION, DIVISION;
+precedence right UNARY;
+precedence left IGUAL_IGUAL, DIFERENTE_IGUAL, MENOR_QUE, MAYOR_QUE, MENOR_IGUAL, MAYOR_IGUAL;
+precedence left OR;
+precedence left AND;
+precedence left NOT;
 
 //Símbolo inicial de la gramática
 start with inicio;
@@ -391,7 +402,7 @@ modo ::=    GLOBAL
             |
             ;
 
-igual_integer ::=   IGUAL D_INTEGER
+igual_integer ::=   IGUAL expresion_aritmetica
                     |
                     ;
 
@@ -424,8 +435,8 @@ strings ::= ALLCHAR
 asignacion_valor ::=    cuerpo_identificadores IGUAL valores_de_asignacion
                         ;
 
-valores_de_asignacion ::=   D_INTEGER
-                            | D_DECIMAL
+valores_de_asignacion ::=   expresion_aritmetica
+                            //| D_DECIMAL
                             | D_CHAR
                             | TRUE
                             | FALSE
@@ -472,9 +483,41 @@ ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_
                         ;
 
 /* CONDICION */
-condicion ::=   ;
+condicion ::=   condicion       IGUAL_IGUAL         condicion
+                | condicion     DIFERENTE_IGUAL     condicion
+                | condicion     MENOR_QUE           condicion
+                | condicion     MENOR_IGUAL         condicion
+                | condicion     MAYOR_QUE           condicion
+                | condicion     MAYOR_IGUAL         condicion
+                | NOT           condicion
+                | condicion     AND                 condicion
+                | condicion     OR                  condicion
+                | RESTA         condicion
+                | condicion     SUMA                condicion
+                | condicion     RESTA               condicion
+                | condicion     MULTIPLICACION      condicion
+                | condicion     DIVISION            condicion
+                | valor_condicion
+                | PARA condicion PARC
+                ;
+
+valor_condicion ::= valor_numerico
+                    ;
 
 /* EXPRESIONES ARITMETICAS */
-expresion_aritmetica ::=    ;
+expresion_aritmetica ::=    RESTA                           expresion_aritmetica:va1                            {:RESULT=va1*-1;:}%prec UNARY
+                            | expresion_aritmetica:va1      SUMA                    expresion_aritmetica:va2    {:RESULT=va1+va2;:}
+                            | expresion_aritmetica:va1      RESTA                   expresion_aritmetica:va2    {:RESULT=va1-va2;:}
+                            | expresion_aritmetica:va1      MULTIPLICACION          expresion_aritmetica:va2    {:RESULT=va1*va2;:}
+                            | expresion_aritmetica:va1      DIVISION                expresion_aritmetica:va2    {:RESULT=va1/va2;:} //AGREGAR ERROR DE DIVISIÓN ENTRE 0
+                            | valor_numerico:va1                                                                {:RESULT = new Double(va1.toString());:}
+                            | PARA expresion_aritmetica:va1 PARC                                                {:RESULT = new Double(va1.toString());:}
+                            ;
+
+valor_numerico ::=  D_INTEGER:val       {:RESULT = val;:}
+                    | D_DECIMAL:val     {:RESULT = val;:}
+                    | IDENTIFICADOR:val {:RESULT = 1;:}
+                    //| D_CHAR:val        {:RESULT = new Double(val);:}
+                    ;
 
  

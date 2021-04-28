@@ -188,7 +188,7 @@ LLAC = "}"
 PUNTO_COMA = ";"
 PUNTOS = ":"
 COM_SIMP = ("'" | "‘" | "’")
-IDENTIFICADOR = ({ALFANUMERICO} | [_] | [-] | [$])+
+IDENTIFICADOR = [a-zA-Z] ({ALFANUMERICO} | [_])+
 COMA = ","
 
 //Comentarios
