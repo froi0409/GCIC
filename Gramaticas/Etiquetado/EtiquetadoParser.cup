@@ -517,6 +517,7 @@ expresion_aritmetica ::=    RESTA                           expresion_aritmetica
 valor_numerico ::=  D_INTEGER:val       {:RESULT = val;:}
                     | D_DECIMAL:val     {:RESULT = val;:}
                     | IDENTIFICADOR:val {:RESULT = 1;:}
+                    | ALFANUMERICO:val  {:RESULT = 1;:}
                     //| D_CHAR:val        {:RESULT = new Double(val);:}
                     ;
 

@@ -29,7 +29,7 @@ VOCALES_ESPECIALES = [áÁ] | [éÉ] | [íÍ] | [óÓ] | [úÚ] | [üÚ]
 ALFABETICO = ([a-zA-Z] | {VOCALES_ESPECIALES} )+
 ALFANUMERICO = ([a-zA-Z] | [0-9] | {VOCALES_ESPECIALES})+
 DIGITO = ( [0-9] | [1-9][0-9]+ ) //No acepta cadenas como 0000
-NUMERO = [-]? {DIGITO} ([.] ([0]*) ( [1-9] | [1-9][0-9]+ )? )?
+NUMERO = {DIGITO} ([.] ([0]*) ( [1-9] | [1-9][0-9]+ )? )
 TEXTO = ( {IDENTIFICADOR} | {ALFANUMERICO} | {VOCALES_ESPECIALES} | [^"<" ">" \n " " "!!" "</"] ) ( {Ignore} | {IDENTIFICADOR} | {ALFANUMERICO} | [^"<" ">"] )+
 DIGITO_COM = "\""{WS}*{DIGITO}{WS}*"\""
 ALLCHAR = "\"" [^\"]+ "\""
@@ -149,7 +149,7 @@ STRING = "string"
 GLOBAL = "@global"
 
 /* DEFINICION DE TIPOS DE DATOS */
-D_INTEGER = [-]? {DIGITO}
+D_INTEGER = {DIGITO}
 D_DECIMAL = {NUMERO}
 TRUE = "true"
 FALSE = "false"
