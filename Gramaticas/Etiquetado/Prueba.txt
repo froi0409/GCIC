@@ -34,7 +34,12 @@
             ON_LOAD()[
                 integer hola_mundo = 5;
                 integer @global xd_nt = 10;
+                decimal gg_wp = 12.3;
+                char caracter_1 = 'A';
+                char caracter_2;
                 string adios_mundo = "adios mundo";
+                boolean booleano_1, booleano_2 = true;
+                boolean @global booleano_3, booleano_4;
             ]
             PROCESS_HOLA()[
 

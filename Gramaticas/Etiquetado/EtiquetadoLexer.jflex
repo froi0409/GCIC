@@ -189,6 +189,7 @@ PUNTO_COMA = ";"
 PUNTOS = ":"
 COM_SIMP = ("'" | "‘" | "’")
 IDENTIFICADOR = ({ALFANUMERICO} | [_] | [-] | [$])+
+COMA = ","
 
 //Comentarios
 COMENTARIO_LINEA = "!!" [^\r\n]*
@@ -360,6 +361,7 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {PUNTOS}                    {return new Symbol(PUNTOS, yyline+1, yycolumn+1, yytext());}
     {COM_SIMP}                  {return new Symbol(COM_SIMP, yyline+1, yycolumn+1, yytext());}
     {IDENTIFICADOR}             {return new Symbol(IDENTIFICADOR, yyline+1, yycolumn+1, yytext());}
+    {COMA}                      {return new Symbol(COMA, yyline+1, yycolumn+1, yytext());}
 
     
 

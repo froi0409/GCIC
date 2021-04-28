@@ -51,17 +51,17 @@ terminal OR, AND, NOT;
 /* OPERADORES ARITMETICOS */
 terminal SUMA, RESTA, MULTIPLICACION, DIVISION;
 /* SIMBOLOS ESPECIALES */
-terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA, PUNTOS, COM_SIMP, IDENTIFICADOR;
+terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA, PUNTOS, COM_SIMP, IDENTIFICADOR, COMA;
 /* COMODINES */
 terminal ALFANUMERICO, TEXTO, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
 
 //Declaración de símbolos no terminales
-non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, variables, modo, strings;
+non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, variables, modo, strings, booleanos;
 
 /* no terminales de cuerpo */
 non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo, cuerpo_title;
 non terminal etiquetas_cabecera, etiquetas_cuerpo, etiqueta_option;
-non terminal texto, texto_comillas_complete, fondos, colores, font_family, alineaciones, clases, tamaños, parametros_textuales, tipos_input;
+non terminal texto, texto_comillas_complete, fondos, colores, font_family, alineaciones, clases, tamaños, parametros_textuales, tipos_input, identificadores;
 
 non terminal cuerpo_spam;
 non terminal cuerpo_input;
@@ -94,6 +94,13 @@ non terminal cuerpo_parametros_proceso, parametros_proceso;
 non terminal parametros_scripting;
 non terminal cuerpo_process, parametros_process;
 non terminal cuerpo_onload, parametros_onload;
+
+/* NO TERMINALES ESPECIALES DEL SCRIPTING */
+non terminal igual_integer;
+non terminal igual_string;
+non terminal igual_boolean;
+non terminal igual_char;
+non terminal igual_decimal;
 
 //Precedencia
 
@@ -342,13 +349,44 @@ cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
 parametros_proceso ::=  variables PUNTO_COMA
                         ;
 
-variables ::=   INTEGER modo IDENTIFICADOR IGUAL D_INTEGER
-                | STRING modo IDENTIFICADOR IGUAL strings
+variables ::=   INTEGER modo identificadores igual_integer
+                | DECIMAL modo identificadores igual_decimal
+                | STRING modo identificadores igual_string
+                | BOOLEAN modo identificadores igual_boolean
+                | CHAR modo identificadores igual_char
                 ;
+
+identificadores ::= identificadores COMA IDENTIFICADOR
+                    | IDENTIFICADOR
+                    ;
 
 modo ::=    GLOBAL
             |
             ;
+
+igual_integer ::=   IGUAL D_INTEGER
+                    |
+                    ;
+
+igual_decimal ::=   IGUAL D_DECIMAL
+                    |
+                    ;
+
+igual_string ::=    IGUAL strings   
+                    |
+                    ;
+
+igual_boolean ::=   IGUAL booleanos
+                    |
+                    ;
+
+igual_char ::=  IGUAL D_CHAR
+                |
+                ;
+
+booleanos ::=   TRUE
+                | FALSE
+                ;
 
 strings ::= ALLCHAR
             | D_STRING
