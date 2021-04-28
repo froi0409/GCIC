@@ -96,12 +96,24 @@ non terminal cuerpo_process, parametros_process;
 non terminal cuerpo_onload, parametros_onload;
 
 /* NO TERMINALES ESPECIALES DEL SCRIPTING */
+non terminal condicion_if;
+non terminal ciclo_repeat;
+non terminal ciclo_while;
+non terminal condicion_else_if, parametros_else_if;
+non terminal condicion_else;
+non terminal asignacion_valor;
+
+non terminal condicion;
+
+
+non terminal valores_de_asignacion;
 non terminal igual_integer;
 non terminal igual_string;
 non terminal igual_boolean;
 non terminal igual_char;
 non terminal igual_decimal;
 
+non terminal cuerpo_identificadores;
 //Precedencia
 
 //Símbolo inicial de la gramática
@@ -347,17 +359,26 @@ cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
                                 ;
 
 parametros_proceso ::=  variables PUNTO_COMA
+                        | asignacion_valor PUNTO_COMA
+                        | condicion_if 
+                        | ciclo_repeat 
+                        | ciclo_while
                         ;
 
-variables ::=   INTEGER modo identificadores igual_integer
-                | DECIMAL modo identificadores igual_decimal
-                | STRING modo identificadores igual_string
-                | BOOLEAN modo identificadores igual_boolean
-                | CHAR modo identificadores igual_char
+/* ASIGNACION DE VALORES A VARIABLES */
+variables ::=   INTEGER modo cuerpo_identificadores igual_integer
+                | DECIMAL modo cuerpo_identificadores igual_decimal
+                | STRING modo cuerpo_identificadores igual_string
+                | BOOLEAN modo cuerpo_identificadores igual_boolean
+                | CHAR modo cuerpo_identificadores igual_char
                 ;
 
-identificadores ::= identificadores COMA IDENTIFICADOR
-                    | IDENTIFICADOR
+cuerpo_identificadores ::=  cuerpo_identificadores COMA identificadores
+                            | identificadores
+                            ;
+
+identificadores ::= IDENTIFICADOR
+                    | ALFANUMERICO
                     ;
 
 modo ::=    GLOBAL
@@ -391,3 +412,44 @@ booleanos ::=   TRUE
 strings ::= ALLCHAR
             | D_STRING
             ;
+
+/* ASIGNACION DE VALORES */
+asignacion_valor ::=    cuerpo_identificadores IGUAL valores_de_asignacion
+                        ;
+
+valores_de_asignacion ::=   D_INTEGER
+                            | D_DECIMAL
+                            | D_CHAR
+                            | TRUE
+                            | FALSE
+                            | ALLCHAR
+                            | D_STRING
+                            ;
+
+/* CONDICION IF */
+condicion_if ::=    IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_scripting PUNTOS LLAC END condicion_else_if condicion_else
+                    ;
+
+condicion_else_if ::=   condicion_else_if parametros_else_if
+                        | 
+                        ;
+
+parametros_else_if ::=  ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_scripting PUNTOS LLAC END
+                        ;
+
+condicion_else ::=  ELSE INIT LLAA PUNTOS cuerpo_scripting PUNTOS LLAC END                        
+                    |
+                    ;
+
+/* CICLO REPEAT */
+ciclo_repeat ::=    REPEAT
+                        ;
+
+/* CICLO WHILE */
+ciclo_while ::=     WHILE
+                        ;
+
+/* CONDICION */
+condicion ::=   ;
+
+ 

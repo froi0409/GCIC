@@ -40,6 +40,31 @@
                 string adios_mundo = "adios mundo";
                 boolean booleano_1, booleano_2 = true;
                 boolean @global booleano_3, booleano_4;
+            
+                booleano_3 = true;
+                booleano_3, booleano_4 = false;
+
+                hola_mundo = 3;
+                
+                hola, adios = 'A';
+
+                IF() THEN 
+                    INIT {:
+                    
+                    :} END
+                ELSE IF() THEN
+                    INIT {:
+                    
+                    :} END
+                ELSE IF() THEN
+                    INIT {:
+                    
+                    :} END
+                ELSE 
+                    INIT {:
+                    
+                    :} END
+
             ]
             PROCESS_HOLA()[
 
