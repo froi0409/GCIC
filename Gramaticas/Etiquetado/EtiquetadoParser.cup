@@ -53,7 +53,7 @@ terminal SUMA, RESTA, MULTIPLICACION, DIVISION, UNARY;
 /* SIMBOLOS ESPECIALES */
 terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA, PUNTOS, COM_SIMP, IDENTIFICADOR, COMA;
 /* COMODINES */
-terminal ALFANUMERICO, TEXTO, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
+terminal ID_ETIQUETA, ALFANUMERICO, TEXTO, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
 
 //Declaración de símbolos no terminales
 non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, variables, modo, strings, booleanos;
@@ -207,7 +207,7 @@ cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic parametros_gcic
                             |
                             ;
 
-parametros_gcic ::= CORA ID IGUAL ALLCHARNOSPACE CORC
+parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA CORC
                     | CORA NAME IGUAL texto_comillas_complete CORC
                     ;
 
@@ -251,7 +251,7 @@ cuerpo_parametros_textarea ::=  cuerpo_parametros_textarea parametros_textarea
 parametros_textarea ::= CORA FONTSIZE IGUAL PIXELES CORC
                         | CORA FONTFAMILY IGUAL font_family CORC
                         | CORA TEXTALIGN IGUAL alineaciones CORC
-                        | CORA ID IGUAL ALLCHARNOSPACE CORC
+                        | CORA ID IGUAL ID_ETIQUETA CORC
                         | CORA COLS IGUAL DIGITO_COM CORC
                         | CORA ROWS IGUAL DIGITO_COM CORC
                         ;
@@ -280,7 +280,7 @@ parametros_img ::=  CORA SRC IGUAL ALLCHARNOSPACE CORC
                     | CORA WIDTH IGUAL tamaños CORC
                     | CORA HEIGHT IGUAL tamaños CORC
                     | CORA ALT IGUAL texto_comillas_complete CORC
-                    | CORA ID IGUAL ALLCHARNOSPACE CORC
+                    | CORA ID IGUAL ID_ETIQUETA CORC
                     ;
 
 cuerpo_parametros_button ::=    cuerpo_parametros_button parametros_button 
@@ -309,7 +309,7 @@ parametros_p ::=    parametros_textuales
 parametros_textuales ::=    CORA FONTSIZE IGUAL PIXELES CORC
                             | CORA FONTFAMILY IGUAL font_family CORC
                             | CORA TEXTALIGN IGUAL alineaciones CORC
-                            | CORA ID IGUAL ALLCHARNOSPACE CORC
+                            | CORA ID IGUAL ID_ETIQUETA CORC
                             | CORA COLOR IGUAL colores CORC
                             ;
 
@@ -429,6 +429,7 @@ booleanos ::=   TRUE
 strings ::= ALLCHAR
             | ALLCHARNOSPACE
             | D_STRING
+            | ID_ETIQUETA
             ;
 
 /* ASIGNACION DE VALORES */
@@ -442,6 +443,7 @@ valores_de_asignacion ::=   expresion_aritmetica
                             | FALSE
                             | ALLCHAR
                             | ALLCHARNOSPACE
+                            | ID_ETIQUETA
                             | D_STRING
                             ;
 

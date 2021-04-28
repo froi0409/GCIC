@@ -32,6 +32,7 @@ DIGITO = ( [0-9] | [1-9][0-9]+ ) //No acepta cadenas como 0000
 NUMERO = {DIGITO} ([.] ([0]*) ( [1-9] | [1-9][0-9]+ )? )
 TEXTO = ( {IDENTIFICADOR} | {ALFANUMERICO} | {VOCALES_ESPECIALES} | [^"<" ">" \n " " "!!" "</"] ) ( {Ignore} | {IDENTIFICADOR} | {ALFANUMERICO} | [^"<" ">"] )+
 DIGITO_COM = "\""{WS}*{DIGITO}{WS}*"\""
+ID_ETIQUETA = "\"" ({ALFANUMERICO} | [_] | [-] | [$])+ "\""
 ALLCHAR = "\"" [^\"]+ "\""
 ALLCHARNOSPACE = "\"" [^\" " " "\n"]+ "\""
 
@@ -344,6 +345,7 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {DIVISION}                  {return new Symbol(DIVISION, yyline+1, yycolumn+1, yytext());}
 
     /* COMODINES */
+    {ID_ETIQUETA}               {return new Symbol(ID_ETIQUETA, yyline+1, yycolumn+1, yytext());}
     {ALLCHARNOSPACE}            {return new Symbol(ALLCHARNOSPACE, yyline+1, yycolumn+1, yytext());}
     {ALLCHAR}                   {return new Symbol(ALLCHAR, yyline+1, yycolumn+1, yytext());}
     {ALFANUMERICO}              {return new Symbol(ALFANUMERICO, yyline+1, yycolumn+1, yytext());}
