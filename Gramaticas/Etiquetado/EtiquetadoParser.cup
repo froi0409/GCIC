@@ -56,7 +56,7 @@ terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA,
 terminal ID_ETIQUETA, ALFANUMERICO, TEXTO, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
 
 //Declaración de símbolos no terminales
-non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, variables, modo, strings, booleanos;
+non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, variables, modo, strings, strings_concatenados, booleanos;
 
 /* no terminales de cuerpo */
 non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo, cuerpo_title;
@@ -410,9 +410,13 @@ igual_decimal ::=   IGUAL D_DECIMAL
                     |
                     ;
 
-igual_string ::=    IGUAL strings   
+igual_string ::=    IGUAL strings_concatenados
                     |
                     ;
+
+strings_concatenados ::=    strings_concatenados SUMA strings
+                            | strings
+                            ;
 
 igual_boolean ::=   IGUAL booleanos
                     |
@@ -430,6 +434,7 @@ strings ::= ALLCHAR
             | ALLCHARNOSPACE
             | D_STRING
             | ID_ETIQUETA
+            | IDENTIFICADOR
             ;
 
 /* ASIGNACION DE VALORES */

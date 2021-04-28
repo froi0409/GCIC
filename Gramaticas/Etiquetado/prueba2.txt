@@ -37,7 +37,7 @@
                 decimal gg_wp = 12.3;
                 char caracter_1 = 'A';
                 char caracter_2;
-                string adios_mundo = "adios mundo";
+                string adios_mundo = "adios mundo" + hola_mundo + "cruel";
                 boolean booleano_1, booleano_2 = true;
                 boolean @global booleano_3, booleano_4;
             
