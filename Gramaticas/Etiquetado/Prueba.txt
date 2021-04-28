@@ -50,7 +50,11 @@
 
                 IF() THEN 
                     INIT {:
-                    
+                        booleano_1 = false;
+                        IF() THEN
+                            INIT {:
+                                booleano_2 = true;
+                            :} END
                     :} END
                 ELSE IF() THEN
                     INIT {:
@@ -63,6 +67,26 @@
                 ELSE 
                     INIT {:
                     
+                    :} END
+                
+                !! IF de una sola instruccion
+                IF() THEN
+                    hola_mundo = "hola mundo";
+                ELSE IF () THEN
+                    hola_mundo = "adios mundo";
+                ELSE 
+                    hola_mundo = "hola_bello_mundo";
+
+
+                !! CICLO REPEAT
+                REPEAT (integer repeticion = 0) HUNTIL(45)
+                    INIT {:
+                        hola_mundo = "adios";
+                    :} END
+
+                WHILE () THENWHILE
+                    INIT {:
+                        HOLA_MUNDO_BELLO = "ADIOS MUNDO BELLO";
                     :} END
 
             ]

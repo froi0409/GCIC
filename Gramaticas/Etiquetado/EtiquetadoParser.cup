@@ -89,7 +89,7 @@ non terminal cuerpo_parametros_img, parametros_img;
 non terminal cuerpo_parametros_button, parametros_button;
 non terminal cuerpo_parametros_h1, parametros_h1;
 non terminal cuerpo_parametros_p, parametros_p;
-non terminal cuerpo_parametros_proceso, parametros_proceso;
+non terminal cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_simples;
 
 non terminal parametros_scripting;
 non terminal cuerpo_process, parametros_process;
@@ -97,7 +97,10 @@ non terminal cuerpo_onload, parametros_onload;
 
 /* NO TERMINALES ESPECIALES DEL SCRIPTING */
 non terminal condicion_if;
+
 non terminal ciclo_repeat;
+non terminal repetir_declaracion, repetir_limite, igual_repeat;
+
 non terminal ciclo_while;
 non terminal condicion_else_if, parametros_else_if;
 non terminal condicion_else;
@@ -359,11 +362,14 @@ cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
                                 ;
 
 parametros_proceso ::=  variables PUNTO_COMA
-                        | asignacion_valor PUNTO_COMA
+                        | parametros_proceso_simples
                         | condicion_if 
                         | ciclo_repeat 
                         | ciclo_while
                         ;
+
+parametros_proceso_simples ::=  asignacion_valor PUNTO_COMA
+                                ;
 
 /* ASIGNACION DE VALORES A VARIABLES */
 variables ::=   INTEGER modo cuerpo_identificadores igual_integer
@@ -410,6 +416,7 @@ booleanos ::=   TRUE
                 ;
 
 strings ::= ALLCHAR
+            | ALLCHARNOSPACE
             | D_STRING
             ;
 
@@ -423,33 +430,51 @@ valores_de_asignacion ::=   D_INTEGER
                             | TRUE
                             | FALSE
                             | ALLCHAR
+                            | ALLCHARNOSPACE
                             | D_STRING
                             ;
 
 /* CONDICION IF */
-condicion_if ::=    IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_scripting PUNTOS LLAC END condicion_else_if condicion_else
+condicion_if ::=    IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END condicion_else_if condicion_else
+                    | IF PARA condicion PARC THEN parametros_proceso_simples condicion_else_if condicion_else
                     ;
 
 condicion_else_if ::=   condicion_else_if parametros_else_if
                         | 
                         ;
 
-parametros_else_if ::=  ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_scripting PUNTOS LLAC END
+parametros_else_if ::=  ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC THEN parametros_proceso_simples
                         ;
 
-condicion_else ::=  ELSE INIT LLAA PUNTOS cuerpo_scripting PUNTOS LLAC END                        
+condicion_else ::=  ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END                        
+                    | ELSE parametros_proceso_simples
                     |
                     ;
 
 /* CICLO REPEAT */
-ciclo_repeat ::=    REPEAT
+ciclo_repeat ::=    REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    ;
+
+repetir_declaracion ::= INTEGER identificadores IGUAL igual_repeat
+                        | identificadores IGUAL igual_repeat
                         ;
 
+repetir_limite ::=  D_INTEGER
+                    | identificadores
+                    ;
+
+igual_repeat ::=    D_INTEGER
+                    ;
+
 /* CICLO WHILE */
-ciclo_while ::=     WHILE
+ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
                         ;
 
 /* CONDICION */
 condicion ::=   ;
+
+/* EXPRESIONES ARITMETICAS */
+expresion_aritmetica ::=    ;
 
  
