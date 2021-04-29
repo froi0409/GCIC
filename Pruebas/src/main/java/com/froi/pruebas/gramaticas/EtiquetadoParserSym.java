@@ -8,13 +8,13 @@ package com.froi.pruebas.gramaticas;
 /** CUP generated class containing symbol constants. */
 public class EtiquetadoParserSym {
   /* terminals */
-  public static final int IDENTIFICADOR = 130;
+  public static final int IDENTIFICADOR = 131;
   public static final int AQUA = 51;
   public static final int LEFT = 60;
   public static final int FONTFAMILY = 23;
   public static final int HEXADECIMAL = 52;
-  public static final int DIVISION = 116;
-  public static final int BARRA = 119;
+  public static final int DIVISION = 117;
+  public static final int BARRA = 120;
   public static final int MENOR_IGUAL = 107;
   public static final int MENOR_QUE = 106;
   public static final int COLUMN = 69;
@@ -23,12 +23,12 @@ public class EtiquetadoParserSym {
   public static final int TEAL = 38;
   public static final int RIGHT = 61;
   public static final int ROWS = 29;
-  public static final int DIAGONAL = 120;
+  public static final int DIAGONAL = 121;
   public static final int ASC = 70;
   public static final int CHECKBOX = 67;
   public static final int NAME = 27;
   public static final int ROW = 68;
-  public static final int TEXTO = 134;
+  public static final int TEXTO = 135;
   public static final int MAROON = 41;
   public static final int SANS_SERIF = 59;
   public static final int INIT = 80;
@@ -37,8 +37,8 @@ public class EtiquetadoParserSym {
   public static final int YELLOW = 50;
   public static final int FUCHSIA = 45;
   public static final int WHITE = 47;
-  public static final int UNARY = 117;
-  public static final int COM_SIMP = 129;
+  public static final int UNARY = 118;
+  public static final int COM_SIMP = 130;
   public static final int LETIMPAR_NUM = 73;
   public static final int INTEGER = 92;
   public static final int BLACK = 36;
@@ -58,25 +58,25 @@ public class EtiquetadoParserSym {
   public static final int PURPLE = 48;
   public static final int WIDTH = 32;
   public static final int REVERSE = 74;
-  public static final int PARC = 122;
-  public static final int PUNTO_COMA = 127;
-  public static final int PARA = 121;
+  public static final int PARC = 123;
+  public static final int PUNTO_COMA = 128;
+  public static final int PARA = 122;
   public static final int CLASS = 30;
   public static final int ALERT_INFO = 77;
   public static final int SELECT = 10;
   public static final int NUMBER = 65;
   public static final int TEXTAREA = 9;
-  public static final int COMA = 131;
+  public static final int COMA = 132;
   public static final int D_INTEGER = 98;
   public static final int NUM_ALEATORIO = 76;
   public static final int HUNTIL = 86;
   public static final int TRUE = 100;
-  public static final int IGUAL = 118;
+  public static final int IGUAL = 119;
   public static final int OLIVE = 37;
   public static final int WHILE = 87;
   public static final int COLS = 28;
   public static final int PORCENTAJE = 54;
-  public static final int ALLCHAR = 135;
+  public static final int ALLCHAR = 136;
   public static final int CHAR = 95;
   public static final int DECIMAL = 93;
   public static final int BOOLEAN = 94;
@@ -85,28 +85,29 @@ public class EtiquetadoParserSym {
   public static final int INPUT = 8;
   public static final int GCIC = 2;
   public static final int DIV = 12;
-  public static final int PUNTOS = 128;
+  public static final int PUNTOS = 129;
   public static final int NAVY = 42;
+  public static final int MENOR_CIERRE = 113;
   public static final int P = 17;
   public static final int ELSE = 84;
-  public static final int CORC = 124;
+  public static final int CORC = 125;
   public static final int COURIER = 55;
-  public static final int CORA = 123;
-  public static final int DIGITO_COM = 137;
+  public static final int CORA = 124;
+  public static final int DIGITO_COM = 138;
   public static final int LINK = 5;
   public static final int EOF = 0;
   public static final int ARIAL = 57;
-  public static final int SUMA = 113;
+  public static final int SUMA = 114;
   public static final int BUTTON = 15;
   public static final int REPEAT = 85;
-  public static final int LLAC = 126;
+  public static final int LLAC = 127;
   public static final int SPAM = 7;
-  public static final int LLAA = 125;
+  public static final int LLAA = 126;
   public static final int VERDANA = 56;
   public static final int GENEVA = 58;
   public static final int SCRIPTING = 18;
   public static final int SRC = 31;
-  public static final int ID_ETIQUETA = 132;
+  public static final int ID_ETIQUETA = 133;
   public static final int D_STRING = 103;
   public static final int BODY = 6;
   public static final int HREF = 19;
@@ -114,7 +115,7 @@ public class EtiquetadoParserSym {
   public static final int OR = 110;
   public static final int EXIT = 78;
   public static final int error = 1;
-  public static final int RESTA = 114;
+  public static final int RESTA = 115;
   public static final int IF = 82;
   public static final int DESC = 71;
   public static final int ID = 26;
@@ -124,7 +125,7 @@ public class EtiquetadoParserSym {
   public static final int END = 81;
   public static final int D_DECIMAL = 99;
   public static final int SILVER = 49;
-  public static final int MULTIPLICACION = 115;
+  public static final int MULTIPLICACION = 116;
   public static final int LIME = 44;
   public static final int IMG = 13;
   public static final int FONTSIZE = 22;
@@ -133,7 +134,7 @@ public class EtiquetadoParserSym {
   public static final int BR = 14;
   public static final int RED = 39;
   public static final int GLOBAL = 97;
-  public static final int ALFANUMERICO = 133;
+  public static final int ALFANUMERICO = 134;
   public static final int CARACTER_ALEATORIO = 75;
   public static final int DIFERENTE_IGUAL = 105;
   public static final int OPTION = 11;
@@ -141,7 +142,7 @@ public class EtiquetadoParserSym {
   public static final int STRING = 96;
   public static final int ONCLICK = 35;
   public static final int AND = 111;
-  public static final int ALLCHARNOSPACE = 136;
+  public static final int ALLCHARNOSPACE = 137;
   public static final int LETPAR_NUM = 72;
   public static final int MAYOR_IGUAL = 109;
   public static final int GETBYID = 79;
@@ -260,6 +261,7 @@ public class EtiquetadoParserSym {
   "OR",
   "AND",
   "NOT",
+  "MENOR_CIERRE",
   "SUMA",
   "RESTA",
   "MULTIPLICACION",

@@ -157,6 +157,9 @@ FALSE = "false"
 D_CHAR = {COM_SIMP} [^"'" "’" "‘"] {COM_SIMP}
 D_STRING = [\"] [^\"] [\"]
 
+/* CIERRE */
+MENOR_CIERRE = "<" {WS}* "/"
+
 /* OPERADORES RELACIONALES */
 IGUAL_IGUAL = "=="
 DIFERENTE_IGUAL = "!="
@@ -324,6 +327,9 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {FALSE}                     {return new Symbol(FALSE, yyline+1, yycolumn+1, yytext());}
     {D_CHAR}                    {return new Symbol(D_CHAR, yyline+1, yycolumn+1, yytext());}
     {D_STRING}                  {return new Symbol(D_STRING, yyline+1, yycolumn+1, yytext());}
+
+    /* CIERRE */
+    {MENOR_CIERRE}              {return new Symbol(MENOR_CIERRE, yyline+1, yycolumn+1, yytext());}
 
     /* OPERADORES RELACIONALES */
     {IGUAL_IGUAL}               {return new Symbol(IGUAL_IGUAL, yyline+1, yycolumn+1, yytext());}

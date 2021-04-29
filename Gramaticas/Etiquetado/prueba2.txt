@@ -24,7 +24,7 @@
         <C_IMG [src="www.google.com"] [id="holis"] [width="30%"] [ heigth="20%" ] [alt="Mensaje aleatorio"]></C_IMG>
         <C_BR>
         <C_H1 [text-align="center"] ></C_H1>
-        <C_P [font-size="20px"] ></C_P>
+        <C_P [font-size="20px"] >  </C_P>
         <C_SCRIPTING>
             PROCESS_ADIOS() [
 
@@ -94,6 +94,7 @@
                 integer hola_mundo_1;
             ]
         </C_SCRIPTING>
-        <c_p></c_p>
+        <c_p>HOLA_MUNDO HOLA MUNDO</c_p>
     </C_BODY>
+    <C_SCRIPTING> </C_SCRIPTING>
 </C_GCIC>

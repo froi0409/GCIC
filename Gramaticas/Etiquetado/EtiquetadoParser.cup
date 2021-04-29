@@ -48,6 +48,8 @@ terminal D_INTEGER, D_DECIMAL, TRUE, FALSE, D_CHAR, D_STRING;
 terminal IGUAL_IGUAL, DIFERENTE_IGUAL, MENOR_QUE, MENOR_IGUAL, MAYOR_QUE, MAYOR_IGUAL;
 /* OPERADORES LOGICOS */
 terminal OR, AND, NOT;
+/* CIERRE */
+terminal MENOR_CIERRE;
 /* OPERADORES ARITMETICOS */
 terminal SUMA, RESTA, MULTIPLICACION, DIVISION, UNARY;
 /* SIMBOLOS ESPECIALES */
@@ -149,22 +151,22 @@ cuerpo_gcic ::= cabecera cuerpo cierre_gcic
                 | scripting cabecera scripting cuerpo scripting cierre_gcic
                 ;
 
-cierre_gcic ::= MENOR_QUE DIVISION GCIC MAYOR_QUE
+cierre_gcic ::= MENOR_CIERRE GCIC MAYOR_QUE
                 ;
 
-cabecera ::=    MENOR_QUE HEAD MAYOR_QUE cuerpo_cabecera MENOR_QUE DIVISION HEAD MAYOR_QUE
+cabecera ::=    MENOR_QUE HEAD MAYOR_QUE cuerpo_cabecera MENOR_CIERRE HEAD MAYOR_QUE
                 ;
 
-cuerpo ::=  MENOR_QUE BODY cuerpo_parametros_body MAYOR_QUE cuerpo_cuerpo MENOR_QUE DIVISION BODY MAYOR_QUE
+cuerpo ::=  MENOR_QUE BODY cuerpo_parametros_body MAYOR_QUE cuerpo_cuerpo MENOR_CIERRE BODY MAYOR_QUE
             ;
 
 cuerpo_cabecera ::= cuerpo_cabecera etiquetas_cabecera 
                     | etiquetas_cabecera
                     ;
 
-etiquetas_cabecera ::=  MENOR_QUE LINK cuerpo_parametros_link MAYOR_QUE MENOR_QUE DIVISION LINK MAYOR_QUE
-                        | MENOR_QUE TITLE MAYOR_QUE cuerpo_title:ct MENOR_QUE DIVISION TITLE MAYOR_QUE      {:System.out.println("El titulo es: " + ct.toString().trim());:}
-                        | MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_QUE DIVISION SCRIPTING MAYOR_QUE
+etiquetas_cabecera ::=  MENOR_QUE LINK cuerpo_parametros_link MAYOR_QUE MENOR_CIERRE LINK MAYOR_QUE
+                        | MENOR_QUE TITLE MAYOR_QUE cuerpo_title:ct MENOR_CIERRE TITLE MAYOR_QUE      {:System.out.println("El titulo es: " + ct.toString().trim());:}
+                        | MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_CIERRE SCRIPTING MAYOR_QUE
                         ;
 
 cuerpo_title ::=    cuerpo_title:ct texto:ent   {:RESULT= ct.toString() + " " + ent.toString();:}
@@ -179,24 +181,24 @@ cuerpo_cuerpo ::=   cuerpo_cuerpo etiquetas_cuerpo
                     | etiquetas_cuerpo
                     ;
 
-etiquetas_cuerpo ::=    MENOR_QUE SPAM cuerpo_parametros_spam MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION SPAM MAYOR_QUE
-                        | MENOR_QUE INPUT cuerpo_parametros_input MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION INPUT MAYOR_QUE
-                        | MENOR_QUE TEXTAREA cuerpo_parametros_textarea MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION TEXTAREA MAYOR_QUE
-                        | MENOR_QUE SELECT cuerpo_parametros_select MAYOR_QUE cuerpo_select MENOR_QUE DIVISION SELECT MAYOR_QUE
-                        | MENOR_QUE DIV cuerpo_parametros_div MAYOR_QUE cuerpo_div MENOR_QUE DIVISION DIV MAYOR_QUE
-                        | MENOR_QUE IMG cuerpo_parametros_img MAYOR_QUE MENOR_QUE DIVISION IMG MAYOR_QUE
+etiquetas_cuerpo ::=    MENOR_QUE SPAM cuerpo_parametros_spam MAYOR_QUE cuerpo_texto MENOR_CIERRE SPAM MAYOR_QUE
+                        | MENOR_QUE INPUT cuerpo_parametros_input MAYOR_QUE cuerpo_texto MENOR_CIERRE INPUT MAYOR_QUE
+                        | MENOR_QUE TEXTAREA cuerpo_parametros_textarea MAYOR_QUE cuerpo_texto MENOR_CIERRE TEXTAREA MAYOR_QUE
+                        | MENOR_QUE SELECT cuerpo_parametros_select MAYOR_QUE cuerpo_select MENOR_CIERRE SELECT MAYOR_QUE
+                        | MENOR_QUE DIV cuerpo_parametros_div MAYOR_QUE cuerpo_div MENOR_CIERRE DIV MAYOR_QUE
+                        | MENOR_QUE IMG cuerpo_parametros_img MAYOR_QUE MENOR_CIERRE IMG MAYOR_QUE
                         | MENOR_QUE BR MAYOR_QUE
-                        | MENOR_QUE BUTTON cuerpo_parametros_button MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION BUTTON MAYOR_QUE
-                        | MENOR_QUE H1 cuerpo_parametros_h1 MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION H1 MAYOR_QUE
-                        | MENOR_QUE P cuerpo_parametros_p MAYOR_QUE cuerpo_p MENOR_QUE DIVISION P MAYOR_QUE
-                        | MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_QUE DIVISION SCRIPTING MAYOR_QUE
+                        | MENOR_QUE BUTTON cuerpo_parametros_button MAYOR_QUE cuerpo_texto MENOR_CIERRE BUTTON MAYOR_QUE
+                        | MENOR_QUE H1 cuerpo_parametros_h1 MAYOR_QUE cuerpo_texto MENOR_CIERRE H1 MAYOR_QUE
+                        | MENOR_QUE P cuerpo_parametros_p MAYOR_QUE cuerpo_p MENOR_CIERRE P MAYOR_QUE
+                        | MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_CIERRE SCRIPTING MAYOR_QUE
                         ;
 
 cuerpo_select ::=   cuerpo_select etiqueta_option
                     | etiqueta_option
                     ;
 
-etiqueta_option ::=     MENOR_QUE OPTION MAYOR_QUE cuerpo_texto MENOR_QUE DIVISION OPTION MAYOR_QUE
+etiqueta_option ::=     MENOR_QUE OPTION MAYOR_QUE cuerpo_texto MENOR_CIERRE OPTION MAYOR_QUE
                         ;
 
 cuerpo_texto ::=    cuerpo_texto texto
@@ -209,7 +211,9 @@ cuerpo_div ::=      cuerpo_div etiquetas_cuerpo
 
 cuerpo_h1 ::=       ;
 
-cuerpo_p ::=        ;
+cuerpo_p ::=    cuerpo_texto
+                | MENOR_QUE BR MAYOR_QUE
+                ;
 
 /* Parametros de etiquetas */
 cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic parametros_gcic
@@ -366,7 +370,7 @@ tamaños ::= PIXELES
 
 
 /* SCRIPTING */
-scripting ::=   MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_QUE DIVISION SCRIPTING MAYOR_QUE
+scripting ::=   MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_CIERRE SCRIPTING MAYOR_QUE
                 ;
 
 cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
