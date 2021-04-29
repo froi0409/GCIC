@@ -3,12 +3,14 @@
  -->
 <C_GCIC [id= "captcha_matematico_1"] [name= "Captcha Matemático 1"]>
     !! El encabezado de la página que tendrá mi captcha
+    <C_SCRIPTING></C_SCRIPTING>
     <C_HEAD>
         <C_LINK [href="www.facebook.com"]> </C_LINK>
         <C_TITLE>Hola Mundo</C_TITLE>
         <C_SCRIPTING></C_SCRIPTING>
         <C_SCRIPTING></C_SCRIPTING>
     </C_HEAD>
+    <C_SCRIPTING></C_SCRIPTING>
     <C_BODY [background="black"]>
         <C_SPAM [color="#00cd38"] [font-size="20px"]></C_SPAM>
         <C_INPUT [font-family="Arial" ] [ text-align = " left " ]></C_INPUT>
@@ -95,4 +97,5 @@
             ]
         </C_SCRIPTING>
     </C_BODY>
+    <C_SCRIPTING></C_SCRIPTING>
 </C_GCIC>

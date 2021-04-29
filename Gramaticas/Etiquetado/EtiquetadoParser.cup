@@ -76,6 +76,8 @@ non terminal cuerpo_p;
 non terminal cuerpo_texto;
 non terminal cuerpo_scripting;
 
+non terminal cierre_gcic;
+
 /* Parametros de etiquetas */
 non terminal cuerpo_parametros_gcic, parametros_gcic;
 non terminal cuerpo_parametros_link, parametros_link;
@@ -134,13 +136,20 @@ precedence left NOT;
 start with inicio;
 
 //Reglas de Producción
-inicio ::=  MENOR_QUE GCIC cuerpo_parametros_gcic MAYOR_QUE cuerpo_gcic MENOR_QUE DIVISION GCIC MAYOR_QUE              {:System.out.println("Se ha llegado al final del reconocimiento");:}
+inicio ::=  MENOR_QUE GCIC cuerpo_parametros_gcic MAYOR_QUE cuerpo_gcic              {:System.out.println("Se ha llegado al final del reconocimiento");:}
             ;
 
-cuerpo_gcic ::= cabecera cuerpo
-                /*| scripting cabecera cuerpo
-                | cabecera scripting cuerpo
-                | cabecera cuerpo scripting*/
+cuerpo_gcic ::= cabecera cuerpo cierre_gcic
+                | scripting cabecera cuerpo cierre_gcic
+                | cabecera scripting cuerpo cierre_gcic
+                | cabecera cuerpo scripting cierre_gcic
+                | scripting cabecera scripting cuerpo cierre_gcic
+                | scripting cabecera cuerpo scripting cierre_gcic
+                | cabecera scripting cuerpo scripting cierre_gcic
+                | scripting cabecera scripting cuerpo scripting cierre_gcic
+                ;
+
+cierre_gcic ::= MENOR_QUE DIVISION GCIC MAYOR_QUE
                 ;
 
 cabecera ::=    MENOR_QUE HEAD MAYOR_QUE cuerpo_cabecera MENOR_QUE DIVISION HEAD MAYOR_QUE

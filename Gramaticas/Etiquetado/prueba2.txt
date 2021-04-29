@@ -94,5 +94,6 @@
                 integer hola_mundo_1;
             ]
         </C_SCRIPTING>
+        <c_p></c_p>
     </C_BODY>
 </C_GCIC>
