@@ -204,7 +204,7 @@ cierre_gcic ::= MENOR_CIERRE GCIC MAYOR_QUE
                 | MENOR_CIERRE GCIC error
                 | error MAYOR_QUE
                 | MENOR_CIERRE error*/
-                | error                         {:System.out.println("Error de prueba");:}
+                //| error                         {:System.out.println("Error de prueba");:}
                 ;
 
 /* CABECERA */
@@ -212,11 +212,11 @@ cabecera ::=    apertura_cabecera cuerpo_cabecera cierre_cabecera
                 ;
 
 apertura_cabecera ::=   MENOR_QUE HEAD MAYOR_QUE
-                        | error
+                        //| error
                         ;
 
 cierre_cabecera ::= MENOR_CIERRE HEAD MAYOR_QUE
-                    | error
+                    //| error
                     ;
 
 /* BODY */
@@ -232,6 +232,7 @@ cierre_body ::= MENOR_CIERRE BODY MAYOR_QUE
 /**/
 cuerpo_cabecera ::= cuerpo_cabecera etiquetas_cabecera 
                     | 
+                    | cuerpo_cabecera error
                     ;
 
 etiquetas_cabecera ::=  apertura_link cierre_link
