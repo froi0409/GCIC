@@ -23,7 +23,7 @@
         </C_DIV>
         <C_IMG [src="www.google.com"] [id="holis"] [width="30%"] [ heigth="20%" ] [alt="Mensaje aleatorio"]></C_IMG>
         <C_BR>
-        <C_H1 [text-align="center"] ></C_H1>
+        <C_H1 [text-align="center"] >HOLA <C_SPAM> ADIOS </C_SPAM> <C_BR> MUNDO</C_H1>
         <C_P [font-size="20px"] >  </C_P>
         <C_SCRIPTING>
             PROCESS_ADIOS() [

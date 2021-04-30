@@ -73,8 +73,8 @@ non terminal cuerpo_div;
 //non terminal cuerpo_img;
 //non terminal cuerpo_br;
 //non terminal cuerpo_button;
-non terminal cuerpo_h1;
-non terminal cuerpo_p;
+non terminal cuerpo_h1, parametros_cuerpo_h1;
+non terminal cuerpo_p, parametros_cuerpo_p;
 non terminal cuerpo_texto;
 non terminal cuerpo_scripting;
 
@@ -98,6 +98,9 @@ non terminal cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_s
 non terminal parametros_scripting;
 non terminal cuerpo_process, parametros_process;
 non terminal cuerpo_onload, parametros_onload;
+
+non terminal parametros_etiquetas_texuales;
+non terminal parametros_etiquetas_texuales_p;
 
 /* NO TERMINALES ESPECIALES DEL SCRIPTING */
 non terminal funciones_especiales;
@@ -280,7 +283,7 @@ cuerpo_cuerpo ::=   cuerpo_cuerpo etiquetas_cuerpo
                     | cuerpo_cuerpo error
                     ;
 
-etiquetas_cuerpo ::=    apertura_spam cuerpo_texto cerradura_spam
+etiquetas_cuerpo ::=    apertura_spam parametros_etiquetas_texuales cerradura_spam
                         | apertura_input cuerpo_texto cerradura_input
                         | apertura_textarea cuerpo_texto cerradura_textarea
                         | apertura_select cuerpo_select cerradura_select
@@ -288,8 +291,8 @@ etiquetas_cuerpo ::=    apertura_spam cuerpo_texto cerradura_spam
                         | apertura_img cerradura_img
                         | apertura_br
                         | apertura_button cuerpo_texto cerradura_button
-                        | apertura_h1 cuerpo_texto cerradura_h1
-                        | apertura_p cuerpo_p cerradura_p
+                        | apertura_h1 parametros_etiquetas_texuales cerradura_h1
+                        | apertura_p parametros_etiquetas_texuales cerradura_p
                         | apertura_scripting cuerpo_scripting cierre_scripting
                         ;
 
@@ -366,12 +369,28 @@ cuerpo_texto ::=    cuerpo_texto texto
 cuerpo_div ::=      cuerpo_div etiquetas_cuerpo
                     |
                     ;
-
+/*
 cuerpo_h1 ::=       ;
 
-cuerpo_p ::=    cuerpo_texto
-                | MENOR_QUE BR MAYOR_QUE
+cuerpo_p ::=    cuerpo_p parametros_cuerpo_p
+                | parametros_cuerpo_p
                 ;
+
+parametros_cuerpo_p ::= cuerpo_texto
+                        | apertura_br
+                        | apertura_h1 cuerpo_h1 cerradura_h1
+                        ;
+*/
+parametros_etiquetas_texuales ::=   parametros_etiquetas_texuales parametros_etiquetas_texuales_p
+                                    |
+                                    ;
+
+parametros_etiquetas_texuales_p ::= texto
+                                    | apertura_br
+                                    | apertura_h1 parametros_etiquetas_texuales cerradura_h1
+                                    | apertura_p parametros_etiquetas_texuales cerradura_p
+                                    | apertura_spam parametros_etiquetas_texuales cerradura_spam
+                                    ;
 
 /* Parametros de etiquetas */
 cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic parametros_gcic
@@ -522,26 +541,31 @@ font_family ::= COURIER
                 | ARIAL
                 | GENEVA
                 | SANS_SERIF
+                | error
                 ;
 
 alineaciones ::=    LEFT
                     | RIGHT
                     | CENTER
                     | JUSTIFY
+                    | error
                     ;
 
 clases ::=  ROW
             | COLUMN
+            | error
             ;
 
 tamaños ::= PIXELES
             | PORCENTAJE
+            | error
             ;
 
 tipos_input ::= TEXT
                 | NUMBER
                 | RADIO
                 | CHECKBOX
+                | error
                 ;
 
 /* SCRIPTING */
@@ -558,6 +582,7 @@ parametros_scripting ::=    PROCESS PARA PARC CORA cuerpo_parametros_proceso COR
 
 cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
                                 |
+                                | cuerpo_parametros_proceso error
                                 ;
 
 parametros_proceso ::=  variables PUNTO_COMA
@@ -596,6 +621,7 @@ cuerpo_identificadores ::=  cuerpo_identificadores COMA identificadores
 
 identificadores ::= IDENTIFICADOR
                     | ALFANUMERICO
+                    | error
                     ;
 
 modo ::=    GLOBAL
@@ -628,6 +654,7 @@ igual_char ::=  IGUAL D_CHAR
 
 booleanos ::=   TRUE
                 | FALSE
+                | error
                 ;
 
 strings ::= ALLCHAR
@@ -635,6 +662,7 @@ strings ::= ALLCHAR
             | D_STRING
             | ID_ETIQUETA
             | IDENTIFICADOR
+            | error
             ;
 
 /* ASIGNACION DE VALORES */
@@ -650,6 +678,7 @@ valores_de_asignacion ::=   expresion_aritmetica
                             | ALLCHARNOSPACE
                             | ID_ETIQUETA
                             | D_STRING
+                            | error
                             ;
 
 /* CONDICION IF */
