@@ -104,6 +104,7 @@ non terminal parametros_etiquetas_texuales_p;
 
 /* NO TERMINALES ESPECIALES DEL SCRIPTING */
 non terminal funciones_especiales;
+non terminal funciones_strings;
 non terminal condicion_if;
 
 non terminal ciclo_repeat;
@@ -596,16 +597,19 @@ parametros_proceso ::=  variables PUNTO_COMA
 parametros_proceso_simples ::=  asignacion_valor PUNTO_COMA
                                 ;
 
-funciones_especiales ::=    ASC PARA IDENTIFICADOR PARC
-                            | DESC PARA IDENTIFICADOR PARC
-                            | LETPAR_NUM PARA IDENTIFICADOR PARC
-                            | LETIMPAR_NUM PARA IDENTIFICADOR PARC
-                            | REVERSE PARA IDENTIFICADOR PARC
+funciones_especiales ::=    funciones_strings
                             | CARACTER_ALEATORIO PARA PARC
                             | NUM_ALEATORIO PARA PARC
                             | ALERT_INFO PARA strings_concatenados PARC
                             | EXIT PARA PARC
                             ;
+
+funciones_strings ::=   ASC PARA strings_concatenados PARC
+                        | DESC PARA strings_concatenados PARC
+                        | LETPAR_NUM PARA strings_concatenados PARC
+                        | LETIMPAR_NUM PARA strings_concatenados PARC
+                        | REVERSE PARA strings_concatenados PARC
+                        ;
 
 /* ASIGNACION DE VALORES A VARIABLES */
 variables ::=   INTEGER modo cuerpo_identificadores igual_integer
@@ -642,6 +646,7 @@ igual_string ::=    IGUAL strings_concatenados
 
 strings_concatenados ::=    strings_concatenados SUMA strings
                             | strings
+                            | strings_concatenados error
                             ;
 
 igual_boolean ::=   IGUAL booleanos
@@ -662,6 +667,7 @@ strings ::= ALLCHAR
             | D_STRING
             | ID_ETIQUETA
             | IDENTIFICADOR
+            | funciones_strings
             | error
             ;
 
