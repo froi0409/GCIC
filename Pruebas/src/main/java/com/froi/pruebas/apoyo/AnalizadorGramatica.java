@@ -5,9 +5,11 @@
  */
 package com.froi.pruebas.apoyo;
 
+import com.froi.pruebas.gramaticas.Advertencia;
 import com.froi.pruebas.gramaticas.EtiquetadoLexer;
 import com.froi.pruebas.gramaticas.EtiquetadoParser;
 import java.io.StringReader;
+import java.util.ArrayList;
 
 /**
  *
@@ -16,12 +18,19 @@ import java.io.StringReader;
 public class AnalizadorGramatica {
     
     public void analizarGramatica(String entrada) {
-        System.out.println(entrada);
+        ArrayList<Advertencia> listaErrores = new ArrayList<>();
+        
+        System.out.println(entrada + "\n\nErrores:");
         StringReader reader = new StringReader(entrada);
         EtiquetadoLexer lexer = new EtiquetadoLexer(reader);
-        EtiquetadoParser parser = new EtiquetadoParser(lexer);
+        EtiquetadoParser parser = new EtiquetadoParser(lexer, listaErrores);
         try {
             parser.parse();
+            if(listaErrores.size() > 0) {
+                for(Advertencia error: listaErrores) {
+                    System.out.println(error + "\n");
+                }
+            }
         } catch (Exception e) {
             System.out.println("Error al ejecutar el parser: " + e.getMessage());
         }

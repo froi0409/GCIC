@@ -1,13 +1,17 @@
 package com.froi.pruebas.gramaticas;
 
 import java_cup.runtime.*;
+import java.util.ArrayList;
 
 class EtiquetadoParser;
 
 parser code {:
 
-    public EtiquetadoParser(EtiquetadoLexer lexer) {
+    private ArrayList<Advertencia> listaErrores;
+
+    public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
         super(lexer);
+        this.listaErrores = listaErrores;
     }
     public void report_error(String message, Object info) {
         System.out.println("reporterror");;
@@ -17,7 +21,24 @@ parser code {:
     }
     @Override
     public void syntax_error(Symbol s) {
-        System.out.println("linea: " + s.left + "   columna: " + s.right + "   token: " + symbl_name_from_id(s.sym) + "     texto: " + s.value);
+        Advertencia errorNuevo = new Advertencia();
+        //System.out.println("linea: " + s.left + "   columna: " + s.right + "   token: " + symbl_name_from_id(s.sym) + "     texto: " + s.value);
+        errorNuevo.setLinea(s.left);
+        errorNuevo.setColumna(s.right);
+        errorNuevo.setToken(symbl_name_from_id(s.sym)); //Se cambiará por uno de la tabla
+        errorNuevo.setTexto(s.value.toString());
+        //Agregamos los simbolos que se esperan
+        String solucion = "";
+        //System.out.print("Se esperaban el(los) simbolo(s): ");
+        for(int i = 0; i < expected_token_ids().size(); i++) {
+            //System.out.print(symbl_name_from_id(expected_token_ids().get(i)) + " ");
+            if(i != 0) {
+                solucion += ",";
+            }
+            solucion += " " + symbl_name_from_id(expected_token_ids().get(i));
+        }
+        errorNuevo.setSolucion(solucion);
+        listaErrores.add(errorNuevo);
     }
     protected int error_sync_size() {
         return 1;
@@ -163,6 +184,9 @@ non terminal cerradura_button;
 non terminal cerradura_h1;
 non terminal cerradura_p;
 
+non terminal apertura_if;
+non terminal apertura_if_complete;
+
 /* CIERRES */
 //non terminal cierre_gcic;
 non terminal cierre_cabecera;
@@ -228,6 +252,7 @@ cuerpo ::=  apertura_body cuerpo_cuerpo cierre_body
             ;
 
 apertura_body ::=   MENOR_QUE BODY cuerpo_parametros_body MAYOR_QUE
+                    | error
                     ;
 
 cierre_body ::= MENOR_CIERRE BODY MAYOR_QUE
@@ -534,7 +559,7 @@ colores ::=  BLACK
             | YELLOW
             | AQUA
             | HEXADECIMAL
-            | error
+            //| error
             ;
 
 font_family ::= COURIER
@@ -542,31 +567,31 @@ font_family ::= COURIER
                 | ARIAL
                 | GENEVA
                 | SANS_SERIF
-                | error
+                //| error
                 ;
 
 alineaciones ::=    LEFT
                     | RIGHT
                     | CENTER
                     | JUSTIFY
-                    | error
+                    //| error
                     ;
 
 clases ::=  ROW
             | COLUMN
-            | error
+            //| error
             ;
 
 tamaños ::= PIXELES
             | PORCENTAJE
-            | error
+            //| error
             ;
 
 tipos_input ::= TEXT
                 | NUMBER
                 | RADIO
                 | CHECKBOX
-                | error
+                //| error
                 ;
 
 /* SCRIPTING */
@@ -575,6 +600,7 @@ scripting ::=   MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_CIERRE SCRI
 
 cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
                         |
+                        //| cuerpo_scripting error
                         ;
 
 parametros_scripting ::=    PROCESS PARA PARC CORA cuerpo_parametros_proceso CORC
@@ -583,7 +609,7 @@ parametros_scripting ::=    PROCESS PARA PARC CORA cuerpo_parametros_proceso COR
 
 cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
                                 |
-                                | cuerpo_parametros_proceso error
+                                | cuerpo_parametros_proceso error   {:System.out.println("Se ha encontrado un error de prueba");:}
                                 ;
 
 parametros_proceso ::=  variables PUNTO_COMA
@@ -592,6 +618,7 @@ parametros_proceso ::=  variables PUNTO_COMA
                         | condicion_if 
                         | ciclo_repeat 
                         | ciclo_while
+                        | error PUNTO_COMA
                         ;
 
 parametros_proceso_simples ::=  asignacion_valor PUNTO_COMA
@@ -621,11 +648,13 @@ variables ::=   INTEGER modo cuerpo_identificadores igual_integer
 
 cuerpo_identificadores ::=  cuerpo_identificadores COMA identificadores
                             | identificadores
+                            | cuerpo_identificadores error
+                            | cuerpo_identificadores COMA error
                             ;
 
 identificadores ::= IDENTIFICADOR
                     | ALFANUMERICO
-                    | error
+                    //| error
                     ;
 
 modo ::=    GLOBAL
@@ -636,7 +665,7 @@ igual_integer ::=   IGUAL expresion_aritmetica
                     |
                     ;
 
-igual_decimal ::=   IGUAL D_DECIMAL
+igual_decimal ::=   IGUAL expresion_aritmetica
                     |
                     ;
 
@@ -688,8 +717,22 @@ valores_de_asignacion ::=   expresion_aritmetica
                             ;
 
 /* CONDICION IF */
-condicion_if ::=    IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END condicion_else_if condicion_else
-                    | IF PARA condicion PARC THEN parametros_proceso_simples condicion_else_if condicion_else
+condicion_if ::=    apertura_if_complete  cuerpo_parametros_proceso PUNTOS LLAC END condicion_else_if condicion_else
+                    | apertura_if parametros_proceso_simples condicion_else_if condicion_else
+                    ;
+
+apertura_if_complete ::=    IF PARA condicion PARC THEN INIT LLAA PUNTOS
+                            | IF PARA error PARC THEN INIT LLAA PUNTOS
+                            | error PARA condicion PARC THEN INIT LLAA PUNTOS   {:listaErrores.get(listaErrores.size()-1).setSolucion("IF");:}
+                            | IF error condicion PARC THEN INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("(");:}
+                            | IF PARA condicion error THEN INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion(")");:}
+                            | IF PARA condicion PARC error INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("THEN");:}
+                            | IF PARA condicion PARC THEN error LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("INIT");:}
+                            | IF PARA condicion PARC THEN INIT error PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("{");:}
+                            | IF PARA condicion PARC THEN INIT LLAA error       {:listaErrores.get(listaErrores.size()-1).setSolucion(":");:}
+                            ;
+
+apertura_if ::=     IF PARA condicion PARC THEN
                     ;
 
 condicion_else_if ::=   condicion_else_if parametros_else_if
