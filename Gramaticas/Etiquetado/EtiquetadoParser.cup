@@ -141,6 +141,8 @@ non terminal valor_condicion;
 
 
 non terminal valores_de_asignacion;
+non terminal tipos_variables;
+non terminal igual_variable;
 non terminal igual_integer;
 non terminal igual_string;
 non terminal igual_boolean;
@@ -639,12 +641,24 @@ funciones_strings ::=   ASC PARA strings_concatenados PARC
                         ;
 
 /* ASIGNACION DE VALORES A VARIABLES */
-variables ::=   INTEGER modo cuerpo_identificadores igual_integer
+variables ::=   /*INTEGER modo cuerpo_identificadores igual_integer
                 | DECIMAL modo cuerpo_identificadores igual_decimal
                 | STRING modo cuerpo_identificadores igual_string
                 | BOOLEAN modo cuerpo_identificadores igual_boolean
                 | CHAR modo cuerpo_identificadores igual_char
+                |*/ tipos_variables modo cuerpo_identificadores igual_variable
                 ;
+
+tipos_variables ::= INTEGER
+                    | DECIMAL
+                    | STRING
+                    | BOOLEAN
+                    | CHAR
+                    ;
+
+igual_variable ::=  IGUAL expresion_aritmetica
+                    |
+                    ;
 
 cuerpo_identificadores ::=  cuerpo_identificadores COMA identificadores
                             | identificadores
@@ -682,7 +696,7 @@ igual_boolean ::=   IGUAL booleanos
                     |
                     ;
 
-igual_char ::=  IGUAL D_CHAR
+igual_char ::=  IGUAL expresion_aritmetica
                 |
                 ;
 
@@ -701,21 +715,18 @@ strings ::= ALLCHAR
             ;
 
 /* ASIGNACION DE VALORES */
-asignacion_valor ::=    cuerpo_identificadores IGUAL valores_de_asignacion
+asignacion_valor ::=    cuerpo_identificadores IGUAL expresion_aritmetica
                         ;
-
+/*
 valores_de_asignacion ::=   expresion_aritmetica
                             //| D_DECIMAL
-                            | D_CHAR
+                            //| D_CHAR
                             | TRUE
                             | FALSE
-                            | ALLCHAR
-                            | ALLCHARNOSPACE
-                            | ID_ETIQUETA
-                            | D_STRING
-                            | error
+                            | strings_concatenados
+                            //| error
                             ;
-
+*/
 /* CONDICION IF */
 condicion_if ::=    apertura_if_complete  cuerpo_parametros_proceso PUNTOS LLAC END condicion_else_if condicion_else
                     | apertura_if parametros_proceso_simples condicion_else_if condicion_else
@@ -801,9 +812,14 @@ expresion_aritmetica ::=    RESTA                           expresion_aritmetica
 
 valor_numerico ::=  D_INTEGER:val       {:RESULT = val;:}
                     | D_DECIMAL:val     {:RESULT = val;:}
-                    | IDENTIFICADOR:val {:RESULT = 1;:}
-                    | ALFANUMERICO:val  {:RESULT = 1;:}
-                    //| D_CHAR:val        {:RESULT = new Double(val);:}
+                    | IDENTIFICADOR:val {:RESULT = 0;:}
+                    | ALFANUMERICO:val  {:RESULT = 0;:}
+                    | D_CHAR:val        {:RESULT = 0;:}
+                    | ALLCHAR           {:RESULT = 0;:}
+                    | ALLCHARNOSPACE    {:RESULT = 0;:}
+                    | D_STRING          {:RESULT = 0;:}
+                    | ID_ETIQUETA       {:RESULT = 0;:}
+                    | TRUE              {:RESULT = 1;:}
+                    | FALSE             {:RESULT = 0;:}
                     ;
-
  
