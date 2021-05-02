@@ -35,6 +35,7 @@ DIGITO_COM = "\""{WS}*{DIGITO}{WS}*"\""
 ID_ETIQUETA = "\"" ({ALFANUMERICO} | [_] | [-] | [$])+ "\""
 ALLCHAR = "\"" [^\"]+ "\""
 ALLCHARNOSPACE = "\"" [^\" " " "\n"]+ "\""
+ALLCHAR_COMSIMP = {COM_SIMP} ([^\' \‘ \’] | " ")+ {COM_SIMP}
 
 /* ETIQUETAS GCIC */
 GCIC = [cC][_][gG][cC][iI][cC]
@@ -352,6 +353,7 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
 
     /* COMODINES */
     {ID_ETIQUETA}               {return new Symbol(ID_ETIQUETA, yyline+1, yycolumn+1, yytext());}
+    {ALLCHAR_COMSIMP}           {return new Symbol(ALLCHAR_COMSIMP, yyline+1, yycolumn+1, yytext());}
     {ALLCHARNOSPACE}            {return new Symbol(ALLCHARNOSPACE, yyline+1, yycolumn+1, yytext());}
     {ALLCHAR}                   {return new Symbol(ALLCHAR, yyline+1, yycolumn+1, yytext());}
     {ALFANUMERICO}              {return new Symbol(ALFANUMERICO, yyline+1, yycolumn+1, yytext());}
@@ -367,7 +369,7 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {LLAC}                      {return new Symbol(LLAC, yyline+1, yycolumn+1, yytext());}
     {PUNTO_COMA}                {return new Symbol(PUNTO_COMA, yyline+1, yycolumn+1, yytext());}
     {PUNTOS}                    {return new Symbol(PUNTOS, yyline+1, yycolumn+1, yytext());}
-    {COM_SIMP}                  {return new Symbol(COM_SIMP, yyline+1, yycolumn+1, yytext());}
+    //{COM_SIMP}                  {return new Symbol(COM_SIMP, yyline+1, yycolumn+1, yytext());}
     {IDENTIFICADOR}             {return new Symbol(IDENTIFICADOR, yyline+1, yycolumn+1, yytext());}
     {COMA}                      {return new Symbol(COMA, yyline+1, yycolumn+1, yytext());}
 

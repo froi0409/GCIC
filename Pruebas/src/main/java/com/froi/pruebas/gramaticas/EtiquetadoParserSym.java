@@ -76,13 +76,14 @@ public class EtiquetadoParserSym {
   public static final int WHILE = 87;
   public static final int COLS = 28;
   public static final int PORCENTAJE = 54;
-  public static final int ALLCHAR = 136;
+  public static final int ALLCHAR = 137;
   public static final int CHAR = 95;
   public static final int DECIMAL = 93;
   public static final int BOOLEAN = 94;
   public static final int JUSTIFY = 63;
   public static final int TEXTALIGN = 24;
   public static final int INPUT = 8;
+  public static final int ALLCHAR_COMSIMP = 136;
   public static final int GCIC = 2;
   public static final int DIV = 12;
   public static final int PUNTOS = 129;
@@ -93,7 +94,7 @@ public class EtiquetadoParserSym {
   public static final int CORC = 125;
   public static final int COURIER = 55;
   public static final int CORA = 124;
-  public static final int DIGITO_COM = 138;
+  public static final int DIGITO_COM = 139;
   public static final int LINK = 5;
   public static final int EOF = 0;
   public static final int ARIAL = 57;
@@ -142,7 +143,7 @@ public class EtiquetadoParserSym {
   public static final int STRING = 96;
   public static final int ONCLICK = 35;
   public static final int AND = 111;
-  public static final int ALLCHARNOSPACE = 137;
+  public static final int ALLCHARNOSPACE = 138;
   public static final int LETPAR_NUM = 72;
   public static final int MAYOR_IGUAL = 109;
   public static final int GETBYID = 79;
@@ -284,6 +285,7 @@ public class EtiquetadoParserSym {
   "ID_ETIQUETA",
   "ALFANUMERICO",
   "TEXTO",
+  "ALLCHAR_COMSIMP",
   "ALLCHAR",
   "ALLCHARNOSPACE",
   "DIGITO_COM"

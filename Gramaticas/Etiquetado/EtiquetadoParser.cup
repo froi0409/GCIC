@@ -76,7 +76,7 @@ terminal SUMA, RESTA, MULTIPLICACION, DIVISION, UNARY;
 /* SIMBOLOS ESPECIALES */
 terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA, PUNTOS, COM_SIMP, IDENTIFICADOR, COMA;
 /* COMODINES */
-terminal ID_ETIQUETA, ALFANUMERICO, TEXTO, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
+terminal ID_ETIQUETA, ALFANUMERICO, TEXTO, ALLCHAR_COMSIMP, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
 
 //Declaración de símbolos no terminales
 non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, variables, modo, strings, strings_concatenados, booleanos;
@@ -119,6 +119,8 @@ non terminal cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_s
 non terminal parametros_scripting;
 non terminal cuerpo_process, parametros_process;
 non terminal cuerpo_onload, parametros_onload;
+
+non terminal cuerpo_insert, parametros_insert;
 
 non terminal parametros_etiquetas_texuales;
 non terminal parametros_etiquetas_texuales_p;
@@ -607,6 +609,15 @@ cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
 
 parametros_scripting ::=    PROCESS PARA PARC CORA cuerpo_parametros_proceso CORC
                             | ON_LOAD PARA PARC CORA cuerpo_parametros_proceso CORC
+                            | error PARA PARC CORA cuerpo_parametros_proceso CORC
+                            //ERRORES PARA PROCESS
+                            | PROCESS error PARC CORA cuerpo_parametros_proceso CORC
+                            | PROCESS PARA error CORA cuerpo_parametros_proceso CORC
+                            | PROCESS PARA PARC error cuerpo_parametros_proceso CORC
+                            //ERORES PARA ON_LOAD
+                            | ON_LOAD error PARC CORA cuerpo_parametros_proceso CORC
+                            | ON_LOAD PARA error CORA cuerpo_parametros_proceso CORC
+                            | ON_LOAD PARA PARC error cuerpo_parametros_proceso CORC
                             ;             
 
 cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
@@ -616,7 +627,6 @@ cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
 
 parametros_proceso ::=  variables PUNTO_COMA
                         | parametros_proceso_simples
-                        | funciones_especiales PUNTO_COMA
                         | condicion_if 
                         | ciclo_repeat 
                         | ciclo_while
@@ -624,6 +634,7 @@ parametros_proceso ::=  variables PUNTO_COMA
                         ;
 
 parametros_proceso_simples ::=  asignacion_valor PUNTO_COMA
+                                | funciones_especiales PUNTO_COMA
                                 ;
 
 funciones_especiales ::=    funciones_strings
@@ -631,7 +642,17 @@ funciones_especiales ::=    funciones_strings
                             | NUM_ALEATORIO PARA PARC
                             | ALERT_INFO PARA strings_concatenados PARC
                             | EXIT PARA PARC
+                            | INSERT PARA cuerpo_insert PARC
                             ;
+
+cuerpo_insert ::=   cuerpo_insert COMA parametros_insert
+                    | parametros_insert
+                    ;
+
+parametros_insert ::=   ALLCHAR_COMSIMP
+                        | ALFANUMERICO
+                        | IDENTIFICADOR
+                        ;
 
 funciones_strings ::=   ASC PARA strings_concatenados PARC
                         | DESC PARA strings_concatenados PARC
@@ -752,15 +773,54 @@ condicion_else_if ::=   condicion_else_if parametros_else_if
 
 parametros_else_if ::=  ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
                         | ELSE IF PARA condicion PARC THEN parametros_proceso_simples
+                        //errores para else if complete
+                        | ELSE error PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF error condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA error PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion error THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC error INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC THEN error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC THEN INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC THEN INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
+                        | ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
+                        | ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
+                        //errores para else if simple
+                        | ELSE error PARA condicion PARC THEN parametros_proceso_simples
+                        | ELSE IF error condicion PARC THEN parametros_proceso_simples
+                        | ELSE IF PARA error PARC THEN parametros_proceso_simples
+                        | ELSE IF PARA condicion error THEN parametros_proceso_simples
+                        | ELSE IF PARA condicion PARC error parametros_proceso_simples
                         ;
 
 condicion_else ::=  ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END                        
                     | ELSE parametros_proceso_simples
                     |
+                    | ELSE error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END 
+                    | ELSE INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END   
+                    | ELSE INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END   
+                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END   
+                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END   
+                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error   
                     ;
 
 /* CICLO REPEAT */
 ciclo_repeat ::=    REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | error PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT error repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA error PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion error HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC error PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL error repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA error PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite error INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END
+                    //| REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS error PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
                     ;
 
 repetir_declaracion ::= INTEGER identificadores IGUAL igual_repeat
@@ -776,7 +836,19 @@ igual_repeat ::=    D_INTEGER
 
 /* CICLO WHILE */
 ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
-                        ;
+                    | error PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE error condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA error PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion error THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion PARC error INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion PARC THENWHILE error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion PARC THENWHILE INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion PARC THENWHILE INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END
+                    //| WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS error PUNTOS LLAC END
+                    | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
+                    | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
+                    | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
+                    ;
 
 /* CONDICION */
 condicion ::=   condicion       IGUAL_IGUAL         condicion
