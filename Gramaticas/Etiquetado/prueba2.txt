@@ -1,0 +1,100 @@
+<!-- -Mi primer captcha
+     en el curso de Organización de Lenguajes y Compiladores 1
+ -->
+<C_GCIC [id= "captcha_matematico_1"] [name= "Captcha Matemático 1"]>
+    !! El encabezado de la página que tendrá mi captcha
+    <C_HEAD>
+        <C_LINK [href="www.facebook.com"]> </C_LINK>
+        <C_TITLE>Hola Mundo</C_TITLE>
+        <C_SCRIPTING></C_SCRIPTING>
+        <C_SCRIPTING></C_SCRIPTING>
+    </C_HEAD>
+    <C_BODY [background="black"]>
+        <C_SPAM [color="#00cd38"] [font-size="20px"]></C_SPAM>
+        <C_INPUT [font-family="Arial" ] [ text-align = " left " ]></C_INPUT>
+        <C_TEXTAREA [id="hola_mundo"] [ cols = "20" ] [rows="5"]></C_TEXTAREA>
+        <C_SELECT [id="hola"] [ color   = "green" ] >
+            <C_OPTION>hola</C_OPTION>
+            <C_OPTION>adios</C_OPTION>
+        </C_SELECT>
+        <C_DIV [class="row"] [background="red"] >
+            <C_INPUT></C_INPUT>
+            <C_SPAM></C_SPAM>
+        </C_DIV>
+        <C_IMG [src="www.google.com"] [id="holis"] [width="30%"] [ heigth="20%" ] [alt="Mensaje aleatorio"]></C_IMG>
+        <C_BR>
+        <C_H1 [text-align="center"] >HOLA <C_SPAM> ADIOS </C_SPAM> <C_BR> MUNDO</C_H1>
+        <C_P [font-size="20px"] >  </C_P>
+        <C_SCRIPTING>
+            PROCESS_ADIOS() [
+
+            ]
+        </C_SCRIPTING>
+        <C_SCRIPTING>
+            ON_LOAD()[
+                integer hola_mundo = (5+5)+5-3*2+(3-(5+5));
+                integer @global xd_nt = -10.05;
+                decimal gg_wp = 12.3;
+                char caracter_1 = 'A';
+                char caracter_2;
+                string adios_mundo = "adios mundo" + hola_mundo + "cruel";
+                boolean booleano_1, booleano_2 = true;
+                boolean @global booleano_3, booleano_4;
+            
+                booleano_3 = true;
+                booleano_3, booleano_4 = false;
+
+                hola_mundo = 3;
+                
+                hola, adios = 'A';
+
+                IF(1 == 2) THEN 
+                    INIT {:
+                        booleano_1 = false;
+                        IF(XD_NT == 5) THEN
+                            INIT {:
+                                booleano_2 = true;
+                            :} END
+                    :} END
+                ELSE IF(hola_mundo == 3) THEN
+                    INIT {:
+                    
+                    :} END
+                ELSE IF(adios_mundo != 3) THEN
+                    INIT {:
+                    
+                    :} END
+                ELSE 
+                    INIT {:
+                    
+                    :} END
+                
+                !! IF de una sola instruccion
+                IF(3 == 3 && (5+5)-3 > HOLA_MUNDO) THEN
+                    hola_mundo = "hola mundo";
+                ELSE IF (1 < 3) THEN
+                    hola_mundo = "adios mundo";
+                ELSE 
+                    hola_mundo = "hola_bello_mundo";
+
+
+                !! CICLO REPEAT
+                REPEAT (integer repeticion = 0) HUNTIL(45)
+                    INIT {:
+                        hola_mundo = "adios";
+                    :} END
+
+                WHILE (HOLA + ADIOS > WP) THENWHILE
+                    INIT {:
+                        HOLA_MUNDO_BELLO = "ADIOS MUNDO BELLO";
+                    :} END
+
+            ]
+            PROCESS_HOLA()[
+                integer hola_mundo_1;
+            ]
+        </C_SCRIPTING>
+        <c_p>HOLA_MUNDO HOLA MUNDO</c_p>
+    </C_BODY>
+    <C_SCRIPTING> </C_SCRIPTING>
+</C_GCIC>

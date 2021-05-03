@@ -1,0 +1,897 @@
+package com.froi.pruebas.gramaticas;
+
+import java_cup.runtime.*;
+import java.util.ArrayList;
+
+class EtiquetadoParser;
+
+parser code {:
+
+    private ArrayList<Advertencia> listaErrores;
+    
+    public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
+        super(lexer);
+        this.listaErrores = listaErrores;
+    }
+    public void report_error(String message, Object info) {
+        System.out.println("reporterror");;
+    }
+    public void report_fatal_error(String message, Object info) {
+        System.out.println("reportfatal " + info);
+    }
+    @Override
+    public void syntax_error(Symbol s) {
+        Advertencia errorNuevo = new Advertencia();
+        //System.out.println("linea: " + s.left + "   columna: " + s.right + "   token: " + symbl_name_from_id(s.sym) + "     texto: " + s.value);
+        errorNuevo.setLinea(s.left);
+        errorNuevo.setColumna(s.right);
+        errorNuevo.setToken(symbl_name_from_id(s.sym)); //Se cambiará por uno de la tabla
+        errorNuevo.setTexto(s.value.toString());
+        //Agregamos los simbolos que se esperan
+        String solucion = "";
+        //System.out.print("Se esperaban el(los) simbolo(s): ");
+        for(int i = 0; i < expected_token_ids().size(); i++) {
+            //System.out.print(symbl_name_from_id(expected_token_ids().get(i)) + " ");
+            if(i != 0) {
+                solucion += ",";
+            }
+            solucion += " " + symbl_name_from_id(expected_token_ids().get(i));
+        }
+        errorNuevo.setSolucion(solucion);
+        listaErrores.add(errorNuevo);
+    }
+    protected int error_sync_size() {
+        return 1;
+    }
+
+:}
+
+//Declaración de símbolos terminales
+/* TERMINALES ETIQUETAS GCIC */
+terminal GCIC, HEAD, TITLE, LINK, BODY, SPAM, INPUT, TEXTAREA, SELECT, OPTION, DIV, IMG, BR, BUTTON, H1, P, SCRIPTING;
+/* PARAMETROS DE ETIQUETAS */
+terminal HREF, BACKGROUND, COLOR, FONTSIZE, FONTFAMILY, TEXTALIGN, TYPE, ID, NAME, COLS, ROWS, CLASS, SRC, WIDTH, HEIGHT, ALT, ONCLICK;
+/* PALABRAS DE LOS PARAMETROS */
+terminal BLACK, OLIVE, TEAL, RED, BLUE, MAROON, NAVY, GRAY, LIME, FUCHSIA, GREEN, WHITE, PURPLE, SILVER, YELLOW, AQUA, HEXADECIMAL;
+terminal PIXELES, PORCENTAJE;
+terminal COURIER, VERDANA, ARIAL, GENEVA, SANS_SERIF;
+terminal LEFT, RIGHT, CENTER, JUSTIFY;
+terminal TEXT, NUMBER, RADIO, CHECKBOX, ROW, COLUMN;
+/* FUNCIONES ESPECIALES DE CLC */
+terminal ASC, DESC, LETPAR_NUM, LETIMPAR_NUM, REVERSE, CARACTER_ALEATORIO, NUM_ALEATORIO, ALERT_INFO, EXIT, GETBYID, INIT, END, IF, THEN, ELSE, REPEAT, HUNTIL, WHILE, THENWHILE, INSERT;
+/* LENGUAJE DE ALTO NIVEL EMBEBIDO */
+terminal ON_LOAD, PROCESS;
+/* TIPOS DE DATOS */
+terminal INTEGER, DECIMAL, BOOLEAN, CHAR, STRING, GLOBAL;
+/* DEFINICION DE TIPOS DE DATOS */
+terminal D_INTEGER, D_DECIMAL, TRUE, FALSE, D_CHAR, D_STRING;
+/* OPERADORES RELACIONALES */
+terminal IGUAL_IGUAL, DIFERENTE_IGUAL, MENOR_QUE, MENOR_IGUAL, MAYOR_QUE, MAYOR_IGUAL;
+/* OPERADORES LOGICOS */
+terminal OR, AND, NOT;
+/* CIERRE */
+terminal MENOR_CIERRE;
+/* OPERADORES ARITMETICOS */
+terminal SUMA, RESTA, MULTIPLICACION, DIVISION, UNARY;
+/* SIMBOLOS ESPECIALES */
+terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA, PUNTOS, COM_SIMP, IDENTIFICADOR, COMA;
+/* COMODINES */
+terminal ID_ETIQUETA, ALFANUMERICO, TEXTO, ALLCHAR_COMSIMP, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
+
+//Declaración de símbolos no terminales
+non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, variables, modo, strings, strings_concatenados, booleanos;
+
+/* no terminales de cuerpo */
+non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo, cuerpo_title;
+non terminal etiquetas_cabecera, etiquetas_cuerpo, etiqueta_option;
+non terminal texto, texto_comillas_complete, fondos, colores, font_family, alineaciones, clases, tamaños, parametros_textuales, tipos_input, identificadores;
+
+//non terminal cuerpo_spam;
+//non terminal cuerpo_input;
+//non terminal cuerpo_textarea;
+non terminal cuerpo_select;
+non terminal cuerpo_div;
+//non terminal cuerpo_img;
+//non terminal cuerpo_br;
+//non terminal cuerpo_button;
+non terminal cuerpo_h1, parametros_cuerpo_h1;
+non terminal cuerpo_p, parametros_cuerpo_p;
+non terminal cuerpo_texto;
+non terminal cuerpo_scripting;
+
+non terminal cierre_gcic;
+
+/* Parametros de etiquetas */
+non terminal cuerpo_parametros_gcic, parametros_gcic;
+non terminal cuerpo_parametros_link, parametros_link;
+non terminal cuerpo_parametros_body, parametros_body;
+non terminal cuerpo_parametros_spam, parametros_spam;
+non terminal cuerpo_parametros_input, parametros_input;
+non terminal cuerpo_parametros_textarea, parametros_textarea;
+non terminal cuerpo_parametros_select, parametros_select;
+non terminal cuerpo_parametros_div, parametros_div;
+non terminal cuerpo_parametros_img, parametros_img;
+non terminal cuerpo_parametros_button, parametros_button;
+non terminal cuerpo_parametros_h1, parametros_h1;
+non terminal cuerpo_parametros_p, parametros_p;
+non terminal cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_simples;
+
+non terminal parametros_scripting;
+non terminal cuerpo_process, parametros_process;
+non terminal cuerpo_onload, parametros_onload;
+
+non terminal cuerpo_insert, parametros_insert;
+
+non terminal parametros_etiquetas_texuales;
+non terminal parametros_etiquetas_texuales_p;
+
+/* NO TERMINALES ESPECIALES DEL SCRIPTING */
+non terminal funciones_especiales;
+non terminal funciones_strings;
+non terminal condicion_if;
+
+non terminal ciclo_repeat;
+non terminal repetir_declaracion, repetir_limite, igual_repeat;
+
+non terminal ciclo_while;
+non terminal condicion_else_if, parametros_else_if;
+non terminal condicion_else;
+non terminal asignacion_valor;
+
+non terminal condicion;
+non terminal valor_condicion;
+
+
+non terminal valores_de_asignacion;
+non terminal tipos_variables;
+non terminal igual_variable;
+non terminal igual_integer;
+non terminal igual_string;
+non terminal igual_boolean;
+non terminal igual_char;
+non terminal igual_decimal;
+non terminal Double expresion_aritmetica;
+non terminal valor_numerico;
+
+non terminal cuerpo_identificadores;
+
+/* APERTURAS */
+non terminal apertura_gcic;
+non terminal apertura_cabecera;
+non terminal apertura_body;
+
+non terminal menor_que_inicial;
+
+non terminal apertura_link;
+non terminal apertura_title;
+non terminal apertura_scripting; 
+
+non terminal apertura_spam;
+non terminal apertura_input;
+non terminal apertura_textarea;
+non terminal apertura_select;
+non terminal apertura_div;
+non terminal apertura_img;
+non terminal apertura_br;
+non terminal apertura_button;
+non terminal apertura_h1;
+non terminal apertura_p;
+
+non terminal cerradura_spam;
+non terminal cerradura_input;
+non terminal cerradura_textarea;
+non terminal cerradura_select;
+non terminal cerradura_div;
+non terminal cerradura_img;
+non terminal cerradura_br;
+non terminal cerradura_button;
+non terminal cerradura_h1;
+non terminal cerradura_p;
+
+non terminal apertura_if;
+non terminal apertura_if_complete;
+
+/* CIERRES */
+//non terminal cierre_gcic;
+non terminal cierre_cabecera;
+non terminal cierre_body;
+
+non terminal cierre_link;
+non terminal cierre_title;
+non terminal cierre_scripting;
+
+//Precedencia
+precedence left SUMA, RESTA;
+precedence left MULTIPLICACION, DIVISION;
+precedence right UNARY;
+precedence left IGUAL_IGUAL, DIFERENTE_IGUAL, MENOR_QUE, MAYOR_QUE, MENOR_IGUAL, MAYOR_IGUAL;
+precedence left OR;
+precedence left AND;
+precedence left NOT;
+
+//Símbolo inicial de la gramática
+start with inicio;
+
+//Reglas de Producción
+inicio ::=  apertura_gcic cuerpo_gcic             {:System.out.println("Se ha llegado al final del reconocimiento");:}
+            ;
+
+apertura_gcic ::=   MENOR_QUE GCIC cuerpo_parametros_gcic MAYOR_QUE
+                    | error
+                    ;
+
+cuerpo_gcic ::= cabecera cuerpo cierre_gcic
+                | scripting cabecera cuerpo cierre_gcic
+                | cabecera scripting cuerpo cierre_gcic
+                | cabecera cuerpo scripting cierre_gcic
+                | scripting cabecera scripting cuerpo cierre_gcic
+                | scripting cabecera cuerpo scripting cierre_gcic
+                | cabecera scripting cuerpo scripting cierre_gcic
+                | scripting cabecera scripting cuerpo scripting cierre_gcic
+                ;
+
+cierre_gcic ::= MENOR_CIERRE GCIC MAYOR_QUE
+                /*| error GCIC MAYOR_QUE
+                | MENOR_CIERRE error MAYOR_QUE
+                | MENOR_CIERRE GCIC error
+                | error MAYOR_QUE
+                | MENOR_CIERRE error*/
+                //| error                         {:System.out.println("Error de prueba");:}
+                ;
+
+/* CABECERA */
+cabecera ::=    apertura_cabecera cuerpo_cabecera cierre_cabecera
+                ;
+
+apertura_cabecera ::=   MENOR_QUE HEAD MAYOR_QUE
+                        //| error
+                        ;
+
+cierre_cabecera ::= MENOR_CIERRE HEAD MAYOR_QUE
+                    //| error
+                    ;
+
+/* BODY */
+cuerpo ::=  apertura_body cuerpo_cuerpo cierre_body
+            ;
+
+apertura_body ::=   MENOR_QUE BODY cuerpo_parametros_body MAYOR_QUE
+                    | error
+                    ;
+
+cierre_body ::= MENOR_CIERRE BODY MAYOR_QUE
+                ;
+
+/**/
+cuerpo_cabecera ::= cuerpo_cabecera etiquetas_cabecera 
+                    | 
+                    | cuerpo_cabecera error
+                    ;
+
+etiquetas_cabecera ::=  apertura_link cierre_link
+                        | apertura_title cuerpo_title:ct cierre_title
+                        | apertura_scripting cuerpo_scripting cierre_scripting
+                        /*
+                        | error cuerpo_parametros_link MAYOR_QUE cierre_link
+                        | error MAYOR_QUE cuerpo_title cierre_title
+                        | error MAYOR_QUE cuerpo_scripting cierre_scripting
+                        | error
+                        */
+                        ;
+
+apertura_link ::=   MENOR_QUE LINK cuerpo_parametros_link MAYOR_QUE
+                    ;
+
+apertura_title ::=  MENOR_QUE TITLE MAYOR_QUE
+                    ;
+
+apertura_scripting ::=  MENOR_QUE SCRIPTING MAYOR_QUE
+                        ;
+
+cierre_link ::= MENOR_CIERRE LINK MAYOR_QUE
+                | error
+                ;
+
+cierre_title ::=    MENOR_CIERRE TITLE MAYOR_QUE
+                    | error
+                    ;
+
+cierre_scripting ::=    MENOR_CIERRE SCRIPTING MAYOR_QUE
+                        | error
+                        ;
+
+cuerpo_title ::=    cuerpo_title:ct texto:ent   {:RESULT= ct.toString() + " " + ent.toString();:}
+                    |                           {:RESULT="";:}
+                    ;
+
+texto ::=   ALFANUMERICO:ent        {:RESULT=ent.toString();:}
+            | IDENTIFICADOR:ent     {:RESULT=ent.toString();:}
+            ;
+
+cuerpo_cuerpo ::=   cuerpo_cuerpo etiquetas_cuerpo
+                    |
+                    | cuerpo_cuerpo error
+                    ;
+
+etiquetas_cuerpo ::=    apertura_spam parametros_etiquetas_texuales cerradura_spam
+                        | apertura_input cuerpo_texto cerradura_input
+                        | apertura_textarea cuerpo_texto cerradura_textarea
+                        | apertura_select cuerpo_select cerradura_select
+                        | apertura_div cuerpo_div cerradura_div
+                        | apertura_img cerradura_img
+                        | apertura_br
+                        | apertura_button cuerpo_texto cerradura_button
+                        | apertura_h1 parametros_etiquetas_texuales cerradura_h1
+                        | apertura_p parametros_etiquetas_texuales cerradura_p
+                        | apertura_scripting cuerpo_scripting cierre_scripting
+                        ;
+
+
+apertura_spam ::=   MENOR_QUE SPAM cuerpo_parametros_spam MAYOR_QUE
+                    ;
+
+apertura_input ::=   MENOR_QUE INPUT cuerpo_parametros_input MAYOR_QUE
+                    ;
+
+apertura_textarea ::=   MENOR_QUE TEXTAREA cuerpo_parametros_textarea MAYOR_QUE
+                        ;
+
+apertura_select ::= MENOR_QUE SELECT cuerpo_parametros_select MAYOR_QUE 
+                    ;
+
+apertura_div ::=    MENOR_QUE DIV cuerpo_parametros_div MAYOR_QUE
+                    ;
+
+apertura_img ::=    MENOR_QUE IMG cuerpo_parametros_img MAYOR_QUE
+                    ;
+
+apertura_br ::= MENOR_QUE BR MAYOR_QUE
+                ;
+
+apertura_button ::= MENOR_QUE BUTTON cuerpo_parametros_button MAYOR_QUE
+                    ;
+
+apertura_h1 ::= MENOR_QUE H1 cuerpo_parametros_h1 MAYOR_QUE
+                ;
+
+apertura_p ::=  MENOR_QUE P cuerpo_parametros_p MAYOR_QUE
+                ;
+
+
+cerradura_spam ::=  MENOR_CIERRE SPAM MAYOR_QUE
+                    ;
+
+cerradura_input ::= MENOR_CIERRE INPUT MAYOR_QUE
+                    ;
+
+cerradura_textarea ::=  MENOR_CIERRE TEXTAREA MAYOR_QUE
+                        ;
+
+cerradura_select ::=    MENOR_CIERRE SELECT MAYOR_QUE
+                        ;
+
+cerradura_div ::=   MENOR_CIERRE DIV MAYOR_QUE
+                    ;
+
+cerradura_img ::=   MENOR_CIERRE IMG MAYOR_QUE
+                    ;
+
+cerradura_button ::=    MENOR_CIERRE BUTTON MAYOR_QUE
+                        ;
+
+cerradura_h1 ::=    MENOR_CIERRE H1 MAYOR_QUE
+                    ;
+
+cerradura_p ::=     MENOR_CIERRE P MAYOR_QUE
+                    ;
+
+cuerpo_select ::=   cuerpo_select etiqueta_option
+                    | etiqueta_option
+                    ;
+
+etiqueta_option ::=     MENOR_QUE OPTION MAYOR_QUE cuerpo_texto MENOR_CIERRE OPTION MAYOR_QUE
+                        ;
+
+cuerpo_texto ::=    cuerpo_texto texto
+                    |
+                    ;
+
+cuerpo_div ::=      cuerpo_div etiquetas_cuerpo
+                    |
+                    ;
+/*
+cuerpo_h1 ::=       ;
+
+cuerpo_p ::=    cuerpo_p parametros_cuerpo_p
+                | parametros_cuerpo_p
+                ;
+
+parametros_cuerpo_p ::= cuerpo_texto
+                        | apertura_br
+                        | apertura_h1 cuerpo_h1 cerradura_h1
+                        ;
+*/
+parametros_etiquetas_texuales ::=   parametros_etiquetas_texuales parametros_etiquetas_texuales_p
+                                    |
+                                    ;
+
+parametros_etiquetas_texuales_p ::= texto
+                                    | apertura_br
+                                    | apertura_h1 parametros_etiquetas_texuales cerradura_h1
+                                    | apertura_p parametros_etiquetas_texuales cerradura_p
+                                    | apertura_spam parametros_etiquetas_texuales cerradura_spam
+                                    ;
+
+/* Parametros de etiquetas */
+cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic parametros_gcic
+                            |
+                            | cuerpo_parametros_gcic error
+                            ;
+
+parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA CORC
+                    | CORA NAME IGUAL texto_comillas_complete CORC
+                    ;
+
+cuerpo_parametros_link ::=  cuerpo_parametros_link parametros_link
+                            |
+                            | cuerpo_parametros_link error
+                            ;
+
+parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE CORC
+                        ;
+
+texto_comillas_complete ::= ALLCHAR
+                            | ALLCHARNOSPACE
+                            ;
+
+cuerpo_parametros_body ::=  cuerpo_parametros_body parametros_body
+                            |
+                            | cuerpo_parametros_body error
+                            ;
+
+parametros_body ::= CORA BACKGROUND IGUAL colores CORC
+                    ;
+
+cuerpo_parametros_spam ::=  cuerpo_parametros_spam parametros_spam
+                            |
+                            | cuerpo_parametros_spam error
+                            ;
+
+parametros_spam ::= parametros_textuales
+                    ;
+
+cuerpo_parametros_input ::= cuerpo_parametros_input parametros_input
+                            |
+                            | cuerpo_parametros_input error
+                            ;
+
+parametros_input ::=    CORA TYPE IGUAL tipos_input CORC
+                        | parametros_textuales
+                        ;
+
+cuerpo_parametros_textarea ::=  cuerpo_parametros_textarea parametros_textarea
+                                |
+                                | cuerpo_parametros_textarea error
+                                ;
+
+parametros_textarea ::= CORA FONTSIZE IGUAL PIXELES CORC
+                        | CORA FONTFAMILY IGUAL font_family CORC
+                        | CORA TEXTALIGN IGUAL alineaciones CORC
+                        | CORA ID IGUAL ID_ETIQUETA CORC
+                        | CORA COLS IGUAL DIGITO_COM CORC
+                        | CORA ROWS IGUAL DIGITO_COM CORC
+                        ;
+
+cuerpo_parametros_select ::=    cuerpo_parametros_select parametros_select
+                                |
+                                | cuerpo_parametros_select error
+                                ;
+
+parametros_select ::=   parametros_textuales
+                        ;
+
+cuerpo_parametros_div ::=   cuerpo_parametros_div parametros_div
+                            |
+                            | cuerpo_parametros_div error
+                            ;
+
+parametros_div ::=  parametros_textuales
+                    | CORA CLASS IGUAL clases CORC
+                    | CORA BACKGROUND IGUAL colores CORC
+                    ;
+
+cuerpo_parametros_img ::=   cuerpo_parametros_img parametros_img
+                            |
+                            | cuerpo_parametros_img error
+                            ;
+
+parametros_img ::=  CORA SRC IGUAL ALLCHARNOSPACE CORC
+                    | CORA WIDTH IGUAL tamaños CORC
+                    | CORA HEIGHT IGUAL tamaños CORC
+                    | CORA ALT IGUAL texto_comillas_complete CORC
+                    | CORA ID IGUAL ID_ETIQUETA CORC
+                    ;
+
+cuerpo_parametros_button ::=    cuerpo_parametros_button parametros_button 
+                                |
+                                | cuerpo_parametros_button error
+                                ;
+
+parametros_button ::=   parametros_textuales
+                        ;
+
+cuerpo_parametros_h1 ::=    cuerpo_parametros_h1 parametros_h1
+                            |
+                            | cuerpo_parametros_h1 error
+                            ;
+
+parametros_h1 ::=   parametros_textuales
+                    ;
+
+cuerpo_parametros_p ::= cuerpo_parametros_p parametros_p
+                        |
+                        | cuerpo_parametros_p error
+                        ;
+
+parametros_p ::=    parametros_textuales
+                    ;
+
+
+
+parametros_textuales ::=    CORA FONTSIZE IGUAL PIXELES CORC
+                            | CORA FONTFAMILY IGUAL font_family CORC
+                            | CORA TEXTALIGN IGUAL alineaciones CORC
+                            | CORA ID IGUAL ID_ETIQUETA CORC
+                            | CORA COLOR IGUAL colores CORC
+                            ;
+
+/* COMODINES */
+colores ::=  BLACK
+            | OLIVE
+            | TEAL
+            | RED
+            | BLUE
+            | MAROON
+            | NAVY
+            | GRAY
+            | LIME
+            | FUCHSIA
+            | GREEN
+            | WHITE
+            | PURPLE
+            | SILVER
+            | YELLOW
+            | AQUA
+            | HEXADECIMAL
+            //| error
+            ;
+
+font_family ::= COURIER
+                | VERDANA
+                | ARIAL
+                | GENEVA
+                | SANS_SERIF
+                //| error
+                ;
+
+alineaciones ::=    LEFT
+                    | RIGHT
+                    | CENTER
+                    | JUSTIFY
+                    //| error
+                    ;
+
+clases ::=  ROW
+            | COLUMN
+            //| error
+            ;
+
+tamaños ::= PIXELES
+            | PORCENTAJE
+            //| error
+            ;
+
+tipos_input ::= TEXT
+                | NUMBER
+                | RADIO
+                | CHECKBOX
+                //| error
+                ;
+
+/* SCRIPTING */
+scripting ::=   MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_CIERRE SCRIPTING MAYOR_QUE
+                ;
+
+cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
+                        |
+                        //| cuerpo_scripting error
+                        ;
+
+parametros_scripting ::=    PROCESS PARA PARC CORA cuerpo_parametros_proceso CORC
+                            | ON_LOAD PARA PARC CORA cuerpo_parametros_proceso CORC
+                            | error PARA PARC CORA cuerpo_parametros_proceso CORC
+                            //ERRORES PARA PROCESS
+                            | PROCESS error PARC CORA cuerpo_parametros_proceso CORC
+                            | PROCESS PARA error CORA cuerpo_parametros_proceso CORC
+                            | PROCESS PARA PARC error cuerpo_parametros_proceso CORC
+                            //ERORES PARA ON_LOAD
+                            | ON_LOAD error PARC CORA cuerpo_parametros_proceso CORC
+                            | ON_LOAD PARA error CORA cuerpo_parametros_proceso CORC
+                            | ON_LOAD PARA PARC error cuerpo_parametros_proceso CORC
+                            ;             
+
+cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
+                                |
+                                | cuerpo_parametros_proceso error   {:System.out.println("Se ha encontrado un error de prueba");:}
+                                ;
+
+parametros_proceso ::=  variables PUNTO_COMA
+                        | parametros_proceso_simples
+                        | condicion_if 
+                        | ciclo_repeat 
+                        | ciclo_while
+                        | error PUNTO_COMA
+                        ;
+
+parametros_proceso_simples ::=  asignacion_valor PUNTO_COMA
+                                | funciones_especiales PUNTO_COMA
+                                ;
+
+funciones_especiales ::=    funciones_strings
+                            | CARACTER_ALEATORIO PARA PARC
+                            | NUM_ALEATORIO PARA PARC
+                            | ALERT_INFO PARA strings_concatenados PARC
+                            | EXIT PARA PARC
+                            | INSERT PARA cuerpo_insert PARC
+                            ;
+
+cuerpo_insert ::=   cuerpo_insert COMA parametros_insert
+                    | parametros_insert
+                    ;
+
+parametros_insert ::=   ALLCHAR_COMSIMP
+                        | ALFANUMERICO
+                        | IDENTIFICADOR
+                        ;
+
+funciones_strings ::=   ASC PARA strings_concatenados PARC
+                        | DESC PARA strings_concatenados PARC
+                        | LETPAR_NUM PARA strings_concatenados PARC
+                        | LETIMPAR_NUM PARA strings_concatenados PARC
+                        | REVERSE PARA strings_concatenados PARC
+                        ;
+
+/* ASIGNACION DE VALORES A VARIABLES */
+variables ::=   /*INTEGER modo cuerpo_identificadores igual_integer
+                | DECIMAL modo cuerpo_identificadores igual_decimal
+                | STRING modo cuerpo_identificadores igual_string
+                | BOOLEAN modo cuerpo_identificadores igual_boolean
+                | CHAR modo cuerpo_identificadores igual_char
+                |*/ tipos_variables modo cuerpo_identificadores igual_variable
+                ;
+
+tipos_variables ::= INTEGER
+                    | DECIMAL
+                    | STRING
+                    | BOOLEAN
+                    | CHAR
+                    ;
+
+igual_variable ::=  IGUAL expresion_aritmetica
+                    |
+                    ;
+
+cuerpo_identificadores ::=  cuerpo_identificadores COMA identificadores
+                            | identificadores
+                            | cuerpo_identificadores error
+                            | cuerpo_identificadores COMA error
+                            ;
+
+identificadores ::= IDENTIFICADOR
+                    | ALFANUMERICO
+                    //| error
+                    ;
+
+modo ::=    GLOBAL
+            |
+            ;
+
+igual_integer ::=   IGUAL expresion_aritmetica
+                    |
+                    ;
+
+igual_decimal ::=   IGUAL expresion_aritmetica
+                    |
+                    ;
+
+igual_string ::=    IGUAL strings_concatenados
+                    |
+                    ;
+
+strings_concatenados ::=    strings_concatenados SUMA strings
+                            | strings
+                            | strings_concatenados error
+                            ;
+
+igual_boolean ::=   IGUAL booleanos
+                    |
+                    ;
+
+igual_char ::=  IGUAL expresion_aritmetica
+                |
+                ;
+
+booleanos ::=   TRUE
+                | FALSE
+                | error
+                ;
+
+strings ::= ALLCHAR
+            | ALLCHARNOSPACE
+            | D_STRING
+            | ID_ETIQUETA
+            | IDENTIFICADOR
+            | funciones_strings
+            | error
+            ;
+
+/* ASIGNACION DE VALORES */
+asignacion_valor ::=    cuerpo_identificadores IGUAL expresion_aritmetica
+                        ;
+/*
+valores_de_asignacion ::=   expresion_aritmetica
+                            //| D_DECIMAL
+                            //| D_CHAR
+                            | TRUE
+                            | FALSE
+                            | strings_concatenados
+                            //| error
+                            ;
+*/
+/* CONDICION IF */
+condicion_if ::=    apertura_if_complete  cuerpo_parametros_proceso PUNTOS LLAC END condicion_else_if condicion_else
+                    | apertura_if parametros_proceso_simples condicion_else_if condicion_else
+                    ;
+
+apertura_if_complete ::=    IF PARA condicion PARC THEN INIT LLAA PUNTOS
+                            | IF PARA error PARC THEN INIT LLAA PUNTOS
+                            | error PARA condicion PARC THEN INIT LLAA PUNTOS   {:listaErrores.get(listaErrores.size()-1).setSolucion("IF");:}
+                            | IF error condicion PARC THEN INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("(");:}
+                            | IF PARA condicion error THEN INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion(")");:}
+                            | IF PARA condicion PARC error INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("THEN");:}
+                            | IF PARA condicion PARC THEN error LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("INIT");:}
+                            | IF PARA condicion PARC THEN INIT error PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("{");:}
+                            | IF PARA condicion PARC THEN INIT LLAA error       {:listaErrores.get(listaErrores.size()-1).setSolucion(":");:}
+                            ;
+
+apertura_if ::=     IF PARA condicion PARC THEN
+                    ;
+
+condicion_else_if ::=   condicion_else_if parametros_else_if
+                        | 
+                        ;
+
+parametros_else_if ::=  ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC THEN parametros_proceso_simples
+                        //errores para else if complete
+                        | ELSE error PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF error condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA error PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion error THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC error INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC THEN error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC THEN INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC THEN INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
+                        | ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
+                        | ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
+                        //errores para else if simple
+                        | ELSE error PARA condicion PARC THEN parametros_proceso_simples
+                        | ELSE IF error condicion PARC THEN parametros_proceso_simples
+                        | ELSE IF PARA error PARC THEN parametros_proceso_simples
+                        | ELSE IF PARA condicion error THEN parametros_proceso_simples
+                        | ELSE IF PARA condicion PARC error parametros_proceso_simples
+                        ;
+
+condicion_else ::=  ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END                        
+                    | ELSE parametros_proceso_simples
+                    |
+                    | ELSE error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END 
+                    | ELSE INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END   
+                    | ELSE INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END   
+                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END   
+                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END   
+                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error   
+                    ;
+
+/* CICLO REPEAT */
+ciclo_repeat ::=    REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | error PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT error repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA error PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion error HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC error PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL error repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA error PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite error INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END
+                    //| REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS error PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
+                    ;
+
+repetir_declaracion ::= INTEGER identificadores IGUAL igual_repeat
+                        | identificadores IGUAL igual_repeat
+                        ;
+
+repetir_limite ::=  D_INTEGER
+                    | identificadores
+                    ;
+
+igual_repeat ::=    D_INTEGER
+                    ;
+
+/* CICLO WHILE */
+ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | error PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE error condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA error PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion error THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion PARC error INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion PARC THENWHILE error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion PARC THENWHILE INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion PARC THENWHILE INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END
+                    //| WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS error PUNTOS LLAC END
+                    | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
+                    | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
+                    | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
+                    ;
+
+/* CONDICION */
+condicion ::=   condicion       IGUAL_IGUAL         condicion
+                | condicion     DIFERENTE_IGUAL     condicion
+                | condicion     MENOR_QUE           condicion
+                | condicion     MENOR_IGUAL         condicion
+                | condicion     MAYOR_QUE           condicion
+                | condicion     MAYOR_IGUAL         condicion
+                | NOT           condicion
+                | condicion     AND                 condicion
+                | condicion     OR                  condicion
+                | RESTA         condicion
+                | condicion     SUMA                condicion
+                | condicion     RESTA               condicion
+                | condicion     MULTIPLICACION      condicion
+                | condicion     DIVISION            condicion
+                | valor_condicion
+                | PARA condicion PARC
+                ;
+
+valor_condicion ::= valor_numerico
+                    ;
+
+/* EXPRESIONES ARITMETICAS */
+expresion_aritmetica ::=    RESTA                           expresion_aritmetica:va1                            {:RESULT=va1*-1;:}%prec UNARY
+                            | expresion_aritmetica:va1      SUMA                    expresion_aritmetica:va2    {:RESULT=va1+va2;:}
+                            | expresion_aritmetica:va1      RESTA                   expresion_aritmetica:va2    {:RESULT=va1-va2;:}
+                            | expresion_aritmetica:va1      MULTIPLICACION          expresion_aritmetica:va2    {:RESULT=va1*va2;:}
+                            | expresion_aritmetica:va1      DIVISION                expresion_aritmetica:va2    {:RESULT=va1/va2;:} //AGREGAR ERROR DE DIVISIÓN ENTRE 0
+                            | valor_numerico:va1                                                                {:RESULT = new Double(va1.toString());:}
+                            | PARA expresion_aritmetica:va1 PARC                                                {:RESULT = new Double(va1.toString());:}
+                            ;
+
+valor_numerico ::=  D_INTEGER:val       {:RESULT = val;:}
+                    | D_DECIMAL:val     {:RESULT = val;:}
+                    | IDENTIFICADOR:val {:RESULT = 0;:}
+                    | ALFANUMERICO:val  {:RESULT = 0;:}
+                    | D_CHAR:val        {:RESULT = 0;:}
+                    | ALLCHAR           {:RESULT = 0;:}
+                    | ALLCHARNOSPACE    {:RESULT = 0;:}
+                    | D_STRING          {:RESULT = 0;:}
+                    | ID_ETIQUETA       {:RESULT = 0;:}
+                    | TRUE              {:RESULT = 1;:}
+                    | FALSE             {:RESULT = 0;:}
+                    ;
+ 
