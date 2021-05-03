@@ -8,7 +8,7 @@ class EtiquetadoParser;
 parser code {:
 
     private ArrayList<Advertencia> listaErrores;
-
+    
     public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
         super(lexer);
         this.listaErrores = listaErrores;
