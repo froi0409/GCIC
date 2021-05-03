@@ -5,10 +5,18 @@
  */
 package com.froi.gcic.etiquetas;
 
+import com.froi.gcic.entidades.Advertencia;
+import com.froi.gcic.entidades.Captcha;
+import java.util.ArrayList;
+
 /**
  *
  * @author froi-pc
  */
-public class EtiquetaOption {
+public class EtiquetaOption extends Etiqueta {
+
+    public EtiquetaOption(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
+        super(listaCaptchas, listaErrores);
+    }
     
 }

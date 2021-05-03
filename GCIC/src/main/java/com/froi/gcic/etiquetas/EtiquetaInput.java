@@ -5,10 +5,29 @@
  */
 package com.froi.gcic.etiquetas;
 
+import com.froi.gcic.entidades.Advertencia;
+import com.froi.gcic.entidades.Captcha;
+import java.util.ArrayList;
+
 /**
  *
  * @author froi-pc
  */
-public class EtiquetaInput {
+public class EtiquetaInput extends EtiquetaTextual {
+
+    private String type;
+    
+    public EtiquetaInput(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
+        super(listaCaptchas, listaErrores);
+        this.type = "text";
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
     
 }

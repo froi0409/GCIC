@@ -5,10 +5,39 @@
  */
 package com.froi.gcic.etiquetas;
 
+import com.froi.gcic.entidades.Advertencia;
+import com.froi.gcic.entidades.Captcha;
+import java.util.ArrayList;
+
 /**
  *
  * @author froi-pc
  */
-public class EtiquetaDiv {
+public class EtiquetaDiv extends EtiquetaTextual {
+
+    private String clase;
+    private String background;
+    
+    public EtiquetaDiv(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
+        super(listaCaptchas, listaErrores);
+        this.clase = "row";
+        this.background = "white";
+    }
+
+    public String getClase() {
+        return clase;
+    }
+
+    public void setClase(String clase) {
+        this.clase = clase;
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
+    }
     
 }

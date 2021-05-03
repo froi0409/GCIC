@@ -11,4 +11,6 @@ package com.froi.gcic.etiquetas;
  */
 public class EtiquetaTitle {
     
+    
+    
 }
