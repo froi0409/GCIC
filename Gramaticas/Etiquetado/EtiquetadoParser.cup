@@ -8,10 +8,14 @@ class EtiquetadoParser;
 parser code {:
 
     private ArrayList<Advertencia> listaErrores;
-    
+    private Captcha captchaSolicitado;
+    private TablaDeSimbolos tablaSimbolos;
+
     public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
         super(lexer);
         this.listaErrores = listaErrores;
+        this.captchaSolicitado = new Captcha();
+        this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
     public void report_error(String message, Object info) {
         System.out.println("reporterror");;
@@ -21,7 +25,7 @@ parser code {:
     }
     @Override
     public void syntax_error(Symbol s) {
-        Advertencia errorNuevo = new Advertencia();
+        Advertencia errorNuevo = new Advertencia("Sintactico");
         //System.out.println("linea: " + s.left + "   columna: " + s.right + "   token: " + symbl_name_from_id(s.sym) + "     texto: " + s.value);
         errorNuevo.setLinea(s.left);
         errorNuevo.setColumna(s.right);
@@ -77,12 +81,13 @@ terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA,
 terminal ID_ETIQUETA, ALFANUMERICO, TEXTO, ALLCHAR_COMSIMP, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
 
 //Declaración de símbolos no terminales
-non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, variables, modo, strings, strings_concatenados, booleanos;
+non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, modo, strings, strings_concatenados, booleanos;
+non terminal ArrayList<Simbolo> variables;
 
 /* no terminales de cuerpo */
 non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo, cuerpo_title;
 non terminal etiquetas_cabecera, etiquetas_cuerpo, etiqueta_option;
-non terminal texto, texto_comillas_complete, fondos, colores, font_family, alineaciones, clases, tamaños, parametros_textuales, tipos_input, identificadores;
+non terminal String texto, texto_comillas_complete, fondos, colores, font_family, alineaciones, clases, tamaños, parametros_textuales, tipos_input, identificadores;
 
 //non terminal cuerpo_spam;
 //non terminal cuerpo_input;
@@ -112,7 +117,7 @@ non terminal cuerpo_parametros_img, parametros_img;
 non terminal cuerpo_parametros_button, parametros_button;
 non terminal cuerpo_parametros_h1, parametros_h1;
 non terminal cuerpo_parametros_p, parametros_p;
-non terminal cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_simples;
+non terminal ArrayList<Simbolo> cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_simples;
 
 non terminal parametros_scripting;
 non terminal cuerpo_process, parametros_process;
@@ -141,7 +146,7 @@ non terminal valor_condicion;
 
 
 non terminal valores_de_asignacion;
-non terminal tipos_variables;
+non terminal String tipos_variables;
 non terminal igual_variable;
 non terminal igual_integer;
 non terminal igual_string;
@@ -151,7 +156,7 @@ non terminal igual_decimal;
 non terminal Double expresion_aritmetica;
 non terminal valor_numerico;
 
-non terminal cuerpo_identificadores;
+non terminal ArrayList<String> cuerpo_identificadores;
 
 /* APERTURAS */
 non terminal apertura_gcic;
@@ -211,7 +216,13 @@ precedence left NOT;
 start with inicio;
 
 //Reglas de Producción
-inicio ::=  apertura_gcic cuerpo_gcic             {:System.out.println("Se ha llegado al final del reconocimiento");:}
+inicio ::=  apertura_gcic cuerpo_gcic           {:
+                                                    System.out.println("Se ha llegado al final del reconocimiento. Los simbolos encontrados son: ");
+                                                    for(Simbolo simb: tablaSimbolos.getTablaSimbolos()) {
+                                                        System.out.println(simb);
+                                                    }
+                                                    System.out.println(" \n\n");
+                                                :}
             ;
 
 apertura_gcic ::=   MENOR_QUE GCIC cuerpo_parametros_gcic MAYOR_QUE
@@ -605,8 +616,34 @@ cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
                         //| cuerpo_scripting error
                         ;
 
-parametros_scripting ::=    PROCESS PARA PARC CORA cuerpo_parametros_proceso CORC
-                            | ON_LOAD PARA PARC CORA cuerpo_parametros_proceso CORC
+parametros_scripting ::=    PROCESS:proc PARA PARC CORA cuerpo_parametros_proceso:sim CORC  {:
+                                                                                                if(sim != null) {
+                                                                                                    for(Simbolo simb: sim) {
+                                                                                                        simb.setProcedimiento(proc.toString());
+                                                                                                        if(tablaSimbolos.insertarSimbolo(simb)) {
+                                                                                                            System.out.println("Simbolo: " + simb.getIdentificador() + ". Se ha ingresado con éxito.");
+                                                                                                        } else {
+                                                                                                            Advertencia errorNuevo = new Advertencia("Semantico");
+                                                                                                            errorNuevo.setMensaje("El simbolo " + simb.getIdentificador() + " ya existe en el procedimiento " + proc.toString());
+                                                                                                            listaErrores.add(errorNuevo);
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            :}
+                            | ON_LOAD:proc PARA PARC CORA cuerpo_parametros_proceso:sim CORC    {:
+                                                                                                    if(sim != null) {
+                                                                                                        for(Simbolo simb: sim) {
+                                                                                                            simb.setProcedimiento(proc.toString());
+                                                                                                            if(tablaSimbolos.insertarSimbolo(simb)) {
+                                                                                                                System.out.println("Simbolo: " + simb.getIdentificador() + ". Se ha ingresado con éxito.");
+                                                                                                            } else {
+                                                                                                                Advertencia errorNuevo = new Advertencia("Semantico");
+                                                                                                                errorNuevo.setMensaje("El simbolo " + simb.getIdentificador() + " ya existe en el procedimiento " + proc.toString());
+                                                                                                                listaErrores.add(errorNuevo);
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                :}
                             | error PARA PARC CORA cuerpo_parametros_proceso CORC
                             //ERRORES PARA PROCESS
                             | PROCESS error PARC CORA cuerpo_parametros_proceso CORC
@@ -618,20 +655,29 @@ parametros_scripting ::=    PROCESS PARA PARC CORA cuerpo_parametros_proceso COR
                             | ON_LOAD PARA PARC error cuerpo_parametros_proceso CORC
                             ;             
 
-cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
-                                |
+cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso:listaSimb parametros_proceso:listaSecond   {:
+                                                                                                        if(listaSecond != null) {
+                                                                                                            for(Simbolo simb: listaSecond) {
+                                                                                                                listaSimb.add(simb);
+                                                                                                            }
+                                                                                                        }
+                                                                                                        RESULT = listaSimb;
+                                                                                                    :}
+                                |                                                                   {:RESULT = new ArrayList<Simbolo>();:}
                                 | cuerpo_parametros_proceso error   {:System.out.println("Se ha encontrado un error de prueba");:}
                                 ;
 
-parametros_proceso ::=  parametros_proceso_simples
+parametros_proceso ::=  parametros_proceso_simples:listaSimb    {:
+                                                                    RESULT = listaSimb;
+                                                                :}
                         | condicion_if 
                         | ciclo_repeat 
                         | ciclo_while
                         | error PUNTO_COMA
                         ;
 
-parametros_proceso_simples ::=  variables PUNTO_COMA
-                                | asignacion_valor PUNTO_COMA
+parametros_proceso_simples ::=  variables:var PUNTO_COMA                {:RESULT = var;:}
+                                | asignacion_valor PUNTO_COMA           {::}
                                 | funciones_especiales PUNTO_COMA
                                 ;
 
@@ -660,38 +706,45 @@ funciones_strings ::=   ASC PARA strings_concatenados PARC
                         ;
 
 /* ASIGNACION DE VALORES A VARIABLES */
-variables ::=   /*INTEGER modo cuerpo_identificadores igual_integer
+variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igual_variable     {:
+                                                                                                    ArrayList<Simbolo> listaSimbolosNuevos = new ArrayList<>();
+                                                                                                    for(String id: ids) {
+                                                                                                        listaSimbolosNuevos.add(new Simbolo(id, tipoVar, null, mode.toString(), null));
+                                                                                                    }
+                                                                                                    RESULT = listaSimbolosNuevos;
+                                                                                                :}
+                /*INTEGER modo cuerpo_identificadores igual_integer
                 | DECIMAL modo cuerpo_identificadores igual_decimal
                 | STRING modo cuerpo_identificadores igual_string
                 | BOOLEAN modo cuerpo_identificadores igual_boolean
                 | CHAR modo cuerpo_identificadores igual_char
-                |*/ tipos_variables modo cuerpo_identificadores igual_variable
+                |*/ 
                 ;
 
-tipos_variables ::= INTEGER
-                    | DECIMAL
-                    | STRING
-                    | BOOLEAN
-                    | CHAR
+tipos_variables ::= INTEGER     {:RESULT = "integer";:}
+                    | DECIMAL   {:RESULT = "decimal";:}
+                    | STRING    {:RESULT = "string";:}
+                    | BOOLEAN   {:RESULT = "boolean";:}
+                    | CHAR      {:RESULT = "char";:}
                     ;
 
 igual_variable ::=  IGUAL condicion
                     |
                     ;
 
-cuerpo_identificadores ::=  cuerpo_identificadores COMA identificadores
-                            | identificadores
+cuerpo_identificadores ::=  cuerpo_identificadores:ids COMA identificadores:id  {:ids.add(id); RESULT = ids;:}
+                            | identificadores:id                                {:ArrayList<String> identificadoresNuevos = new ArrayList<>(); identificadoresNuevos.add(id); RESULT = identificadoresNuevos;:}
                             | cuerpo_identificadores error
                             | cuerpo_identificadores COMA error
                             ;
 
-identificadores ::= IDENTIFICADOR
-                    | ALFANUMERICO
+identificadores ::= IDENTIFICADOR:id    {:RESULT = id.toString();:}
+                    | ALFANUMERICO:id   {:RESULT = id.toString();:}
                     //| error
                     ;
 
-modo ::=    GLOBAL
-            |
+modo ::=    GLOBAL  {:RESULT = "@global";:}
+            |       {:RESULT = "-";:}
             ;
 
 igual_integer ::=   IGUAL expresion_aritmetica
