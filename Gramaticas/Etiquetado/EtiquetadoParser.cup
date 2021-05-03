@@ -29,9 +29,7 @@ parser code {:
         errorNuevo.setTexto(s.value.toString());
         //Agregamos los simbolos que se esperan
         String solucion = "";
-        //System.out.print("Se esperaban el(los) simbolo(s): ");
         for(int i = 0; i < expected_token_ids().size(); i++) {
-            //System.out.print(symbl_name_from_id(expected_token_ids().get(i)) + " ");
             if(i != 0) {
                 solucion += ",";
             }
@@ -625,15 +623,15 @@ cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
                                 | cuerpo_parametros_proceso error   {:System.out.println("Se ha encontrado un error de prueba");:}
                                 ;
 
-parametros_proceso ::=  variables PUNTO_COMA
-                        | parametros_proceso_simples
+parametros_proceso ::=  parametros_proceso_simples
                         | condicion_if 
                         | ciclo_repeat 
                         | ciclo_while
                         | error PUNTO_COMA
                         ;
 
-parametros_proceso_simples ::=  asignacion_valor PUNTO_COMA
+parametros_proceso_simples ::=  variables PUNTO_COMA
+                                | asignacion_valor PUNTO_COMA
                                 | funciones_especiales PUNTO_COMA
                                 ;
 
@@ -677,7 +675,7 @@ tipos_variables ::= INTEGER
                     | CHAR
                     ;
 
-igual_variable ::=  IGUAL expresion_aritmetica
+igual_variable ::=  IGUAL condicion
                     |
                     ;
 
@@ -736,7 +734,7 @@ strings ::= ALLCHAR
             ;
 
 /* ASIGNACION DE VALORES */
-asignacion_valor ::=    cuerpo_identificadores IGUAL expresion_aritmetica
+asignacion_valor ::=    cuerpo_identificadores IGUAL condicion
                         ;
 /*
 valores_de_asignacion ::=   expresion_aritmetica
@@ -860,7 +858,7 @@ condicion ::=   condicion       IGUAL_IGUAL         condicion
                 | NOT           condicion
                 | condicion     AND                 condicion
                 | condicion     OR                  condicion
-                | RESTA         condicion
+                | RESTA         condicion                       %prec UNARY
                 | condicion     SUMA                condicion
                 | condicion     RESTA               condicion
                 | condicion     MULTIPLICACION      condicion
@@ -873,6 +871,7 @@ valor_condicion ::= valor_numerico
                     ;
 
 /* EXPRESIONES ARITMETICAS */
+/*
 expresion_aritmetica ::=    RESTA                           expresion_aritmetica:va1                            {:RESULT=va1*-1;:}%prec UNARY
                             | expresion_aritmetica:va1      SUMA                    expresion_aritmetica:va2    {:RESULT=va1+va2;:}
                             | expresion_aritmetica:va1      RESTA                   expresion_aritmetica:va2    {:RESULT=va1-va2;:}
@@ -881,6 +880,7 @@ expresion_aritmetica ::=    RESTA                           expresion_aritmetica
                             | valor_numerico:va1                                                                {:RESULT = new Double(va1.toString());:}
                             | PARA expresion_aritmetica:va1 PARC                                                {:RESULT = new Double(va1.toString());:}
                             ;
+*/
 
 valor_numerico ::=  D_INTEGER:val       {:RESULT = val;:}
                     | D_DECIMAL:val     {:RESULT = val;:}
