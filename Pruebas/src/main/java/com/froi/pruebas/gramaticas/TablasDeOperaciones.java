@@ -151,6 +151,44 @@ public class TablasDeOperaciones {
         return nuevoDato;
     }
     
+    /**
+     * Permite llevar a cabo una multiplicación entre dos datos
+     * @param dato1 primer dato a multiplicar
+     * @param dato2 segundo dato a multiplicar 
+     * @return 
+     */
+    public Dato multiplicar(Dato dato1, Dato dato2) {
+        Dato nuevoDato;
+        int fila = buscarPosicion(dato1);
+        int columna = buscarPosicion(dato2);
+        String tipoDato = tablaMultiplicacion[fila][columna];
+        if(!tipoDato.equals(error)) {
+            String valorRetorno;
+            if(tipoDato.equals(integer)) {
+                int valorDato1 = devolverInteger(dato1);
+                int valorDato2 = devolverInteger(dato2);
+                Integer dato = valorDato1 + valorDato2;
+                valorRetorno = dato.toString();
+            } else if(tipoDato.equals(decimal)) {
+                double valorDato1 = devolverDecimal(dato1);
+                double valorDato2 = devolverDecimal(dato2);
+                Double dato = valorDato1 + valorDato2;
+                valorRetorno = dato.toString();
+            } else if(tipoDato.equals(booleano)) {
+                Boolean valorDato1 = devolverBoolean(dato1);
+                Boolean valorDato2 = devolverBoolean(dato2);
+                Boolean dato = valorDato1 && valorDato2;
+                valorRetorno = dato.toString();
+            } else {
+                valorRetorno = null;
+            }
+            nuevoDato = new Dato(tipoDato, valorRetorno);
+        } else {
+            nuevoDato = new Dato(error, null);
+        }
+        return nuevoDato;
+    }
+    
     /*
     public Dato restar(Dato dato1, Dato dato2) {
         
