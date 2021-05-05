@@ -155,7 +155,7 @@ public class TablasDeOperaciones {
      * Permite llevar a cabo una multiplicación entre dos datos
      * @param dato1 primer dato a multiplicar
      * @param dato2 segundo dato a multiplicar 
-     * @return 
+     * @return Dato multiplicado (puede retornar un tipo de dato error)
      */
     public Dato multiplicar(Dato dato1, Dato dato2) {
         Dato nuevoDato;
@@ -167,18 +167,59 @@ public class TablasDeOperaciones {
             if(tipoDato.equals(integer)) {
                 int valorDato1 = devolverInteger(dato1);
                 int valorDato2 = devolverInteger(dato2);
-                Integer dato = valorDato1 + valorDato2;
+                Integer dato = valorDato1 * valorDato2;
                 valorRetorno = dato.toString();
             } else if(tipoDato.equals(decimal)) {
                 double valorDato1 = devolverDecimal(dato1);
                 double valorDato2 = devolverDecimal(dato2);
-                Double dato = valorDato1 + valorDato2;
+                Double dato = valorDato1 * valorDato2;
                 valorRetorno = dato.toString();
             } else if(tipoDato.equals(booleano)) {
                 Boolean valorDato1 = devolverBoolean(dato1);
                 Boolean valorDato2 = devolverBoolean(dato2);
                 Boolean dato = valorDato1 && valorDato2;
                 valorRetorno = dato.toString();
+            } else {
+                valorRetorno = null;
+            }
+            nuevoDato = new Dato(tipoDato, valorRetorno);
+        } else {
+            nuevoDato = new Dato(error, null);
+        }
+        return nuevoDato;
+    }
+    
+    /**
+     * Permite llevar a cabo una división
+     * @param dato1 Dividendo - Numerador
+     * @param dato2 Divisor - Denominador
+     * @return Dato dividido (puede retornar un dato de tipo error)
+     */
+    public Dato dividir(Dato dato1, Dato dato2) {
+        Dato nuevoDato;
+        int fila = buscarPosicion(dato1);
+        int columna = buscarPosicion(dato2);
+        String tipoDato = tablaDivision[fila][columna];
+        if(!tipoDato.equals(error)) {
+            String valorRetorno;
+            if(tipoDato.equals(integer)) {
+                int valorDato1 = devolverInteger(dato1);
+                int valorDato2 = devolverInteger(dato2);
+                if(valorDato2 != 0) {
+                    Integer dato = valorDato1 / valorDato2;
+                    valorRetorno = dato.toString();
+                } else {
+                    valorRetorno = "División entre 0";
+                }
+            } else if(tipoDato.equals(decimal)) {
+                double valorDato1 = devolverInteger(dato1);
+                double valorDato2 = devolverInteger(dato2);
+                if(valorDato2 != 0) {
+                    Double dato = valorDato1 / valorDato2;
+                    valorRetorno = dato.toString();
+                } else {
+                    valorRetorno = "División entre 0";
+                }
             } else {
                 valorRetorno = null;
             }
