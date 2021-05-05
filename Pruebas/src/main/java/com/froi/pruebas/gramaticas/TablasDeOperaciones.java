@@ -88,7 +88,9 @@ public class TablasDeOperaciones {
         if(!tipoDato.equals(error)) {
             String valorRetorno;
             if(tipoDato.equals(integer)) {
-                Integer dato = Integer.parseInt(dato1.getValor()) + Integer.parseInt(dato2.getValor());
+                int valorDato1 = devolverInteger(dato1);
+                int valorDato2 = devolverInteger(dato2);
+                Integer dato = valorDato1 + valorDato2;
                 valorRetorno = dato.toString();
             } else if(tipoDato.equals(string)) {
                 valorRetorno = dato1.getValor() + dato2.getValor();
@@ -110,6 +112,13 @@ public class TablasDeOperaciones {
         return nuevoDato;
     }
     
+    
+    /*
+    public Dato restar(Dato dato1, Dato dato2) {
+        
+    }
+    */
+    
     private int buscarPosicion(Dato dato) {
         String tipoDeDato = dato.getTipo();
         if(tipoDeDato.equals(integer)) {
@@ -126,6 +135,28 @@ public class TablasDeOperaciones {
             return 5;
         } else {
             return -1;
+        }
+    }
+    
+    /**
+     * Permite encontrar el valor entero de un dato
+     * @param dato
+     * @return valor entero del dato
+     */
+    private int devolverInteger(Dato dato) {
+        switch (dato.getTipo()) {
+            case "char":
+                char caracter = dato.getValor().charAt(0);
+                int caracterEntero = caracter;
+                return caracterEntero;
+            case "boolean":
+                if(dato.getValor().equalsIgnoreCase("true")) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            default:
+                return Integer.parseInt(dato.getValor());
         }
     }
     

@@ -18,10 +18,8 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Boolean hola = Boolean.parseBoolean("true");
-        System.out.println(hola.toString());
         frame ventana = new frame();
         ventana.setVisible(true);
     }
     
-}
+} 
