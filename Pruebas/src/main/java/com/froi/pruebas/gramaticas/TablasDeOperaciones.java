@@ -117,6 +117,39 @@ public class TablasDeOperaciones {
         return nuevoDato;
     }
     
+    /**
+     * Permite llevar a cabo una resta entre dos datos
+     * @param dato1 primer dato a restar
+     * @param dato2 segundo dato a restar
+     * @return Dato restado (puede devolver un dato de tipo error)
+     */
+    public Dato restar(Dato dato1, Dato dato2) {
+        Dato nuevoDato;
+        int fila = buscarPosicion(dato1);
+        int columna = buscarPosicion(dato2);
+        String tipoDato = tablaResta[fila][columna];
+        if(!tipoDato.equals("error")) {
+            String valorRetorno;
+            if(tipoDato.equals("integer")) {
+                int valorDato1 = devolverInteger(dato1);
+                int valorDato2 = devolverInteger(dato2);
+                Integer dato = valorDato1 - valorDato2;
+                valorRetorno = dato.toString();
+            } else if(tipoDato.equals("decimal")) {
+                double valorDato1 = devolverDecimal(dato1);
+                double valorDato2 = devolverDecimal(dato2);
+                Double dato = valorDato1 - valorDato2;
+                valorRetorno = dato.toString();
+            } else {
+                valorRetorno = null;
+            }
+            nuevoDato = new Dato(tipoDato, valorRetorno);
+        } else {
+            nuevoDato = new Dato(error, null);
+        }
+            
+        return nuevoDato;
+    }
     
     /*
     public Dato restar(Dato dato1, Dato dato2) {
