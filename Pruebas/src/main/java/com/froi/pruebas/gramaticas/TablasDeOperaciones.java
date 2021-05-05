@@ -85,6 +85,7 @@ public class TablasDeOperaciones {
         int fila = buscarPosicion(dato1);
         int columna = buscarPosicion(dato2);
         String tipoDato = tablaSuma[fila][columna];
+        
         if(!tipoDato.equals(error)) {
             String valorRetorno;
             if(tipoDato.equals(integer)) {
@@ -95,12 +96,16 @@ public class TablasDeOperaciones {
             } else if(tipoDato.equals(string)) {
                 valorRetorno = dato1.getValor() + dato2.getValor();
             } else if(tipoDato.equals(decimal)) {
-                Double dato = Double.parseDouble(dato1.getValor()) + Double.parseDouble(dato2.getValor());
+                double valorDato1 = devolverDecimal(dato1);
+                double valorDato2 = devolverDecimal(dato2);
+                Double dato = valorDato1 + valorDato2;
                 valorRetorno = dato.toString();
             } else if(tipoDato.equals(character)) {
                 valorRetorno = null;
             } else if(tipoDato.equals(booleano)) {
-                Boolean dato = Boolean.parseBoolean(dato1.getValor()) || Boolean.parseBoolean(dato2.getValor());
+                Boolean valorDato1 = devolverBoolean(dato1);
+                Boolean valorDato2 = devolverBoolean(dato2);
+                Boolean dato = valorDato1 || valorDato2;
                 valorRetorno = dato.toString();
             } else {
                 valorRetorno = null;
@@ -157,6 +162,50 @@ public class TablasDeOperaciones {
                 }
             default:
                 return Integer.parseInt(dato.getValor());
+        }
+    }
+    
+    /**
+     * Permite encontrar el valor decimal de un dato
+     * @param dato
+     * @return valor decimal del dato
+     */
+    private double devolverDecimal(Dato dato) {
+        switch(dato.getTipo()) {
+            case "decimal":
+                return Double.parseDouble(dato.getValor());
+            default:
+                return devolverInteger(dato);
+        }
+    }
+    
+    /**
+     * Permite encontrar el valor booleano de un dato
+     * @param dato
+     * @return Valor booleano del dato, si no es un valor booleano, devuelve null
+     */
+    private Boolean devolverBoolean(Dato dato) {
+        switch(dato.getTipo()) {
+            case "integer":
+                int numeroInteger = devolverInteger(dato);
+                if(numeroInteger == 0) {
+                    return false;
+                } else if(numeroInteger == 1) {
+                    return true;
+                } else {
+                    return null;
+                }
+            case "double":
+                double numeroDecimal = devolverDecimal(dato);
+                if(numeroDecimal == 0) {
+                    return false;
+                } else if(numeroDecimal == 1) {
+                    return true;
+                } else {
+                    return null;
+                }
+            default:
+                return Boolean.parseBoolean(dato.getValor());                
         }
     }
     
