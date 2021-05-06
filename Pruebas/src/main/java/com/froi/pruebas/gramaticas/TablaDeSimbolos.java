@@ -38,4 +38,19 @@ public class TablaDeSimbolos {
         return tablaSimbolos;
     }
     
+    public Dato obtenerDato(String identificador, String procedimiento) {
+        for(Simbolo simb : tablaSimbolos) {
+            if(simb.getIdentificador().equals(identificador) && simb.getProcedimiento().equals(procedimiento)) {
+                if(simb.getValorActual() == null) {
+                    return new Dato(TipoDeDato.ERROR, "La variable" + simb.getIdentificador() + " no tiene valor para ser asignado");
+                } else {
+                    return new Dato(simb.getTipo(), simb.getValorActual());
+                }
+                
+            }
+        }
+        return new Dato(TipoDeDato.ERROR, "No existe una variable " + identificador + " en el procedimiento " + procedimiento);
+        
+    }
+    
 }

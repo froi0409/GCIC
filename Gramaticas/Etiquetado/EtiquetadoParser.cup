@@ -19,11 +19,14 @@ parser code {:
     private String booleano = TipoDeDato.BOOLEAN;
     private String error = TipoDeDato.ERROR;
 
+    private String procesoActual;
+
     public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
         super(lexer);
         this.listaErrores = listaErrores;
         this.captchaSolicitado = new Captcha();
         this.tablaOperaciones = new TablasDeOperaciones();
+        this.procesoActual = "";
         this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
     public void report_error(String message, Object info) {
@@ -208,6 +211,8 @@ non terminal cerradura_p;
 
 non terminal apertura_if;
 non terminal apertura_if_complete;
+
+non terminal String apertura_proceso;
 
 /* CIERRES */
 //non terminal cierre_gcic;
@@ -631,8 +636,8 @@ cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
                         //| cuerpo_scripting error
                         ;
 
-parametros_scripting ::=    PROCESS:proc PARA PARC CORA cuerpo_parametros_proceso:sim CORC  {:
-                                                                                                if(sim != null) {
+parametros_scripting ::=    apertura_proceso:proc CORA cuerpo_parametros_proceso:sim CORC   {:
+                                                                                                /*if(sim != null) {
                                                                                                     for(Simbolo simb: sim) {
                                                                                                         simb.setProcedimiento(proc.toString());
                                                                                                         if(tablaSimbolos.insertarSimbolo(simb)) {
@@ -643,9 +648,9 @@ parametros_scripting ::=    PROCESS:proc PARA PARC CORA cuerpo_parametros_proces
                                                                                                             listaErrores.add(errorNuevo);
                                                                                                         }
                                                                                                     }
-                                                                                                }
+                                                                                                }*/
                                                                                             :}
-                            | ON_LOAD:proc PARA PARC CORA cuerpo_parametros_proceso:sim CORC    {:
+                            /*| ON_LOAD:proc PARA PARC CORA cuerpo_parametros_proceso:sim CORC    {:
                                                                                                     if(sim != null) {
                                                                                                         for(Simbolo simb: sim) {
                                                                                                             simb.setProcedimiento(proc.toString());
@@ -659,16 +664,28 @@ parametros_scripting ::=    PROCESS:proc PARA PARC CORA cuerpo_parametros_proces
                                                                                                         }
                                                                                                     }
                                                                                                 :}
+                            */
                             | error PARA PARC CORA cuerpo_parametros_proceso CORC
                             //ERRORES PARA PROCESS
                             | PROCESS error PARC CORA cuerpo_parametros_proceso CORC
                             | PROCESS PARA error CORA cuerpo_parametros_proceso CORC
                             | PROCESS PARA PARC error cuerpo_parametros_proceso CORC
-                            //ERORES PARA ON_LOAD
+                            /*//ERORES PARA ON_LOAD
                             | ON_LOAD error PARC CORA cuerpo_parametros_proceso CORC
                             | ON_LOAD PARA error CORA cuerpo_parametros_proceso CORC
                             | ON_LOAD PARA PARC error cuerpo_parametros_proceso CORC
+                            */
                             ;             
+
+apertura_proceso ::=    PROCESS:proc PARA PARC      {:
+                                                        procesoActual = proc.toString();
+                                                        RESULT = proc.toString();
+                                                    :}
+                        | ON_LOAD:proc PARA PARC    {:
+                                                        procesoActual = proc.toString();
+                                                        RESULT = proc.toString();
+                                                    :}
+                        ;
 
 cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso:listaSimb parametros_proceso:listaSecond   {:
                                                                                                         if(listaSecond != null) {
@@ -724,12 +741,13 @@ funciones_strings ::=   ASC PARA strings_concatenados PARC
 variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igual_variable:valor   {:
                                                                                                         ArrayList<Simbolo> listaSimbolosNuevos = new ArrayList<>();
                                                                                                         for(String id: ids) {
-                                                                                                            
-                                                                                                            if(valor.getTipo().equals(error)) {
-                                                                                                                listaSimbolosNuevos.add(new Simbolo(id, tipoVar, null, mode.toString(), null));
+                                                                                                            if(valor.getTipo().equals(error) && valor.getValor().equals("vacio")){
+                                                                                                                tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, null, mode.toString(), procesoActual));
+                                                                                                            } else if(valor.getTipo().equals(error)) {
+                                                                                                                agregarErrorSemantico(valor.getValor() + ".\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
                                                                                                             } else {
                                                                                                                 if(tipoVar.equals(valor.getTipo())) {
-                                                                                                                    listaSimbolosNuevos.add(new Simbolo(id, tipoVar, valor.getValor(), mode.toString(), null));
+                                                                                                                    tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, valor.getValor(), mode.toString(), procesoActual));
                                                                                                                 } else {
                                                                                                                     agregarErrorSemantico("El valor asignado a la(s) variable(s) no es compatible. Conflicto en Linea " + tipoVarleft + " - Columna " + tipoVarright);
                                                                                                                 }
@@ -753,7 +771,7 @@ tipos_variables ::= INTEGER     {:RESULT = integer;:}
                     ;
 
 igual_variable ::=  IGUAL condicion:val     {:RESULT = val;:}
-                    |                       {:RESULT = new Dato(error, null);:}
+                    |                       {:RESULT = new Dato(error, "vacio");:}
                     ;
 
 cuerpo_identificadores ::=  cuerpo_identificadores:ids COMA identificadores:id  {:ids.add(id); RESULT = ids;:}
@@ -1022,14 +1040,27 @@ expresion_aritmetica ::=    RESTA                           expresion_aritmetica
 
 valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toString());:}
                     | D_DECIMAL:val         {:RESULT = new Dato(decimal, val.toString());:}
-                    | IDENTIFICADOR:val     {:/* BUSCAR VALOR EN TABLA DE SIMBOLOS */RESULT = new Dato(string, "");:}
-                    | ALFANUMERICO:val      {:/* BUSCAR VALOR EN TABLA DE SIMBOLOS */RESULT = new Dato(string, "");:}
-                    | D_CHAR:val            {:String caracterSt = val.toString().substring(1,1); RESULT = new Dato(character, caracterSt);:}
+                    | IDENTIFICADOR:val     {:
+                                                Dato nuevoDato = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                if(nuevoDato.getTipo().equals(error)) {
+                                                    agregarErrorSemantico(nuevoDato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                }
+                                                RESULT = nuevoDato;
+                                            :}
+                    | ALFANUMERICO:val      {:
+                                                Dato nuevoDato = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                if(nuevoDato.getTipo().equals(error)) {
+                                                    agregarErrorSemantico(nuevoDato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                }
+                                                RESULT = nuevoDato;
+                                            :}
+                    | D_CHAR:val            {:String caracterSt = val.toString().substring(1,2); RESULT = new Dato(character, caracterSt);:}
                     | ALLCHAR:val           {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
                     | ALLCHARNOSPACE:val    {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
                     | D_STRING:val          {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
                     | ID_ETIQUETA:val       {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
                     | TRUE:val              {:RESULT = new Dato(booleano, "true");:}
                     | FALSE:val             {:RESULT = new Dato(booleano, "false");:}
+                    /* agregar getElementById */
                     ;
  

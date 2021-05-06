@@ -18,6 +18,8 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        String hola = "'h'";
+        System.out.println(hola.substring(1, 2));
         frame ventana = new frame();
         ventana.setVisible(true);
     }
