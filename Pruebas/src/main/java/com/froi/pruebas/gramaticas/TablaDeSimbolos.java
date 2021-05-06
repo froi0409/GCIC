@@ -42,7 +42,7 @@ public class TablaDeSimbolos {
         for(Simbolo simb : tablaSimbolos) {
             if(simb.getIdentificador().equals(identificador) && simb.getProcedimiento().equals(procedimiento)) {
                 if(simb.getValorActual() == null) {
-                    return new Dato(TipoDeDato.ERROR, "La variable" + simb.getIdentificador() + " no tiene valor para ser asignado");
+                    return new Dato(TipoDeDato.ERROR, "La variable " + simb.getIdentificador() + " no tiene valor para ser asignado");
                 } else {
                     return new Dato(simb.getTipo(), simb.getValorActual());
                 }

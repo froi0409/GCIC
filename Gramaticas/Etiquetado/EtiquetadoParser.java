@@ -4099,7 +4099,7 @@ class CUP$EtiquetadoParser$actions {
 		
                                                                                                         ArrayList<Simbolo> listaSimbolosNuevos = new ArrayList<>();
                                                                                                         for(String id: ids) {
-                                                                                                            if(valor.getTipo().equals(error) && valor.getValor().equals("vacio")){
+                                                                                                            if(valor.getValor() != null && valor.getTipo().equals(error) && valor.getValor().equals("vacio")){
                                                                                                                 tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, null, mode.toString(), procesoActual));
                                                                                                             } else if(valor.getTipo().equals(error)) {
                                                                                                                 agregarErrorSemantico(valor.getValor() + ".\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
