@@ -32,44 +32,48 @@ public class TablasDeOperaciones {
     
     private String[][] inicializarSuma() {
         String[][] suma = {
-            {integer, string, decimal, integer, integer},
-            {string, string, string, string, error},
-            {decimal, string, decimal, decimal, decimal},
-            {integer, string, decimal, integer, integer},
-            {integer, error, decimal, integer, booleano}
+            {integer, string, decimal, integer, integer, error},
+            {string, string, string, string, error, error},
+            {decimal, string, decimal, decimal, decimal, error},
+            {integer, string, decimal, integer, integer, error},
+            {integer, error, decimal, integer, booleano, error},
+            {error, error, error, error, error, error, error}
         };
         return suma;
     }
     
     private String[][] inicializarResta() {
         String[][] resta = {
-            {integer, error, decimal, integer, integer},
-            {error, error, error, error, error},
-            {decimal, error, decimal, decimal, decimal},
-            {integer, error, decimal, integer, error},
-            {integer, error, decimal, error, error}
+            {integer, error, decimal, integer, integer, error},
+            {error, error, error, error, error, error},
+            {decimal, error, decimal, decimal, decimal, error},
+            {integer, error, decimal, integer, error, error},
+            {integer, error, decimal, error, error, error},
+            {error, error, error, error, error, error, error}
         };
         return resta;
     }
     
     private String[][] inicializarMultiplicacion() {
         String[][] multiplicacion = {
-            {integer, error, decimal, integer, integer},
-            {error, error, error, error, error},
-            {decimal, error, decimal, decimal, decimal},
-            {integer, error, decimal, integer, integer},
-            {integer, error, decimal, integer, booleano} 
+            {integer, error, decimal, integer, integer, error},
+            {error, error, error, error, error, error},
+            {decimal, error, decimal, decimal, decimal, error},
+            {integer, error, decimal, integer, integer, error},
+            {integer, error, decimal, integer, booleano, error},
+            {error, error, error, error, error, error, error}
         };
         return multiplicacion;
     }
     
     private String[][] inicializarDivision() {
         String[][]  division = {
-            {decimal, error, decimal, decimal, integer},
-            {error, error, error, error, error},
-            {decimal, error, decimal, decimal, decimal},
-            {decimal, error, decimal, decimal, integer},
-            {decimal, error, decimal, decimal, error}
+            {decimal, error, decimal, decimal, integer, error},
+            {error, error, error, error, error, error},
+            {decimal, error, decimal, decimal, decimal, error},
+            {decimal, error, decimal, decimal, integer, error},
+            {decimal, error, decimal, decimal, error, error},
+            {error, error, error, error, error, error, error}
         };
         return division;
     }
@@ -224,6 +228,33 @@ public class TablasDeOperaciones {
                 valorRetorno = null;
             }
             nuevoDato = new Dato(tipoDato, valorRetorno);
+        } else {
+            nuevoDato = new Dato(error, null);
+        }
+        return nuevoDato;
+    }
+    
+    /**
+     * Permite identificar una operación de menos unario
+     * @param dato
+     * @return Dato operado (puede devolver un dato de tipo error)
+     */
+    public Dato menosUnario(Dato dato) {
+        Dato nuevoDato;
+        if(!dato.getTipo().equals(error)) {
+            String valorRetorno;
+            if(dato.getTipo().equals(integer)) {
+                int valorDato = devolverInteger(dato);
+                Integer datoRetornado = valorDato * -1;
+                valorRetorno = datoRetornado.toString();
+            } else if(dato.getTipo().equals(decimal)) {
+                double valorDato = devolverDecimal(dato);
+                Double datoRetornado = valorDato * -1;
+                valorRetorno = datoRetornado.toString();
+            } else {
+                valorRetorno = "La operación del menos unario solo es válida para valores integer y decimal";
+            }
+            nuevoDato = new Dato(dato.getTipo(), valorRetorno);
         } else {
             nuevoDato = new Dato(error, null);
         }

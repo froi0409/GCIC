@@ -56,7 +56,7 @@ parser code {:
     }
 
     public void agregarErrorSemantico(String mensaje) {
-        Advertencia errorNevo = new Advertencia("Semantico");
+        Advertencia errorNuevo = new Advertencia("Semantico");
         errorNuevo.setMensaje(mensaje);
         listaErrores.add(errorNuevo);
     }
@@ -162,7 +162,7 @@ non terminal Dato valor_condicion;
 
 non terminal valores_de_asignacion;
 non terminal String tipos_variables;
-non terminal igual_variable;
+non terminal Dato igual_variable;
 non terminal igual_integer;
 non terminal igual_string;
 non terminal igual_boolean;
@@ -721,13 +721,22 @@ funciones_strings ::=   ASC PARA strings_concatenados PARC
                         ;
 
 /* ASIGNACION DE VALORES A VARIABLES */
-variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igual_variable     {:
-                                                                                                    ArrayList<Simbolo> listaSimbolosNuevos = new ArrayList<>();
-                                                                                                    for(String id: ids) {
-                                                                                                        listaSimbolosNuevos.add(new Simbolo(id, tipoVar, null, mode.toString(), null));
-                                                                                                    }
-                                                                                                    RESULT = listaSimbolosNuevos;
-                                                                                                :}
+variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igual_variable:valor   {:
+                                                                                                        ArrayList<Simbolo> listaSimbolosNuevos = new ArrayList<>();
+                                                                                                        for(String id: ids) {
+                                                                                                            
+                                                                                                            if(valor.getTipo().equals(error)) {
+                                                                                                                listaSimbolosNuevos.add(new Simbolo(id, tipoVar, null, mode.toString(), null));
+                                                                                                            } else {
+                                                                                                                if(tipoVar.equals(valor.getTipo())) {
+                                                                                                                    listaSimbolosNuevos.add(new Simbolo(id, tipoVar, valor.getValor(), mode.toString(), null));
+                                                                                                                } else {
+                                                                                                                    agregarErrorSemantico("El valor asignado a la(s) variable(s) no es compatible. Conflicto en Linea " + tipoVarleft + " - Columna " + tipoVarright);
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                        RESULT = listaSimbolosNuevos;
+                                                                                                    :}
                 /*INTEGER modo cuerpo_identificadores igual_integer
                 | DECIMAL modo cuerpo_identificadores igual_decimal
                 | STRING modo cuerpo_identificadores igual_string
@@ -736,15 +745,15 @@ variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igu
                 |*/ 
                 ;
 
-tipos_variables ::= INTEGER     {:RESULT = "integer";:}
-                    | DECIMAL   {:RESULT = "decimal";:}
-                    | STRING    {:RESULT = "string";:}
-                    | BOOLEAN   {:RESULT = "boolean";:}
-                    | CHAR      {:RESULT = "char";:}
+tipos_variables ::= INTEGER     {:RESULT = integer;:}
+                    | DECIMAL   {:RESULT = decimal;:}
+                    | STRING    {:RESULT = string;:}
+                    | BOOLEAN   {:RESULT = booleano;:}
+                    | CHAR      {:RESULT = character;:}
                     ;
 
-igual_variable ::=  IGUAL condicion
-                    |
+igual_variable ::=  IGUAL condicion:val     {:RESULT = val;:}
+                    |                       {:RESULT = new Dato(error, null);:}
                     ;
 
 cuerpo_identificadores ::=  cuerpo_identificadores:ids COMA identificadores:id  {:ids.add(id); RESULT = ids;:}
@@ -917,34 +926,83 @@ ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_
                     ;
 
 /* CONDICION */
-condicion ::=   condicion       IGUAL_IGUAL         condicion
-                | condicion     DIFERENTE_IGUAL     condicion
-                | condicion     MENOR_QUE           condicion
-                | condicion     MENOR_IGUAL         condicion
-                | condicion     MAYOR_QUE           condicion
-                | condicion     MAYOR_IGUAL         condicion
-                | NOT           condicion
-                | condicion     AND                 condicion
-                | condicion     OR                  condicion
+condicion ::=   condicion       IGUAL_IGUAL         condicion               {:RESULT = new Dato(error, "");:}
+                | condicion     DIFERENTE_IGUAL     condicion               {:RESULT = new Dato(error, "");:}
+                | condicion     MENOR_QUE           condicion               {:RESULT = new Dato(error, "");:}
+                | condicion     MENOR_IGUAL         condicion               {:RESULT = new Dato(error, "");:}
+                | condicion     MAYOR_QUE           condicion               {:RESULT = new Dato(error, "");:}
+                | condicion     MAYOR_IGUAL         condicion               {:RESULT = new Dato(error, "");:}
+                | NOT           condicion                                   {:RESULT = new Dato(error, "");:}
+                | condicion     AND                 condicion               {:RESULT = new Dato(error, "");:}
+                | condicion     OR                  condicion               {:RESULT = new Dato(error, "");:}
                 /* operaciones aritméticas */
-                | RESTA         condicion:dato                       %prec UNARY
+                | RESTA         condicion:dato                              {:
+                                                                                Dato datoMultiplicado = tablaOperaciones.menosUnario(dato);
+                                                                                if(datoMultiplicado.getTipo().equals(error)) {
+                                                                                    if(datoMultiplicado.getValor() != null) {
+                                                                                        agregarErrorSemantico("El dato " + dato.getValor() + " no es compatible para operar de manera unaria.\nConflicto en Linea " + datoleft + " - Columna " + datoright);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoMultiplicado.getValor() + ".\nConflicto en Linea " + datoleft + " - Columna " + datoright);
+                                                                                    }
+                                                                                    RESULT = datoMultiplicado;
+                                                                                } else {
+                                                                                    RESULT = datoMultiplicado;
+                                                                                }
+                                                                            :}%prec UNARY
                 | condicion:dato1     SUMA                condicion:dato2   {:
                                                                                 Dato datoSumado = tablaOperaciones.sumar(dato1, dato2);
                                                                                 if(datoSumado.getTipo().equals(error)) {
                                                                                     if(datoSumado.getValor() != null) {
                                                                                         agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para sumar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                     } else {
-                                                                                        agregarErrorSemantico(mensaje + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                        agregarErrorSemantico(datoSumado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                     }
+                                                                                    RESULT = datoSumado;
                                                                                 } else {
-
+                                                                                    RESULT = datoSumado;
                                                                                 }
                                                                             :}
-                | condicion:dato1     RESTA               condicion:dato2
-                | condicion:dato1     MULTIPLICACION      condicion:dato2
-                | condicion:dato1     DIVISION            condicion:dato2
-                | valor_condicion
-                | PARA condicion:dato PARC
+                | condicion:dato1     RESTA               condicion:dato2   {:
+                                                                                Dato datoRestado = tablaOperaciones.restar(dato1, dato2);
+                                                                                if(datoRestado.getTipo().equals(error)) {
+                                                                                    if(datoRestado.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para restar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoRestado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                    RESULT = datoRestado;
+                                                                                } else {
+                                                                                    RESULT = datoRestado;
+                                                                                }
+                                                                            :}
+                | condicion:dato1     MULTIPLICACION      condicion:dato2   {:
+                                                                                Dato datoMultiplicado = tablaOperaciones.multiplicar(dato1, dato2);
+                                                                                if(datoMultiplicado.getTipo().equals(error)) {
+                                                                                    if(datoMultiplicado.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para multiplicar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoMultiplicado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                    RESULT = datoMultiplicado;
+                                                                                } else {
+                                                                                    RESULT = datoMultiplicado;
+                                                                                }
+                                                                            :}
+                | condicion:dato1     DIVISION            condicion:dato2   {:
+                                                                                Dato datoDividido = tablaOperaciones.dividir(dato1, dato2);
+                                                                                if(datoDividido.getTipo().equals(error)) {
+                                                                                    if(datoDividido.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para dividir.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoDividido.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                    RESULT = datoDividido;
+                                                                                } else {
+                                                                                    RESULT = datoDividido;
+                                                                                }
+                                                                            :}
+                | valor_condicion:dato                                      {:RESULT = dato;:}
+                | PARA condicion:dato PARC                                  {:RESULT = dato;:}
                 ;
 
 valor_condicion ::= valor_numerico:val  {:RESULT = val;:}
@@ -969,9 +1027,9 @@ valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toS
                     | D_CHAR:val            {:String caracterSt = val.toString().substring(1,1); RESULT = new Dato(character, caracterSt);:}
                     | ALLCHAR:val           {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
                     | ALLCHARNOSPACE:val    {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | D_STRING              {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | ID_ETIQUETA           {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | TRUE                  {:RESULT = new Dato(booleano, "true");:}
-                    | FALSE                 {:RESULT = new Dato(booleano, "false");:}
+                    | D_STRING:val          {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | ID_ETIQUETA:val       {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | TRUE:val              {:RESULT = new Dato(booleano, "true");:}
+                    | FALSE:val             {:RESULT = new Dato(booleano, "false");:}
                     ;
  

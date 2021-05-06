@@ -1947,11 +1947,20 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
     private ArrayList<Advertencia> listaErrores;
     private Captcha captchaSolicitado;
     private TablaDeSimbolos tablaSimbolos;
+    private TablasDeOperaciones tablaOperaciones;
+
+    private String integer = TipoDeDato.INTEGER;
+    private String string = TipoDeDato.STRING;
+    private String decimal = TipoDeDato.DECIMAL;
+    private String character = TipoDeDato.CHAR;
+    private String booleano = TipoDeDato.BOOLEAN;
+    private String error = TipoDeDato.ERROR;
 
     public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
         super(lexer);
         this.listaErrores = listaErrores;
         this.captchaSolicitado = new Captcha();
+        this.tablaOperaciones = new TablasDeOperaciones();
         this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
     public void report_error(String message, Object info) {
@@ -1981,6 +1990,12 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
     }
     protected int error_sync_size() {
         return 1;
+    }
+
+    public void agregarErrorSemantico(String mensaje) {
+        Advertencia errorNuevo = new Advertencia("Semantico");
+        errorNuevo.setMensaje(mensaje);
+        listaErrores.add(errorNuevo);
     }
 
 
@@ -4150,13 +4165,25 @@ class CUP$EtiquetadoParser$actions {
 		int idsleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
 		int idsright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
 		ArrayList<String> ids = (ArrayList<String>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		int valorleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valorright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato valor = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
-                                                                                                    ArrayList<Simbolo> listaSimbolosNuevos = new ArrayList<>();
-                                                                                                    for(String id: ids) {
-                                                                                                        listaSimbolosNuevos.add(new Simbolo(id, tipoVar, null, mode.toString(), null));
-                                                                                                    }
-                                                                                                    RESULT = listaSimbolosNuevos;
-                                                                                                
+                                                                                                        ArrayList<Simbolo> listaSimbolosNuevos = new ArrayList<>();
+                                                                                                        for(String id: ids) {
+                                                                                                            
+                                                                                                            if(valor.getTipo().equals(error)) {
+                                                                                                                listaSimbolosNuevos.add(new Simbolo(id, tipoVar, null, mode.toString(), null));
+                                                                                                            } else {
+                                                                                                                if(tipoVar.equals(valor.getTipo())) {
+                                                                                                                    listaSimbolosNuevos.add(new Simbolo(id, tipoVar, valor.getValor(), mode.toString(), null));
+                                                                                                                } else {
+                                                                                                                    agregarErrorSemantico("El valor asignado a la(s) variable(s) no es compatible. Conflicto en Linea " + tipoVarleft + " - Columna " + tipoVarright);
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                        RESULT = listaSimbolosNuevos;
+                                                                                                    
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("variables",9, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4165,7 +4192,7 @@ class CUP$EtiquetadoParser$actions {
           case 228: // tipos_variables ::= INTEGER 
             {
               String RESULT =null;
-		RESULT = "integer";
+		RESULT = integer;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("tipos_variables",88, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4174,7 +4201,7 @@ class CUP$EtiquetadoParser$actions {
           case 229: // tipos_variables ::= DECIMAL 
             {
               String RESULT =null;
-		RESULT = "decimal";
+		RESULT = decimal;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("tipos_variables",88, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4183,7 +4210,7 @@ class CUP$EtiquetadoParser$actions {
           case 230: // tipos_variables ::= STRING 
             {
               String RESULT =null;
-		RESULT = "string";
+		RESULT = string;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("tipos_variables",88, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4192,7 +4219,7 @@ class CUP$EtiquetadoParser$actions {
           case 231: // tipos_variables ::= BOOLEAN 
             {
               String RESULT =null;
-		RESULT = "boolean";
+		RESULT = booleano;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("tipos_variables",88, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4201,7 +4228,7 @@ class CUP$EtiquetadoParser$actions {
           case 232: // tipos_variables ::= CHAR 
             {
               String RESULT =null;
-		RESULT = "char";
+		RESULT = character;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("tipos_variables",88, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4209,8 +4236,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 233: // igual_variable ::= IGUAL condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato val = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = val;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("igual_variable",89, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4218,8 +4248,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 234: // igual_variable ::= 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		RESULT = new Dato(error, null);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("igual_variable",89, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5208,8 +5238,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 340: // condicion ::= condicion IGUAL_IGUAL condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		RESULT = new Dato(error, "");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5217,8 +5247,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 341: // condicion ::= condicion DIFERENTE_IGUAL condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		RESULT = new Dato(error, "");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5226,8 +5256,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 342: // condicion ::= condicion MENOR_QUE condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		RESULT = new Dato(error, "");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5235,8 +5265,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 343: // condicion ::= condicion MENOR_IGUAL condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		RESULT = new Dato(error, "");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5244,8 +5274,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 344: // condicion ::= condicion MAYOR_QUE condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		RESULT = new Dato(error, "");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5253,8 +5283,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 345: // condicion ::= condicion MAYOR_IGUAL condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		RESULT = new Dato(error, "");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5262,8 +5292,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 346: // condicion ::= NOT condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		RESULT = new Dato(error, "");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5271,8 +5301,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 347: // condicion ::= condicion AND condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		RESULT = new Dato(error, "");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5280,8 +5310,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 348: // condicion ::= condicion OR condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		RESULT = new Dato(error, "");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5289,8 +5319,23 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 349: // condicion ::= RESTA condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		int datoleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int datoright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoMultiplicado = tablaOperaciones.menosUnario(dato);
+                                                                                if(datoMultiplicado.getTipo().equals(error)) {
+                                                                                    if(datoMultiplicado.getValor() != null) {
+                                                                                        agregarErrorSemantico("El dato " + dato.getValor() + " no es compatible para operar de manera unaria.\nConflicto en Linea " + datoleft + " - Columna " + datoright);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoMultiplicado.getValor() + ".\nConflicto en Linea " + datoleft + " - Columna " + datoright);
+                                                                                    }
+                                                                                    RESULT = datoMultiplicado;
+                                                                                } else {
+                                                                                    RESULT = datoMultiplicado;
+                                                                                }
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5298,8 +5343,26 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 350: // condicion ::= condicion SUMA condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoSumado = tablaOperaciones.sumar(dato1, dato2);
+                                                                                if(datoSumado.getTipo().equals(error)) {
+                                                                                    if(datoSumado.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para sumar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoSumado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                    RESULT = datoSumado;
+                                                                                } else {
+                                                                                    RESULT = datoSumado;
+                                                                                }
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5307,8 +5370,26 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 351: // condicion ::= condicion RESTA condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoRestado = tablaOperaciones.restar(dato1, dato2);
+                                                                                if(datoRestado.getTipo().equals(error)) {
+                                                                                    if(datoRestado.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para restar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoRestado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                    RESULT = datoRestado;
+                                                                                } else {
+                                                                                    RESULT = datoRestado;
+                                                                                }
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5316,8 +5397,26 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 352: // condicion ::= condicion MULTIPLICACION condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoMultiplicado = tablaOperaciones.multiplicar(dato1, dato2);
+                                                                                if(datoMultiplicado.getTipo().equals(error)) {
+                                                                                    if(datoMultiplicado.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para multiplicar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoMultiplicado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                    RESULT = datoMultiplicado;
+                                                                                } else {
+                                                                                    RESULT = datoMultiplicado;
+                                                                                }
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5325,8 +5424,26 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 353: // condicion ::= condicion DIVISION condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoDividido = tablaOperaciones.dividir(dato1, dato2);
+                                                                                if(datoDividido.getTipo().equals(error)) {
+                                                                                    if(datoDividido.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para dividir.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoDividido.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                    RESULT = datoDividido;
+                                                                                } else {
+                                                                                    RESULT = datoDividido;
+                                                                                }
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5334,8 +5451,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 354: // condicion ::= valor_condicion 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		int datoleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int datoright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = dato;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5343,8 +5463,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 355: // condicion ::= PARA condicion PARC 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		int datoleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int datoright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		Dato dato = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		RESULT = dato;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5352,8 +5475,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 356: // valor_condicion ::= valor_numerico 
             {
-              Object RESULT =null;
-
+              Dato RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato val = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = val;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_condicion",86, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5361,11 +5487,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 357: // valor_numerico ::= D_INTEGER 
             {
-              Object RESULT =null;
+              Dato RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
 		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
-		RESULT = val;
+		RESULT = new Dato(integer, val.toString());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",96, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5373,11 +5499,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 358: // valor_numerico ::= D_DECIMAL 
             {
-              Object RESULT =null;
+              Dato RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
 		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
-		RESULT = val;
+		RESULT = new Dato(decimal, val.toString());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",96, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5385,11 +5511,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 359: // valor_numerico ::= IDENTIFICADOR 
             {
-              Object RESULT =null;
+              Dato RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
 		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
-		RESULT = 0;
+		/* BUSCAR VALOR EN TABLA DE SIMBOLOS */RESULT = new Dato(string, "");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",96, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5397,11 +5523,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 360: // valor_numerico ::= ALFANUMERICO 
             {
-              Object RESULT =null;
+              Dato RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
 		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
-		RESULT = 0;
+		/* BUSCAR VALOR EN TABLA DE SIMBOLOS */RESULT = new Dato(string, "");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",96, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5409,11 +5535,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 361: // valor_numerico ::= D_CHAR 
             {
-              Object RESULT =null;
+              Dato RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
 		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
-		RESULT = 0;
+		String caracterSt = val.toString().substring(1,1); RESULT = new Dato(character, caracterSt);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",96, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5421,8 +5547,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 362: // valor_numerico ::= ALLCHAR 
             {
-              Object RESULT =null;
-		RESULT = 0;
+              Dato RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = new Dato(string, val.toString().replace("\"", ""));
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",96, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5430,8 +5559,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 363: // valor_numerico ::= ALLCHARNOSPACE 
             {
-              Object RESULT =null;
-		RESULT = 0;
+              Dato RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = new Dato(string, val.toString().replace("\"", ""));
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",96, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5439,8 +5571,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 364: // valor_numerico ::= D_STRING 
             {
-              Object RESULT =null;
-		RESULT = 0;
+              Dato RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = new Dato(string, val.toString().replace("\"", ""));
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",96, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5448,8 +5583,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 365: // valor_numerico ::= ID_ETIQUETA 
             {
-              Object RESULT =null;
-		RESULT = 0;
+              Dato RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = new Dato(string, val.toString().replace("\"", ""));
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",96, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5457,8 +5595,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 366: // valor_numerico ::= TRUE 
             {
-              Object RESULT =null;
-		RESULT = 1;
+              Dato RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = new Dato(booleano, "true");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",96, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5466,8 +5607,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 367: // valor_numerico ::= FALSE 
             {
-              Object RESULT =null;
-		RESULT = 0;
+              Dato RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = new Dato(booleano, "false");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",96, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
