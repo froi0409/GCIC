@@ -10,11 +10,20 @@ parser code {:
     private ArrayList<Advertencia> listaErrores;
     private Captcha captchaSolicitado;
     private TablaDeSimbolos tablaSimbolos;
+    private TablasDeOperaciones tablaOperaciones;
+
+    private String integer = TipoDeDato.INTEGER;
+    private String string = TipoDeDato.STRING;
+    private String decimal = TipoDeDato.DECIMAL;
+    private String character = TipoDeDato.CHAR;
+    private String booleano = TipoDeDato.BOOLEAN;
+    private String error = TipoDeDato.ERROR;
 
     public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
         super(lexer);
         this.listaErrores = listaErrores;
         this.captchaSolicitado = new Captcha();
+        this.tablaOperaciones = new TablasDeOperaciones();
         this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
     public void report_error(String message, Object info) {
@@ -44,6 +53,12 @@ parser code {:
     }
     protected int error_sync_size() {
         return 1;
+    }
+
+    public void agregarErrorSemantico(String mensaje) {
+        Advertencia errorNevo = new Advertencia("Semantico");
+        errorNuevo.setMensaje(mensaje);
+        listaErrores.add(errorNuevo);
     }
 
 :}
@@ -141,8 +156,8 @@ non terminal condicion_else_if, parametros_else_if;
 non terminal condicion_else;
 non terminal asignacion_valor;
 
-non terminal condicion;
-non terminal valor_condicion;
+non terminal Dato condicion;
+non terminal Dato valor_condicion;
 
 
 non terminal valores_de_asignacion;
@@ -154,7 +169,7 @@ non terminal igual_boolean;
 non terminal igual_char;
 non terminal igual_decimal;
 non terminal Double expresion_aritmetica;
-non terminal valor_numerico;
+non terminal Dato valor_numerico;
 
 non terminal ArrayList<String> cuerpo_identificadores;
 
@@ -911,16 +926,28 @@ condicion ::=   condicion       IGUAL_IGUAL         condicion
                 | NOT           condicion
                 | condicion     AND                 condicion
                 | condicion     OR                  condicion
-                | RESTA         condicion                       %prec UNARY
-                | condicion     SUMA                condicion
-                | condicion     RESTA               condicion
-                | condicion     MULTIPLICACION      condicion
-                | condicion     DIVISION            condicion
+                /* operaciones aritméticas */
+                | RESTA         condicion:dato                       %prec UNARY
+                | condicion:dato1     SUMA                condicion:dato2   {:
+                                                                                Dato datoSumado = tablaOperaciones.sumar(dato1, dato2);
+                                                                                if(datoSumado.getTipo().equals(error)) {
+                                                                                    if(datoSumado.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para sumar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(mensaje + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                } else {
+
+                                                                                }
+                                                                            :}
+                | condicion:dato1     RESTA               condicion:dato2
+                | condicion:dato1     MULTIPLICACION      condicion:dato2
+                | condicion:dato1     DIVISION            condicion:dato2
                 | valor_condicion
-                | PARA condicion PARC
+                | PARA condicion:dato PARC
                 ;
 
-valor_condicion ::= valor_numerico
+valor_condicion ::= valor_numerico:val  {:RESULT = val;:}
                     ;
 
 /* EXPRESIONES ARITMETICAS */
@@ -935,16 +962,16 @@ expresion_aritmetica ::=    RESTA                           expresion_aritmetica
                             ;
 */
 
-valor_numerico ::=  D_INTEGER:val       {:RESULT = val;:}
-                    | D_DECIMAL:val     {:RESULT = val;:}
-                    | IDENTIFICADOR:val {:RESULT = 0;:}
-                    | ALFANUMERICO:val  {:RESULT = 0;:}
-                    | D_CHAR:val        {:RESULT = 0;:}
-                    | ALLCHAR           {:RESULT = 0;:}
-                    | ALLCHARNOSPACE    {:RESULT = 0;:}
-                    | D_STRING          {:RESULT = 0;:}
-                    | ID_ETIQUETA       {:RESULT = 0;:}
-                    | TRUE              {:RESULT = 1;:}
-                    | FALSE             {:RESULT = 0;:}
+valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toString());:}
+                    | D_DECIMAL:val         {:RESULT = new Dato(decimal, val.toString());:}
+                    | IDENTIFICADOR:val     {:/* BUSCAR VALOR EN TABLA DE SIMBOLOS */RESULT = new Dato(string, "");:}
+                    | ALFANUMERICO:val      {:/* BUSCAR VALOR EN TABLA DE SIMBOLOS */RESULT = new Dato(string, "");:}
+                    | D_CHAR:val            {:String caracterSt = val.toString().substring(1,1); RESULT = new Dato(character, caracterSt);:}
+                    | ALLCHAR:val           {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | ALLCHARNOSPACE:val    {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | D_STRING              {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | ID_ETIQUETA           {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | TRUE                  {:RESULT = new Dato(booleano, "true");:}
+                    | FALSE                 {:RESULT = new Dato(booleano, "false");:}
                     ;
  
