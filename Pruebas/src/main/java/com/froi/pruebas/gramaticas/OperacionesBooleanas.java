@@ -97,6 +97,7 @@ public class OperacionesBooleanas extends TablasDeOperaciones {
                 nuevoDato = new Dato(booleano, "false");
             }
         } else {
+            System.out.println("");
             nuevoDato = new Dato(error, "El operador > solo puede ser utilizado para comparar datos numéricos");
         }
         return nuevoDato;
@@ -241,11 +242,22 @@ public class OperacionesBooleanas extends TablasDeOperaciones {
         boolean bandera = true;
         //Detectamos si el dato 1 es un dao no munérico
         if(!dato1.getTipo().equals(integer) && !dato1.getTipo().equals(decimal)) {
-             bandera = false;
-        }
-        if(!dato2.getTipo().equals(integer) && !dato2.getTipo().equals(decimal)) {
+            //System.out.println("El dato " + dato1.getValor() + " no es numérico"); 
             bandera = false;
         }
+        if(!dato2.getTipo().equals(integer) && !dato2.getTipo().equals(decimal)) {
+            //System.out.println("El dato " + dato2.getValor() + " no es numérico");
+            bandera = false;
+        }
+        /*
+        try {
+            Double.parseDouble(dato1.getValor());
+            Double.parseDouble(dato2.getValor());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+        */
         return bandera;
     }
     

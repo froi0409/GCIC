@@ -5178,7 +5178,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.igualIgual(dato1, dato2);
-                                                                                if(datoCondicionado.equals(error)) {
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
                                                                                 RESULT = datoCondicionado;
@@ -5199,7 +5199,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.diferenteIgual(dato1, dato2);
-                                                                                if(datoCondicionado.equals(error)) {
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
                                                                                 RESULT = datoCondicionado;
@@ -5220,7 +5220,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.menorQue(dato1, dato2);
-                                                                                if(datoCondicionado.equals(error)) {
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
                                                                                 RESULT = datoCondicionado;
@@ -5241,7 +5241,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.menorIgual(dato1, dato2);
-                                                                                if(datoCondicionado.equals(error)) {
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
                                                                                 RESULT = datoCondicionado;
@@ -5262,7 +5262,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.mayorQue(dato1, dato2);
-                                                                                if(datoCondicionado.equals(error)) {
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
                                                                                 RESULT = datoCondicionado;
@@ -5283,7 +5283,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.mayorIgual(dato1, dato2);
-                                                                                if(datoCondicionado.equals(error)) {
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
                                                                                 RESULT = datoCondicionado;
@@ -5301,7 +5301,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.not(dato);
-                                                                                if(datoCondicionado.equals(error)) {
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + datoleft + " - Columna " + datoright);
                                                                                 }
                                                                                 RESULT = datoCondicionado;
@@ -5322,7 +5322,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.and(dato1, dato2);
-                                                                                if(datoCondicionado.equals(error)) {
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
                                                                                 RESULT = datoCondicionado;
@@ -5343,7 +5343,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.or(dato1, dato2);
-                                                                                if(datoCondicionado.equals(error)) {
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
                                                                                 RESULT = datoCondicionado;
