@@ -169,6 +169,69 @@ public class OperacionesBooleanas extends TablasDeOperaciones {
     }
     
     /**
+     * Permite cambiar el valor de un Dato booleano por su opuesto
+     * @param dato Dato
+     * @return Dato de tipo booleano o error
+     */
+    public Dato not(Dato dato) {
+        Dato nuevoDato = null;
+        if(dato.getTipo().equals(booleano)) {
+            if(dato.getValor().equalsIgnoreCase("true")) {
+                nuevoDato = new Dato(booleano, "false");
+            } else {
+                nuevoDato = new Dato(booleano, "true");
+            }
+        } else {
+            nuevoDato = new Dato(error, "El operador ! solo puede ser asignado a un dato de tipo booleano");
+        }
+        return nuevoDato;
+    }
+    
+    /**
+     * Permite comparar dos Datos de timpo booleano a través de un AND
+     * @param dato1 Dato 1
+     * @param dato2 Dato 2
+     * @return Dato de tipo booleano o error
+     */
+    public Dato and(Dato dato1, Dato dato2) {
+        Dato nuevoDato = null;
+        if(isBooleano(dato1, dato2)) {
+            Boolean valorDato1 = Boolean.parseBoolean(dato1.getValor());
+            Boolean valorDato2 = Boolean.parseBoolean(dato2.getValor());
+            if(valorDato1 && valorDato2) {
+                nuevoDato = new Dato(booleano, "true");
+            } else {
+                nuevoDato = new Dato(booleano, "false");
+            }
+        } else {
+            nuevoDato = new Dato(error, "El operador && solo puede comparar a dos datos de tipo booleano");
+        }
+        return nuevoDato;
+    }
+    
+    /**
+     * Permite comparar dos Datos de tipo booleano a través de un OR
+     * @param dato1 Dato 1
+     * @param dato2 Dato 2
+     * @return Dato de tipo booleano o error
+     */
+    public Dato or(Dato dato1, Dato dato2) {
+        Dato nuevoDato = null;
+        if(isBooleano(dato1, dato2)) {
+            Boolean valorDato1 = Boolean.parseBoolean(dato1.getValor());
+            Boolean valorDato2 = Boolean.parseBoolean(dato2.getValor());
+            if(valorDato1 || valorDato2) {
+                nuevoDato = new Dato(booleano, "true");
+            } else {
+                nuevoDato = new Dato(booleano, "false");
+            }
+        } else {
+            nuevoDato = new Dato(error, "El operador && solo puede comparar a dos datos de tipo booleano");
+        }
+        return nuevoDato;
+    }
+    
+    /**
      * Permite identificar si ambos datos son de tipo numerico
      * @param dato1 Dato 1
      * @param dato2 Dato 2
@@ -184,6 +247,23 @@ public class OperacionesBooleanas extends TablasDeOperaciones {
             bandera = false;
         }
         return bandera;
+    }
+    
+    /**
+     * Permite identificar si ambos datos son de tipo booleano
+     * @param dato1 Dato 1
+     * @param dato2 Dato 2
+     * @return true si ambos datos son de tipo booleano, de lo contrario retorna false
+     */
+    public boolean isBooleano(Dato dato1, Dato dato2) {
+        boolean bandera = true;
+        if(!dato1.getTipo().equals(booleano)) {
+            bandera = false;
+        }
+        if(dato2.getTipo().equals(booleano)) {
+            bandera = false;
+        }
+        return false;
     }
     
     /**
