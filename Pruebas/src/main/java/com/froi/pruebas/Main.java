@@ -6,6 +6,8 @@
 package com.froi.pruebas;
 
 import com.froi.pruebas.frames.frame;
+import com.froi.pruebas.gramaticas.Dato;
+import java.util.Objects;
 
 /**
  *
@@ -18,8 +20,13 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        String hola = "'h'";
-        System.out.println(hola.substring(1, 2));
+        Double dato1 = Double.parseDouble("12.0");
+        Double dato2 = Double.parseDouble("12");
+        if(dato1 == dato2) {
+            System.out.println("si " + dato1 + " " + dato2);
+        } else {
+            System.out.println("no");
+        }
         frame ventana = new frame();
         ventana.setVisible(true);
     }
