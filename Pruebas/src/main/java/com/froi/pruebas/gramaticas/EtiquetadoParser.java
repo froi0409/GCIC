@@ -1898,6 +1898,7 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
     private Captcha captchaSolicitado;
     private TablaDeSimbolos tablaSimbolos;
     private TablasDeOperaciones tablaOperaciones;
+    private OperacionesBooleanas operacionesBooleanas;
 
     private String integer = TipoDeDato.INTEGER;
     private String string = TipoDeDato.STRING;
@@ -1913,6 +1914,7 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
         this.listaErrores = listaErrores;
         this.captchaSolicitado = new Captcha();
         this.tablaOperaciones = new TablasDeOperaciones();
+        this.operacionesBooleanas = new OperacionesBooleanas();
         this.procesoActual = "";
         this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
@@ -5168,7 +5170,19 @@ class CUP$EtiquetadoParser$actions {
           case 338: // condicion ::= condicion IGUAL_IGUAL condicion 
             {
               Dato RESULT =null;
-		RESULT = new Dato(error, "");
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoCondicionado = operacionesBooleanas.igualIgual(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5177,7 +5191,19 @@ class CUP$EtiquetadoParser$actions {
           case 339: // condicion ::= condicion DIFERENTE_IGUAL condicion 
             {
               Dato RESULT =null;
-		RESULT = new Dato(error, "");
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoCondicionado = operacionesBooleanas.diferenteIgual(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5186,7 +5212,19 @@ class CUP$EtiquetadoParser$actions {
           case 340: // condicion ::= condicion MENOR_QUE condicion 
             {
               Dato RESULT =null;
-		RESULT = new Dato(error, "");
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoCondicionado = operacionesBooleanas.menorQue(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5195,7 +5233,19 @@ class CUP$EtiquetadoParser$actions {
           case 341: // condicion ::= condicion MENOR_IGUAL condicion 
             {
               Dato RESULT =null;
-		RESULT = new Dato(error, "");
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoCondicionado = operacionesBooleanas.menorIgual(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5204,7 +5254,19 @@ class CUP$EtiquetadoParser$actions {
           case 342: // condicion ::= condicion MAYOR_QUE condicion 
             {
               Dato RESULT =null;
-		RESULT = new Dato(error, "");
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoCondicionado = operacionesBooleanas.mayorQue(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5213,7 +5275,19 @@ class CUP$EtiquetadoParser$actions {
           case 343: // condicion ::= condicion MAYOR_IGUAL condicion 
             {
               Dato RESULT =null;
-		RESULT = new Dato(error, "");
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoCondicionado = operacionesBooleanas.mayorIgual(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5222,7 +5296,16 @@ class CUP$EtiquetadoParser$actions {
           case 344: // condicion ::= NOT condicion 
             {
               Dato RESULT =null;
-		RESULT = new Dato(error, "");
+		int datoleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int datoright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoCondicionado = operacionesBooleanas.not(dato);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + datoleft + " - Columna " + datoright);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5231,7 +5314,19 @@ class CUP$EtiquetadoParser$actions {
           case 345: // condicion ::= condicion AND condicion 
             {
               Dato RESULT =null;
-		RESULT = new Dato(error, "");
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoCondicionado = operacionesBooleanas.and(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5240,7 +5335,19 @@ class CUP$EtiquetadoParser$actions {
           case 346: // condicion ::= condicion OR condicion 
             {
               Dato RESULT =null;
-		RESULT = new Dato(error, "");
+		int dato1left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int dato1right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		Dato dato1 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int dato2left = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int dato2right = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                Dato datoCondicionado = operacionesBooleanas.or(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("condicion",85, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;

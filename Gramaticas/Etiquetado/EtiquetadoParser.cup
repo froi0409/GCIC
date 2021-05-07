@@ -11,6 +11,7 @@ parser code {:
     private Captcha captchaSolicitado;
     private TablaDeSimbolos tablaSimbolos;
     private TablasDeOperaciones tablaOperaciones;
+    private OperacionesBooleanas operacionesBooleanas;
 
     private String integer = TipoDeDato.INTEGER;
     private String string = TipoDeDato.STRING;
@@ -26,6 +27,7 @@ parser code {:
         this.listaErrores = listaErrores;
         this.captchaSolicitado = new Captcha();
         this.tablaOperaciones = new TablasDeOperaciones();
+        this.operacionesBooleanas = new OperacionesBooleanas();
         this.procesoActual = "";
         this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
@@ -944,15 +946,69 @@ ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_
                     ;
 
 /* CONDICION */
-condicion ::=   condicion       IGUAL_IGUAL         condicion               {:RESULT = new Dato(error, "");:}
-                | condicion     DIFERENTE_IGUAL     condicion               {:RESULT = new Dato(error, "");:}
-                | condicion     MENOR_QUE           condicion               {:RESULT = new Dato(error, "");:}
-                | condicion     MENOR_IGUAL         condicion               {:RESULT = new Dato(error, "");:}
-                | condicion     MAYOR_QUE           condicion               {:RESULT = new Dato(error, "");:}
-                | condicion     MAYOR_IGUAL         condicion               {:RESULT = new Dato(error, "");:}
-                | NOT           condicion                                   {:RESULT = new Dato(error, "");:}
-                | condicion     AND                 condicion               {:RESULT = new Dato(error, "");:}
-                | condicion     OR                  condicion               {:RESULT = new Dato(error, "");:}
+condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.igualIgual(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     DIFERENTE_IGUAL     condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.diferenteIgual(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     MENOR_QUE           condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.menorQue(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     MENOR_IGUAL         condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.menorIgual(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     MAYOR_QUE           condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.mayorQue(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     MAYOR_IGUAL         condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.mayorIgual(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | NOT           condicion:dato                              {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.not(dato);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + datoleft + " - Columna " + datoright);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     AND                 condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.and(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     OR                  condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.or(dato1, dato2);
+                                                                                if(datoCondicionado.equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
                 /* operaciones aritméticas */
                 | RESTA         condicion:dato                              {:
                                                                                 Dato datoMultiplicado = tablaOperaciones.menosUnario(dato);
