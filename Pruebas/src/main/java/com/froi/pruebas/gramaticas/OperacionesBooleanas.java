@@ -33,8 +33,8 @@ public class OperacionesBooleanas extends TablasDeOperaciones {
     public Dato igualIgual(Dato dato1, Dato dato2) {
         Dato nuevoDato = null;
         if(isNumerico(dato1, dato2)) {
-            Boolean valorDato1 = Boolean.parseBoolean(dato1.getValor());
-            Boolean valorDato2 = Boolean.parseBoolean(dato2.getValor());
+            Double valorDato1 = Double.parseDouble(dato1.getValor());
+            Double valorDato2 = Double.parseDouble(dato2.getValor());
             if(Objects.equals(valorDato1, valorDato2)) {
                 nuevoDato = new Dato(booleano, "true");
             } else {
@@ -50,6 +50,122 @@ public class OperacionesBooleanas extends TablasDeOperaciones {
             nuevoDato = new Dato(error, "Datos no compatibles para ser operados");
         }
         return nuevoDato;
+    }
+    
+    /**
+     * Permite verificar si dos datos son diferentes
+     * @param dato1 Dato 1
+     * @param dato2 Dato 2
+     * @return Retorna un Dato de tipo booleano o error
+     */
+    public Dato diferenteIgual(Dato dato1, Dato dato2) {
+        Dato nuevoDato = null;
+        if(isNumerico(dato1, dato2)) {
+            Double valorDato1 = Double.parseDouble(dato1.getValor());
+            Double valorDato2 = Double.parseDouble(dato2.getValor());
+            if(!Objects.equals(valorDato1, valorDato2)) {
+                nuevoDato = new Dato(booleano, "true");
+            } else {
+                nuevoDato = new Dato(booleano, "false");
+            }
+        } else if(tiposIguales(dato1, dato2)) {
+            if(!dato1.getValor().equals(dato2.getValor())) {
+                nuevoDato = new Dato(booleano, "true");
+            } else {
+                nuevoDato = new Dato(booleano, "false");
+            }
+        } else {
+            nuevoDato = new Dato(error, "Datos no compatibles para ser operados");
+        }
+        return nuevoDato;
+    }
+    
+    /**
+     * Permite verificar si un dato es mayor que otro dato
+     * @param dato1 Dato 1
+     * @param dato2 Dato 2
+     * @return Retorna un dato de tipo booleano o error.
+     */
+    public Dato mayorQue(Dato dato1, Dato dato2) {
+        Dato nuevoDato = null;
+        if(isNumerico(dato1, dato2)) {
+            Double valorDato1 = Double.parseDouble(dato1.getValor());
+            Double valorDato2 = Double.parseDouble(dato2.getValor());
+            if(valorDato1 > valorDato2) {
+                nuevoDato = new Dato(booleano, "true");
+            } else {
+                nuevoDato = new Dato(booleano, "false");
+            }
+        } else {
+            nuevoDato = new Dato(error, "El operador > solo puede ser utilizado para comparar datos numéricos");
+        }
+        return nuevoDato;
+    }
+    
+    /**
+     * Permite verificar si un dato es menos que otro dato
+     * @param dato1
+     * @param dato2
+     * @return Retorna un dato de tipo booleano o error
+     */
+    public Dato menorQue(Dato dato1, Dato dato2) {
+        Dato nuevoDato = null;
+        if(isNumerico(dato1, dato2)) {
+            Double valorDato1 = Double.parseDouble(dato1.getValor());
+            Double valorDato2 = Double.parseDouble(dato2.getValor());
+            if(valorDato1 < valorDato2) {
+                nuevoDato = new Dato(booleano, "true");
+            } else {
+                nuevoDato = new Dato(booleano, "false");
+            }
+        } else {
+            nuevoDato = new Dato(error, "El operador < solo puede ser utilizado para comparar datos numéricos");
+        }
+        return nuevoDato;
+    }
+    
+    /**
+     * Permite verificar si un dato es mayor o igual que otro dato
+     * @param dato1 Dato 1
+     * @param dato2 Dato 2
+     * @return Retorna un dato de tipo booleano o error
+     */
+    public Dato mayorIgual(Dato dato1, Dato dato2) {
+        Dato nuevoDato = null;
+        if(isNumerico(dato1, dato2)) {
+            Double valorDato1 = Double.parseDouble(dato1.getValor());
+            Double valorDato2 = Double.parseDouble(dato2.getValor());
+            if(valorDato1 >= valorDato2) {
+                nuevoDato = new Dato(booleano, "true");
+            } else {
+                nuevoDato = new Dato(booleano, "false");
+            }
+        } else {
+            nuevoDato = new Dato(error, "El operador >= solo puede ser utilizado para comparar datos numéricos");
+        }
+        return nuevoDato;
+    }
+    
+    /**
+     * Permite verificar si un dato es menor o igual que otro dato
+     * @param dato1 Dato 1
+     * @param dato2 Dato 2
+     * @return Retorna un dato de tipo booleano o error
+     */
+    public Dato menorIgual(Dato dato1, Dato dato2) {
+        Dato nuevoDato = null;
+        if(isNumerico(dato1, dato2)) {
+            Double valorDato1 = Double.parseDouble(dato1.getValor());
+            Double valorDato2 = Double.parseDouble(dato2.getValor());
+            if(valorDato1 <= valorDato2) {
+                nuevoDato = new Dato(booleano, "true");
+            } else {
+                nuevoDato = new Dato(booleano, "false");
+            }
+        } else {
+            nuevoDato = new Dato(error, "El operador <= solo puede ser utilizado para comparar datos numéricos");
+        }
+        return nuevoDato = null;
     }
     
     /**
