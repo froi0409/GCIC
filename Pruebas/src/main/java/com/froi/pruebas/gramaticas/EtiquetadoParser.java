@@ -2018,6 +2018,7 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
 
     private ArrayList<Advertencia> listaErrores;
     private ArrayList<String> parametros;
+    private ArrayList<Identificador> procesos;
     private ArrayList<Identificador> identificadores;
     private Captcha captchaSolicitado;
     private TablaDeSimbolos tablaSimbolos;
@@ -2034,6 +2035,7 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
     private String procesoActual;
     private int cantOnLoad;
     private int totalOnLoad;
+    private int procesoRepetido;
 
     public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
         super(lexer);
@@ -2042,10 +2044,12 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
         this.tablaOperaciones = new TablasDeOperaciones();
         this.operacionesBooleanas = new OperacionesBooleanas();
         this.parametros = new ArrayList<>();
+        this.procesos = new ArrayList<>();
         this.identificadores = new ArrayList<>();
         this.procesoActual = "";
         this.totalOnLoad = 0;
         this.cantOnLoad = 0;
+        this.procesoRepetido = 0;
         this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
     public void report_error(String message, Object info) {
@@ -2112,7 +2116,7 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
 
     public boolean variableExistente(String id, String procesoActual) {
         for(Simbolo simb : tablaSimbolos.getTablaSimbolos()) {
-            if(simb.getIdentificador().equals(id) && simb.getProcedimiento().equals(procesoActual)) {
+            if(simb.getIdentificador().equals(id) && (simb.getProcedimiento().equals(procesoActual) || simb.getModo().equals("@global"))) {
                 return true;
             }
         }
@@ -2121,11 +2125,22 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
     
     public boolean variableValida(String id, String procesoActual, String tipo) {
         for(Simbolo simb : tablaSimbolos.getTablaSimbolos()) {
-            if(simb.getIdentificador().equals(id) && simb.getProcedimiento().equals(procesoActual) && simb.getTipo().equals(tipo)) {
+            if(simb.getIdentificador().equals(id) && (simb.getProcedimiento().equals(procesoActual) || simb.getModo().equals("@global")) && simb.getTipo().equals(tipo)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public String agregarProceso(String nombreProceso, int linea, int columna) {
+        for(Identificador proc : procesos) {
+            if(proc.getId().equals(nombreProceso)) {
+                agregarErrorSemantico("El proceso " + nombreProceso + " Ya está declarado en la Linea: " + proc.getLinea() + " - Columna: " + proc.getColumna() + ".\nConflicto en Linea: " + linea + " - Columna: " + columna); 
+                procesoRepetido++;
+                return nombreProceso + procesoRepetido;
+            }
+        }
+        return nombreProceso;
     }
 
 
@@ -4076,8 +4091,9 @@ class CUP$EtiquetadoParser$actions {
 		int procright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
 		Object proc = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
 		
-                                                        procesoActual = proc.toString();
-                                                        RESULT = proc.toString();
+                                                        procesoActual = agregarProceso(proc.toString(), procleft, procright);
+                                                        procesos.add(new Identificador(procesoActual, procleft, procright));
+                                                        RESULT = procesoActual;
                                                     
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_proceso",127, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -4093,6 +4109,7 @@ class CUP$EtiquetadoParser$actions {
 		
                                                         cantOnLoad++; totalOnLoad++;
                                                         procesoActual = proc.toString() + totalOnLoad;
+                                                        procesos.add(new Identificador(procesoActual, procleft, procright));
                                                         if(cantOnLoad > 1) {
                                                             agregarErrorSemantico("Ya existe un bloque ON_LOAD() en el scripting.\nConflicto en Linea: " + procleft + " - Columna: " + procright);
                                                         }
