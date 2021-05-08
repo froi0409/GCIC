@@ -827,12 +827,20 @@ variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igu
                                                                                                         ArrayList<Simbolo> listaSimbolosNuevos = new ArrayList<>();
                                                                                                         for(String id: ids) {
                                                                                                             if(valor.getValor() != null && valor.getTipo().equals(error) && valor.getValor().equals("vacio")){
-                                                                                                                tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, null, mode.toString(), procesoActual));
+                                                                                                                if(!tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, null, mode.toString(), procesoActual))) {
+                                                                                                                    Advertencia errorNuevo = new Advertencia("Semantico");
+                                                                                                                    errorNuevo.setMensaje("El simbolo " + id + " ya existe en el procedimiento " + procesoActual);
+                                                                                                                    listaErrores.add(errorNuevo);
+                                                                                                                }
                                                                                                             } else if(valor.getTipo().equals(error)) {
                                                                                                                 agregarErrorSemantico(valor.getValor() + ".\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
                                                                                                             } else {
                                                                                                                 if(tipoVar.equals(valor.getTipo())) {
-                                                                                                                    tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, valor.getValor(), mode.toString(), procesoActual));
+                                                                                                                    if(!tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, valor.getValor(), mode.toString(), procesoActual))){
+                                                                                                                        Advertencia errorNuevo = new Advertencia("Semantico");
+                                                                                                                        errorNuevo.setMensaje("El simbolo " + id + " ya existe en el procedimiento " + procesoActual);
+                                                                                                                        listaErrores.add(errorNuevo);
+                                                                                                                    }
                                                                                                                 } else {
                                                                                                                     agregarErrorSemantico("El valor asignado a la(s) variable(s) no es compatible. Conflicto en Linea " + tipoVarleft + " - Columna " + tipoVarright);
                                                                                                                 }
@@ -984,6 +992,7 @@ condicion_else ::=  ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC 
 
 /* CICLO REPEAT */
 ciclo_repeat ::=    REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC parametros_proceso_simples
                     | error PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
                     | REPEAT error repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
                     | REPEAT PARA error PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
@@ -999,6 +1008,14 @@ ciclo_repeat ::=    REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_lim
                     | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
                     | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
                     | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
+                    //Errores repeat de una instruccion
+                    | REPEAT error repetir_declaracion PARC HUNTIL PARA repetir_limite PARC parametros_proceso_simples
+                    | REPEAT PARA error PARC HUNTIL PARA repetir_limite PARC parametros_proceso_simples
+                    | REPEAT PARA repetir_declaracion error HUNTIL PARA repetir_limite PARC parametros_proceso_simples
+                    | REPEAT PARA repetir_declaracion PARC error PARA repetir_limite PARC parametros_proceso_simples
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL error repetir_limite PARC parametros_proceso_simples
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA error PARC parametros_proceso_simples
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite error parametros_proceso_simples
                     ;
 
 repetir_declaracion ::= INTEGER identificadores IGUAL igual_repeat
@@ -1014,6 +1031,7 @@ igual_repeat ::=    D_INTEGER
 
 /* CICLO WHILE */
 ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion PARC THENWHILE parametros_proceso_simples
                     | error PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
                     | WHILE error condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
                     | WHILE PARA error PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
@@ -1026,6 +1044,11 @@ ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_
                     | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
                     | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
                     | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
+                    // errores para while simple
+                    | WHILE error condicion PARC THENWHILE parametros_proceso_simples
+                    | WHILE PARA error PARC THENWHILE parametros_proceso_simples
+                    | WHILE PARA condicion error THENWHILE parametros_proceso_simples
+                    | WHILE PARA condicion PARC error parametros_proceso_simples
                     ;
 
 /* CONDICION */
