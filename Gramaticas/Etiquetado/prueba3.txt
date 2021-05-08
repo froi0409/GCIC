@@ -39,6 +39,9 @@
             ]
             PROCESS_HOLA()[
                 integer hola_mundo_1;
+                REPEAT(hola_mundo_1 = 12) HUNTIL(12) 
+                    INIT{:
+                    :} END
             ]
         </C_SCRIPTING>
         <c_p>HOLA_MUNDO HOLA MUNDO</c_p>

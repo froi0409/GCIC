@@ -100,6 +100,24 @@ parser code {:
         }
     }
 
+    public boolean variableExistente(String id, String procesoActual) {
+        for(Simbolo simb : tablaSimbolos.getTablaSimbolos()) {
+            if(simb.getIdentificador().equals(id) && simb.getProcedimiento().equals(procesoActual)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean variableValida(String id, String procesoActual, String tipo) {
+        for(Simbolo simb : tablaSimbolos.getTablaSimbolos()) {
+            if(simb.getIdentificador().equals(id) && simb.getProcedimiento().equals(procesoActual) && simb.getTipo().equals(tipo)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 :}
 
 //Declaración de símbolos terminales
@@ -1018,8 +1036,30 @@ ciclo_repeat ::=    REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_lim
                     | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite error parametros_proceso_simples
                     ;
 
-repetir_declaracion ::= INTEGER identificadores IGUAL igual_repeat
-                        | identificadores IGUAL igual_repeat
+repetir_declaracion ::= INTEGER:ent identificadores:ide IGUAL condicion:val {:
+                                                                                if(val.getTipo().equals(integer)) {
+                                                                                    if(!tablaSimbolos.insertarSimbolo(new Simbolo(ide.toString(), integer, val.getValor(), "-", procesoActual))){
+                                                                                        agregarErrorSemantico("El simbolo " + ide.toString() + " ya existe en el procedimiento " + procesoActual + ".\nConflicto en Linea: " + entleft + " - Columna: " + entright);
+                                                                                    }
+                                                                                } else {
+                                                                                    agregarErrorSemantico("El valor asignado a la variable no es compatible.\n Conflicto en Linea: " + entleft + " - Columna: " + entright);
+                                                                                }
+                                                                                
+                                                                            :}
+                        | identificadores:ide IGUAL condicion:val           {:
+                                                                                if(!val.getTipo().equals(integer)) {
+                                                                                    agregarErrorSemantico("El valor a asignar no es de tipo integer, recuerde que REPEAT solo acepta parametros de tipo integer.\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                                                }
+                                                                                if(variableExistente(ide.toString(), procesoActual)) {
+                                                                                    if(variableValida(ide.toString(), procesoActual, integer)) {
+                                                                                        
+                                                                                    } else {
+                                                                                        agregarErrorSemantico("La variable " + ide.toString() + " no es una variable de tipo integer.\nConflicto en Linea: " + ideleft + " - Columna: " + ideright);
+                                                                                    }
+                                                                                } else {
+                                                                                    agregarErrorSemantico("La variable " + ide.toString() + " no está declarada en el proceso " + procesoActual + ".\nConflicto en Linea: " + ideleft + " - Columna: " + ideright);
+                                                                                }
+                                                                            :}
                         ;
 
 repetir_limite ::=  D_INTEGER
