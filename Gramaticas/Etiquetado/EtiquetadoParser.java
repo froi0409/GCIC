@@ -4766,7 +4766,25 @@ class CUP$EtiquetadoParser$actions {
           case 265: // asignacion_valor ::= cuerpo_identificadores IGUAL condicion 
             {
               Object RESULT =null;
-
+		int idsleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int idsright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		ArrayList<String> ids = (ArrayList<String>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int conleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int conright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Dato con = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                                                String tipoVar = con.getTipo();
+                                                                                for(String iden: ids) {
+                                                                                    if(variableExistente(iden, procesoActual)) {
+                                                                                        if(!variableValida(iden, procesoActual, tipoVar)) {
+                                                                                            agregarErrorSemantico("La variable: " + iden + " no es del tipo " + tipoVar + ".\nConflicto en la Linea: " + idsleft + " - Columna: " + idsright);
+                                                                                        }
+                                                                                    } else {
+                                                                                        agregarErrorSemantico("La variable " + iden + " no está declarada en el proceso " + procesoActual + ".\nConflicto en la Linea: " + idsleft + " - Columna: " + idsright);
+                                                                                    }
+                                                                                }
+                                                                                
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("asignacion_valor",84, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;

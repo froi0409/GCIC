@@ -940,7 +940,19 @@ strings ::= ALLCHAR
             ;
 
 /* ASIGNACION DE VALORES */
-asignacion_valor ::=    cuerpo_identificadores IGUAL condicion
+asignacion_valor ::=    cuerpo_identificadores:ids IGUAL condicion:con      {:
+                                                                                String tipoVar = con.getTipo();
+                                                                                for(String iden: ids) {
+                                                                                    if(variableExistente(iden, procesoActual)) {
+                                                                                        if(!variableValida(iden, procesoActual, tipoVar)) {
+                                                                                            agregarErrorSemantico("La variable: " + iden + " no es del tipo " + tipoVar + ".\nConflicto en la Linea: " + idsleft + " - Columna: " + idsright);
+                                                                                        }
+                                                                                    } else {
+                                                                                        agregarErrorSemantico("La variable " + iden + " no está declarada en el proceso " + procesoActual + ".\nConflicto en la Linea: " + idsleft + " - Columna: " + idsright);
+                                                                                    }
+                                                                                }
+                                                                                
+                                                                            :}
                         ;
 /*
 valores_de_asignacion ::=   expresion_aritmetica
