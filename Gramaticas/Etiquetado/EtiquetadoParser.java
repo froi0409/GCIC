@@ -1902,6 +1902,7 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
 
     private ArrayList<Advertencia> listaErrores;
     private ArrayList<String> parametros;
+    private ArrayList<Identificador> identificadores;
     private Captcha captchaSolicitado;
     private TablaDeSimbolos tablaSimbolos;
     private TablasDeOperaciones tablaOperaciones;
@@ -1923,6 +1924,7 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
         this.tablaOperaciones = new TablasDeOperaciones();
         this.operacionesBooleanas = new OperacionesBooleanas();
         this.parametros = new ArrayList<>();
+        this.identificadores = new ArrayList<>();
         this.procesoActual = "";
         this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
@@ -1972,6 +1974,20 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
             }
         }
         return comprobante;
+    }
+
+    public void agregarIdentificador(String id, int linea, int columna) {
+        boolean comprobante = true;
+        for(Identificador ident : identificadores) {
+            if(ident.getId().equals(id)) {
+                agregarErrorSemantico("El identificador " + id + " ya fue declarado en la Linea: " + ident.getLinea() + " - Columna: " + ident.getColumna() + ".\nConflicto en Linea: " + linea + " - Columna: " + columna);
+                comprobante = false;
+                break;
+            }
+        }
+        if(comprobante) {
+            identificadores.add(new Identificador(id, linea, columna));
+        }
     }
 
 
@@ -2915,7 +2931,10 @@ class CUP$EtiquetadoParser$actions {
           case 89: // parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA CORC 
             {
               Object RESULT =null;
-		parametros.add("id");
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_gcic",38, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3167,7 +3186,10 @@ class CUP$EtiquetadoParser$actions {
           case 117: // parametros_textarea ::= CORA ID IGUAL ID_ETIQUETA CORC 
             {
               Object RESULT =null;
-		parametros.add("id");
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_textarea",48, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3347,7 +3369,10 @@ class CUP$EtiquetadoParser$actions {
           case 137: // parametros_img ::= CORA ID IGUAL ID_ETIQUETA CORC 
             {
               Object RESULT =null;
-		parametros.add("id");
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_img",54, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3491,7 +3516,10 @@ class CUP$EtiquetadoParser$actions {
           case 153: // parametros_textuales ::= CORA ID IGUAL ID_ETIQUETA CORC 
             {
               String RESULT =null;
-		parametros.add("id");
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_textuales",25, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;

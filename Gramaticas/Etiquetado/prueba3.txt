@@ -32,7 +32,7 @@
         </C_SCRIPTING>
         <C_SCRIPTING>
             ON_LOAD()[
-                IF(5+6+9*9 > 12 && 3 == 3) THEN
+                IF(((5+6+9*9) > 12) && (3 == 3)) THEN
                     INIT{:
 
                     :} END

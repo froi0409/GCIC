@@ -12,6 +12,7 @@ parser code {:
 
     private ArrayList<Advertencia> listaErrores;
     private ArrayList<String> parametros;
+    private ArrayList<Identificador> identificadores;
     private Captcha captchaSolicitado;
     private TablaDeSimbolos tablaSimbolos;
     private TablasDeOperaciones tablaOperaciones;
@@ -33,6 +34,7 @@ parser code {:
         this.tablaOperaciones = new TablasDeOperaciones();
         this.operacionesBooleanas = new OperacionesBooleanas();
         this.parametros = new ArrayList<>();
+        this.identificadores = new ArrayList<>();
         this.procesoActual = "";
         this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
@@ -82,6 +84,20 @@ parser code {:
             }
         }
         return comprobante;
+    }
+
+    public void agregarIdentificador(String id, int linea, int columna) {
+        boolean comprobante = true;
+        for(Identificador ident : identificadores) {
+            if(ident.getId().equals(id)) {
+                agregarErrorSemantico("El identificador " + id + " ya fue declarado en la Linea: " + ident.getLinea() + " - Columna: " + ident.getColumna() + ".\nConflicto en Linea: " + linea + " - Columna: " + columna);
+                comprobante = false;
+                break;
+            }
+        }
+        if(comprobante) {
+            identificadores.add(new Identificador(id, linea, columna));
+        }
     }
 
 :}
@@ -525,7 +541,7 @@ cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic parametros_gcic
                             | cuerpo_parametros_gcic error
                             ;
 
-parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA CORC                  {:parametros.add("id");:}
+parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA:ide CORC              {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);:}
                     | CORA NAME IGUAL texto_comillas_complete CORC  {:parametros.add("name");:}
                     ;
 
@@ -575,7 +591,7 @@ cuerpo_parametros_textarea ::=  cuerpo_parametros_textarea parametros_textarea
 parametros_textarea ::= CORA FONTSIZE IGUAL PIXELES CORC            {:parametros.add("font-size");:}
                         | CORA FONTFAMILY IGUAL font_family CORC    {:parametros.add("font-family");:}
                         | CORA TEXTALIGN IGUAL alineaciones CORC    {:parametros.add("text-align");:}
-                        | CORA ID IGUAL ID_ETIQUETA CORC            {:parametros.add("id");:}
+                        | CORA ID IGUAL ID_ETIQUETA:ide CORC        {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);:}
                         | CORA COLS IGUAL DIGITO_COM CORC           {:parametros.add("cols");:}
                         | CORA ROWS IGUAL DIGITO_COM CORC           {:parametros.add("rows");:}
                         ;
@@ -607,7 +623,7 @@ parametros_img ::=  CORA SRC IGUAL ALLCHARNOSPACE CORC              {:parametros
                     | CORA WIDTH IGUAL tamaños CORC                 {:parametros.add("width");:}
                     | CORA HEIGHT IGUAL tamaños CORC                {:parametros.add("height");:}
                     | CORA ALT IGUAL texto_comillas_complete CORC   {:parametros.add("alt");:}
-                    | CORA ID IGUAL ID_ETIQUETA CORC                {:parametros.add("id");:}
+                    | CORA ID IGUAL ID_ETIQUETA:ide CORC            {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);:}
                     ;
 
 cuerpo_parametros_button ::=    cuerpo_parametros_button parametros_button 
@@ -639,7 +655,7 @@ parametros_p ::=    parametros_textuales
 parametros_textuales ::=    CORA FONTSIZE IGUAL PIXELES CORC            {:parametros.add("font-size");:}
                             | CORA FONTFAMILY IGUAL font_family CORC    {:parametros.add("font-family");:}
                             | CORA TEXTALIGN IGUAL alineaciones CORC    {:parametros.add("text-align");:}
-                            | CORA ID IGUAL ID_ETIQUETA CORC            {:parametros.add("id");:}
+                            | CORA ID IGUAL ID_ETIQUETA:ide CORC        {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);:}
                             | CORA COLOR IGUAL colores CORC             {:parametros.add("color");:}
                             ;
 
