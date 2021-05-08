@@ -226,13 +226,14 @@ non terminal cierre_title;
 non terminal cierre_scripting;
 
 //Precedencia
-precedence left SUMA, RESTA;
-precedence left MULTIPLICACION, DIVISION;
-precedence right UNARY;
 precedence left IGUAL_IGUAL, DIFERENTE_IGUAL, MENOR_QUE, MAYOR_QUE, MENOR_IGUAL, MAYOR_IGUAL;
 precedence left OR;
 precedence left AND;
 precedence left NOT;
+precedence left SUMA, RESTA;
+precedence left MULTIPLICACION, DIVISION;
+precedence left UNARY;
+
 
 //Símbolo inicial de la gramática
 start with inicio;
@@ -948,6 +949,7 @@ ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_
 /* CONDICION */
 condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.igualIgual(dato1, dato2);
+                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " == " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -976,6 +978,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     MAYOR_QUE           condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.mayorQue(dato1, dato2);
+                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " > " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -997,6 +1000,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     AND                 condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.and(dato1, dato2);
+                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " && " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }

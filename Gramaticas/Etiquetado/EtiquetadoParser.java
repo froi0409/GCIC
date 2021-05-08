@@ -309,8 +309,8 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
     "\165\ufe9c\166\ufe9c\167\ufe9c\175\ufe9c\202\ufe9c\001\002\000" +
     "\036\144\175\145\173\146\171\147\201\150\176\151\172" +
     "\162\170\165\206\174\174\205\205\207\202\210\203\213" +
-    "\165\214\200\001\002\000\040\003\ufea6\152\213\153\220" +
-    "\154\216\155\223\156\211\157\214\160\222\161\210\164" +
+    "\165\214\200\001\002\000\040\003\ufea6\152\ufea6\153\ufea6" +
+    "\154\ufea6\155\ufea6\156\ufea6\157\ufea6\160\ufea6\161\ufea6\164" +
     "\ufea6\165\ufea6\166\ufea6\167\ufea6\175\ufea6\202\ufea6\001\002" +
     "\000\036\144\175\145\173\146\171\147\201\150\176\151" +
     "\172\162\170\165\206\174\174\205\205\207\202\210\203" +
@@ -343,36 +343,36 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
     "\151\172\162\170\165\206\174\174\205\205\207\202\210" +
     "\203\213\165\214\200\001\002\000\040\003\ufeac\152\ufeac" +
     "\153\ufeac\154\ufeac\155\ufeac\156\ufeac\157\ufeac\160\222\161" +
-    "\210\164\ufeac\165\ufeac\166\ufeac\167\ufeac\175\ufeac\202\ufeac" +
+    "\210\164\212\165\221\166\215\167\217\175\ufeac\202\ufeac" +
     "\001\002\000\040\003\ufea7\152\ufea7\153\ufea7\154\ufea7\155" +
-    "\ufea7\156\ufea7\157\ufea7\160\ufea7\161\210\164\ufea7\165\ufea7" +
-    "\166\ufea7\167\ufea7\175\ufea7\202\ufea7\001\002\000\040\003" +
-    "\ufea4\152\213\153\220\154\216\155\223\156\211\157\214" +
-    "\160\222\161\210\164\ufea4\165\ufea4\166\215\167\217\175" +
+    "\ufea7\156\ufea7\157\ufea7\160\ufea7\161\210\164\212\165\221" +
+    "\166\215\167\217\175\ufea7\202\ufea7\001\002\000\040\003" +
+    "\ufea4\152\ufea4\153\ufea4\154\ufea4\155\ufea4\156\ufea4\157\ufea4" +
+    "\160\ufea4\161\ufea4\164\ufea4\165\ufea4\166\215\167\217\175" +
     "\ufea4\202\ufea4\001\002\000\040\003\ufeae\152\ufeae\153\ufeae" +
     "\154\ufeae\155\ufeae\156\ufeae\157\ufeae\160\222\161\210\164" +
-    "\ufeae\165\ufeae\166\ufeae\167\ufeae\175\ufeae\202\ufeae\001\002" +
-    "\000\040\003\ufea2\152\213\153\220\154\216\155\223\156" +
-    "\211\157\214\160\222\161\210\164\ufea2\165\ufea2\166\ufea2" +
+    "\212\165\221\166\215\167\217\175\ufeae\202\ufeae\001\002" +
+    "\000\040\003\ufea2\152\ufea2\153\ufea2\154\ufea2\155\ufea2\156" +
+    "\ufea2\157\ufea2\160\ufea2\161\ufea2\164\ufea2\165\ufea2\166\ufea2" +
     "\167\ufea2\175\ufea2\202\ufea2\001\002\000\040\003\ufead\152" +
     "\ufead\153\ufead\154\ufead\155\ufead\156\ufead\157\ufead\160\222" +
-    "\161\210\164\ufead\165\ufead\166\ufead\167\ufead\175\ufead\202" +
-    "\ufead\001\002\000\040\003\ufea3\152\213\153\220\154\216" +
-    "\155\223\156\211\157\214\160\222\161\210\164\ufea3\165" +
+    "\161\210\164\212\165\221\166\215\167\217\175\ufead\202" +
+    "\ufead\001\002\000\040\003\ufea3\152\ufea3\153\ufea3\154\ufea3" +
+    "\155\ufea3\156\ufea3\157\ufea3\160\ufea3\161\ufea3\164\ufea3\165" +
     "\ufea3\166\ufea3\167\ufea3\175\ufea3\202\ufea3\001\002\000\040" +
     "\003\ufeaa\152\ufeaa\153\ufeaa\154\ufeaa\155\ufeaa\156\ufeaa\157" +
-    "\ufeaa\160\222\161\210\164\ufeaa\165\ufeaa\166\ufeaa\167\ufeaa" +
+    "\ufeaa\160\222\161\210\164\212\165\221\166\215\167\217" +
     "\175\ufeaa\202\ufeaa\001\002\000\040\003\ufeaf\152\ufeaf\153" +
     "\ufeaf\154\ufeaf\155\ufeaf\156\ufeaf\157\ufeaf\160\222\161\210" +
-    "\164\ufeaf\165\ufeaf\166\ufeaf\167\ufeaf\175\ufeaf\202\ufeaf\001" +
-    "\002\000\040\003\ufea5\152\213\153\220\154\216\155\223" +
-    "\156\211\157\214\160\222\161\210\164\ufea5\165\ufea5\166" +
+    "\164\212\165\221\166\215\167\217\175\ufeaf\202\ufeaf\001" +
+    "\002\000\040\003\ufea5\152\ufea5\153\ufea5\154\ufea5\155\ufea5" +
+    "\156\ufea5\157\ufea5\160\ufea5\161\ufea5\164\ufea5\165\ufea5\166" +
     "\215\167\217\175\ufea5\202\ufea5\001\002\000\040\003\ufeab" +
     "\152\ufeab\153\ufeab\154\ufeab\155\ufeab\156\ufeab\157\ufeab\160" +
-    "\222\161\210\164\ufeab\165\ufeab\166\ufeab\167\ufeab\175\ufeab" +
+    "\222\161\210\164\212\165\221\166\215\167\217\175\ufeab" +
     "\202\ufeab\001\002\000\040\003\ufea8\152\ufea8\153\ufea8\154" +
-    "\ufea8\155\ufea8\156\ufea8\157\ufea8\160\ufea8\161\ufea8\164\ufea8" +
-    "\165\ufea8\166\ufea8\167\ufea8\175\ufea8\202\ufea8\001\002\000" +
+    "\ufea8\155\ufea8\156\ufea8\157\ufea8\160\ufea8\161\ufea8\164\212" +
+    "\165\221\166\215\167\217\175\ufea8\202\ufea8\001\002\000" +
     "\004\132\241\001\002\000\004\122\242\001\002\000\004" +
     "\200\243\001\002\000\004\203\244\001\002\000\056\003" +
     "\uff3a\110\uff3a\111\uff3a\112\uff3a\113\uff3a\114\uff3a\115\uff3a" +
@@ -393,7 +393,7 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
     "\155\ufea0\156\ufea0\157\ufea0\160\ufea0\161\ufea0\164\ufea0\165" +
     "\ufea0\166\ufea0\167\ufea0\175\ufea0\202\ufea0\001\002\000\040" +
     "\003\ufea9\152\ufea9\153\ufea9\154\ufea9\155\ufea9\156\ufea9\157" +
-    "\ufea9\160\ufea9\161\ufea9\164\ufea9\165\ufea9\166\ufea9\167\ufea9" +
+    "\ufea9\160\ufea9\161\ufea9\164\212\165\221\166\215\167\217" +
     "\175\ufea9\202\ufea9\001\002\000\004\132\377\001\002\000" +
     "\006\003\256\132\257\001\002\000\004\122\370\001\002" +
     "\000\006\003\260\122\261\001\002\000\004\200\362\001" +
@@ -5178,6 +5178,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.igualIgual(dato1, dato2);
+                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " == " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -5262,6 +5263,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.mayorQue(dato1, dato2);
+                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " > " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -5322,6 +5324,7 @@ class CUP$EtiquetadoParser$actions {
 		Dato dato2 = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
                                                                                 Dato datoCondicionado = operacionesBooleanas.and(dato1, dato2);
+                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " && " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
