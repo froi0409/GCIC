@@ -97,7 +97,6 @@ public class OperacionesBooleanas extends TablasDeOperaciones {
                 nuevoDato = new Dato(booleano, "false");
             }
         } else {
-            System.out.println("");
             nuevoDato = new Dato(error, "El operador > solo puede ser utilizado para comparar datos numéricos");
         }
         return nuevoDato;

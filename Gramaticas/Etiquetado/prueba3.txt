@@ -32,63 +32,10 @@
         </C_SCRIPTING>
         <C_SCRIPTING>
             ON_LOAD()[
-                integer hola_mundo = (5+5)+5-3*2+(3-(5+5));
-                integer @global xd_nt = -10;
-                decimal gg_wp = 12.3;
-                char caracter_1 = 'A';
-                char caracter_2;
-                string adios_mundo = "adios mundo" + hola_mundo + "cruel";
-                boolean booleano_1, booleano_2 = true;
-                boolean @global booleano_3, booleano_4;
-            
-                booleano_3 = true;
-                booleano_3, booleano_4 = false;
+                IF(5+6+9*9 > 12 && 3 == 3) THEN
+                    INIT{:
 
-                hola_mundo = 3;
-                
-                hola, adios = 'A';
-
-                IF(1 == 2) THEN 
-                    INIT {:
-                        booleano_1 = false;
-                        IF(xd_nt == 5) THEN
-                            INIT {:
-                                booleano_2 = true;
-                            :} END
                     :} END
-                ELSE IF(hola_mundo == 3) THEN
-                    INIT {:
-                    
-                    :} END
-                ELSE IF(adios_mundo != 3) THEN
-                    INIT {:
-                    
-                    :} END
-                ELSE 
-                    INIT {:
-                    
-                    :} END
-                
-                !! IF de una sola instruccion
-                IF(3 == 3 && (5+5)-3 > 15) THEN
-                    hola_mundo = "hola mundo";
-                ELSE IF (1 < 3) THEN
-                    hola_mundo = "adios mundo";
-                ELSE 
-                    hola_mundo = "hola_bello_mundo";
-
-
-                !! CICLO REPEAT
-                REPEAT (integer repeticion = 0) HUNTIL(45)
-                    INIT {:
-                        hola_mundo = "adios";
-                    :} END
-
-                WHILE ((hola_mundo + adios_mundo) > gg_wp) THENWHILE
-                    INIT {:
-                        HOLA_MUNDO_BELLO = "ADIOS MUNDO BELLO";
-                    :} END
-
             ]
             PROCESS_HOLA()[
                 integer hola_mundo_1;

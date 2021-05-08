@@ -2,12 +2,16 @@ package com.froi.pruebas.gramaticas;
 
 import java_cup.runtime.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 class EtiquetadoParser;
 
 parser code {:
 
     private ArrayList<Advertencia> listaErrores;
+    private ArrayList<String> parametros;
     private Captcha captchaSolicitado;
     private TablaDeSimbolos tablaSimbolos;
     private TablasDeOperaciones tablaOperaciones;
@@ -28,6 +32,7 @@ parser code {:
         this.captchaSolicitado = new Captcha();
         this.tablaOperaciones = new TablasDeOperaciones();
         this.operacionesBooleanas = new OperacionesBooleanas();
+        this.parametros = new ArrayList<>();
         this.procesoActual = "";
         this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
@@ -64,6 +69,19 @@ parser code {:
         Advertencia errorNuevo = new Advertencia("Semantico");
         errorNuevo.setMensaje(mensaje);
         listaErrores.add(errorNuevo);
+    }
+
+    public boolean etiquetasDuplicadas(int linea, int columna) {
+        boolean comprobante = false;
+        Set<String> datosSinDuplicar = new HashSet<String>(parametros); //Creamos un Set de los parametros
+        for(String param : datosSinDuplicar) {
+            int repeticion = Collections.frequency(parametros, param);
+            if(repeticion > 1) {
+                agregarErrorSemantico("El parametro " + param + " se ha repetido " + repeticion + " veces.\nConflicto en Linea: " + linea + " - Columna: " + columna);
+                comprobante = true;
+            }
+        }
+        return comprobante;
     }
 
 :}
@@ -226,14 +244,13 @@ non terminal cierre_title;
 non terminal cierre_scripting;
 
 //Precedencia
+precedence left SUMA, RESTA;
+precedence left MULTIPLICACION, DIVISION;
+precedence left UNARY;
 precedence left IGUAL_IGUAL, DIFERENTE_IGUAL, MENOR_QUE, MAYOR_QUE, MENOR_IGUAL, MAYOR_IGUAL;
 precedence left OR;
 precedence left AND;
 precedence left NOT;
-precedence left SUMA, RESTA;
-precedence left MULTIPLICACION, DIVISION;
-precedence left UNARY;
-
 
 //Símbolo inicial de la gramática
 start with inicio;
@@ -248,7 +265,11 @@ inicio ::=  apertura_gcic cuerpo_gcic           {:
                                                 :}
             ;
 
-apertura_gcic ::=   MENOR_QUE GCIC cuerpo_parametros_gcic MAYOR_QUE
+apertura_gcic ::=   MENOR_QUE:ini GCIC cuerpo_parametros_gcic MAYOR_QUE         {:
+                                                                                    if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                    }
+                                                                                :}
                     | error
                     ;
 
@@ -287,7 +308,11 @@ cierre_cabecera ::= MENOR_CIERRE HEAD MAYOR_QUE
 cuerpo ::=  apertura_body cuerpo_cuerpo cierre_body
             ;
 
-apertura_body ::=   MENOR_QUE BODY cuerpo_parametros_body MAYOR_QUE
+apertura_body ::=   MENOR_QUE:ini BODY cuerpo_parametros_body MAYOR_QUE     {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                }
+                                                                            :}
                     | error
                     ;
 
@@ -311,7 +336,11 @@ etiquetas_cabecera ::=  apertura_link cierre_link
                         */
                         ;
 
-apertura_link ::=   MENOR_QUE LINK cuerpo_parametros_link MAYOR_QUE
+apertura_link ::=   MENOR_QUE:ini LINK cuerpo_parametros_link MAYOR_QUE     {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                }
+                                                                            :}
                     ;
 
 apertura_title ::=  MENOR_QUE TITLE MAYOR_QUE
@@ -359,34 +388,70 @@ etiquetas_cuerpo ::=    apertura_spam parametros_etiquetas_texuales cerradura_sp
                         ;
 
 
-apertura_spam ::=   MENOR_QUE SPAM cuerpo_parametros_spam MAYOR_QUE
+apertura_spam ::=   MENOR_QUE:ini SPAM cuerpo_parametros_spam MAYOR_QUE     {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                }
+                                                                            :}
                     ;
 
-apertura_input ::=   MENOR_QUE INPUT cuerpo_parametros_input MAYOR_QUE
+apertura_input ::=   MENOR_QUE:ini INPUT cuerpo_parametros_input MAYOR_QUE  {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                }
+                                                                            :}
                     ;
 
-apertura_textarea ::=   MENOR_QUE TEXTAREA cuerpo_parametros_textarea MAYOR_QUE
+apertura_textarea ::=   MENOR_QUE:ini TEXTAREA cuerpo_parametros_textarea MAYOR_QUE     {:
+                                                                                            if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                            }
+                                                                                        :}
                         ;
 
-apertura_select ::= MENOR_QUE SELECT cuerpo_parametros_select MAYOR_QUE 
+apertura_select ::= MENOR_QUE:ini SELECT cuerpo_parametros_select MAYOR_QUE     {:
+                                                                                    if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                    }
+                                                                                :}
                     ;
 
-apertura_div ::=    MENOR_QUE DIV cuerpo_parametros_div MAYOR_QUE
+apertura_div ::=    MENOR_QUE:ini DIV cuerpo_parametros_div MAYOR_QUE       {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                }
+                                                                            :}
                     ;
 
-apertura_img ::=    MENOR_QUE IMG cuerpo_parametros_img MAYOR_QUE
+apertura_img ::=    MENOR_QUE:ini IMG cuerpo_parametros_img MAYOR_QUE       {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                }
+                                                                            :}
                     ;
 
 apertura_br ::= MENOR_QUE BR MAYOR_QUE
                 ;
 
-apertura_button ::= MENOR_QUE BUTTON cuerpo_parametros_button MAYOR_QUE
+apertura_button ::= MENOR_QUE:ini BUTTON cuerpo_parametros_button MAYOR_QUE     {:
+                                                                                    if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                    }
+                                                                                :}
                     ;
 
-apertura_h1 ::= MENOR_QUE H1 cuerpo_parametros_h1 MAYOR_QUE
+apertura_h1 ::= MENOR_QUE:ini H1 cuerpo_parametros_h1 MAYOR_QUE     {:
+                                                                        if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                        }
+                                                                    :}
                 ;
 
-apertura_p ::=  MENOR_QUE P cuerpo_parametros_p MAYOR_QUE
+apertura_p ::=  MENOR_QUE:ini P cuerpo_parametros_p MAYOR_QUE       {:
+                                                                        if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                        }
+                                                                    :}
                 ;
 
 
@@ -456,36 +521,37 @@ parametros_etiquetas_texuales_p ::= texto
 
 /* Parametros de etiquetas */
 cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic parametros_gcic
-                            |
+                            |                                           {:parametros.clear();:}
                             | cuerpo_parametros_gcic error
                             ;
 
-parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA CORC
-                    | CORA NAME IGUAL texto_comillas_complete CORC
+parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA CORC                  {:parametros.add("id");:}
+                    | CORA NAME IGUAL texto_comillas_complete CORC  {:parametros.add("name");:}
                     ;
 
 cuerpo_parametros_link ::=  cuerpo_parametros_link parametros_link
-                            |
+                            |                                       {:parametros.clear();:}
                             | cuerpo_parametros_link error
                             ;
 
-parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE CORC
+parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE CORC     {:parametros.add("href");:}
                         ;
 
 texto_comillas_complete ::= ALLCHAR
                             | ALLCHARNOSPACE
+                            | ID_ETIQUETA
                             ;
 
 cuerpo_parametros_body ::=  cuerpo_parametros_body parametros_body
-                            |
+                            |                                           {:parametros.clear();:}
                             | cuerpo_parametros_body error
                             ;
 
-parametros_body ::= CORA BACKGROUND IGUAL colores CORC
+parametros_body ::= CORA BACKGROUND IGUAL colores CORC  {:parametros.add("background");:}
                     ;
 
 cuerpo_parametros_spam ::=  cuerpo_parametros_spam parametros_spam
-                            |
+                            |                                           {:parametros.clear();:}
                             | cuerpo_parametros_spam error
                             ;
 
@@ -493,59 +559,59 @@ parametros_spam ::= parametros_textuales
                     ;
 
 cuerpo_parametros_input ::= cuerpo_parametros_input parametros_input
-                            |
+                            |                                           {:parametros.clear();:}
                             | cuerpo_parametros_input error
                             ;
 
-parametros_input ::=    CORA TYPE IGUAL tipos_input CORC
+parametros_input ::=    CORA TYPE IGUAL tipos_input CORC    {:parametros.add("type");:}
                         | parametros_textuales
                         ;
 
 cuerpo_parametros_textarea ::=  cuerpo_parametros_textarea parametros_textarea
-                                |
+                                |                                               {:parametros.clear();:}
                                 | cuerpo_parametros_textarea error
                                 ;
 
-parametros_textarea ::= CORA FONTSIZE IGUAL PIXELES CORC
-                        | CORA FONTFAMILY IGUAL font_family CORC
-                        | CORA TEXTALIGN IGUAL alineaciones CORC
-                        | CORA ID IGUAL ID_ETIQUETA CORC
-                        | CORA COLS IGUAL DIGITO_COM CORC
-                        | CORA ROWS IGUAL DIGITO_COM CORC
+parametros_textarea ::= CORA FONTSIZE IGUAL PIXELES CORC            {:parametros.add("font-size");:}
+                        | CORA FONTFAMILY IGUAL font_family CORC    {:parametros.add("font-family");:}
+                        | CORA TEXTALIGN IGUAL alineaciones CORC    {:parametros.add("text-align");:}
+                        | CORA ID IGUAL ID_ETIQUETA CORC            {:parametros.add("id");:}
+                        | CORA COLS IGUAL DIGITO_COM CORC           {:parametros.add("cols");:}
+                        | CORA ROWS IGUAL DIGITO_COM CORC           {:parametros.add("rows");:}
                         ;
 
 cuerpo_parametros_select ::=    cuerpo_parametros_select parametros_select
-                                |
+                                |                                           {:parametros.clear();:}
                                 | cuerpo_parametros_select error
                                 ;
 
 parametros_select ::=   parametros_textuales
                         ;
 
-cuerpo_parametros_div ::=   cuerpo_parametros_div parametros_div
-                            |
+cuerpo_parametros_div ::=   cuerpo_parametros_div parametros_div    
+                            |                                       {:parametros.clear();:}
                             | cuerpo_parametros_div error
                             ;
 
 parametros_div ::=  parametros_textuales
-                    | CORA CLASS IGUAL clases CORC
-                    | CORA BACKGROUND IGUAL colores CORC
+                    | CORA CLASS IGUAL clases CORC          {:parametros.add("class");:}
+                    | CORA BACKGROUND IGUAL colores CORC    {:parametros.add("background");:}
                     ;
 
 cuerpo_parametros_img ::=   cuerpo_parametros_img parametros_img
-                            |
+                            |                                       {:parametros.clear();:}
                             | cuerpo_parametros_img error
                             ;
 
-parametros_img ::=  CORA SRC IGUAL ALLCHARNOSPACE CORC
-                    | CORA WIDTH IGUAL tamaños CORC
-                    | CORA HEIGHT IGUAL tamaños CORC
-                    | CORA ALT IGUAL texto_comillas_complete CORC
-                    | CORA ID IGUAL ID_ETIQUETA CORC
+parametros_img ::=  CORA SRC IGUAL ALLCHARNOSPACE CORC              {:parametros.add("src");:}
+                    | CORA WIDTH IGUAL tamaños CORC                 {:parametros.add("width");:}
+                    | CORA HEIGHT IGUAL tamaños CORC                {:parametros.add("height");:}
+                    | CORA ALT IGUAL texto_comillas_complete CORC   {:parametros.add("alt");:}
+                    | CORA ID IGUAL ID_ETIQUETA CORC                {:parametros.add("id");:}
                     ;
 
 cuerpo_parametros_button ::=    cuerpo_parametros_button parametros_button 
-                                |
+                                |                                               {:parametros.clear();:}
                                 | cuerpo_parametros_button error
                                 ;
 
@@ -553,7 +619,7 @@ parametros_button ::=   parametros_textuales
                         ;
 
 cuerpo_parametros_h1 ::=    cuerpo_parametros_h1 parametros_h1
-                            |
+                            |                                   {:parametros.clear();:}
                             | cuerpo_parametros_h1 error
                             ;
 
@@ -561,7 +627,7 @@ parametros_h1 ::=   parametros_textuales
                     ;
 
 cuerpo_parametros_p ::= cuerpo_parametros_p parametros_p
-                        |
+                        |                                   {:parametros.clear();:}
                         | cuerpo_parametros_p error
                         ;
 
@@ -570,11 +636,11 @@ parametros_p ::=    parametros_textuales
 
 
 
-parametros_textuales ::=    CORA FONTSIZE IGUAL PIXELES CORC
-                            | CORA FONTFAMILY IGUAL font_family CORC
-                            | CORA TEXTALIGN IGUAL alineaciones CORC
-                            | CORA ID IGUAL ID_ETIQUETA CORC
-                            | CORA COLOR IGUAL colores CORC
+parametros_textuales ::=    CORA FONTSIZE IGUAL PIXELES CORC            {:parametros.add("font-size");:}
+                            | CORA FONTFAMILY IGUAL font_family CORC    {:parametros.add("font-family");:}
+                            | CORA TEXTALIGN IGUAL alineaciones CORC    {:parametros.add("text-align");:}
+                            | CORA ID IGUAL ID_ETIQUETA CORC            {:parametros.add("id");:}
+                            | CORA COLOR IGUAL colores CORC             {:parametros.add("color");:}
                             ;
 
 /* COMODINES */
