@@ -26,6 +26,8 @@ parser code {:
     private String error = TipoDeDato.ERROR;
 
     private String procesoActual;
+    private int cantOnLoad;
+    private int totalOnLoad;
 
     public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
         super(lexer);
@@ -36,6 +38,8 @@ parser code {:
         this.parametros = new ArrayList<>();
         this.identificadores = new ArrayList<>();
         this.procesoActual = "";
+        this.totalOnLoad = 0;
+        this.cantOnLoad = 0;
         this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
     public void report_error(String message, Object info) {
@@ -380,7 +384,7 @@ apertura_link ::=   MENOR_QUE:ini LINK cuerpo_parametros_link MAYOR_QUE     {:
 apertura_title ::=  MENOR_QUE TITLE MAYOR_QUE
                     ;
 
-apertura_scripting ::=  MENOR_QUE SCRIPTING MAYOR_QUE
+apertura_scripting ::=  MENOR_QUE SCRIPTING MAYOR_QUE   {:cantOnLoad = 0;:}
                         ;
 
 cierre_link ::= MENOR_CIERRE LINK MAYOR_QUE
@@ -731,7 +735,7 @@ tipos_input ::= TEXT
                 ;
 
 /* SCRIPTING */
-scripting ::=   MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_CIERRE SCRIPTING MAYOR_QUE
+scripting ::=   apertura_scripting cuerpo_scripting MENOR_CIERRE SCRIPTING MAYOR_QUE
                 ;
 
 cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
@@ -785,7 +789,11 @@ apertura_proceso ::=    PROCESS:proc PARA PARC      {:
                                                         RESULT = proc.toString();
                                                     :}
                         | ON_LOAD:proc PARA PARC    {:
-                                                        procesoActual = proc.toString();
+                                                        cantOnLoad++; totalOnLoad++;
+                                                        procesoActual = proc.toString() + totalOnLoad;
+                                                        if(cantOnLoad > 1) {
+                                                            agregarErrorSemantico("Ya existe un bloque ON_LOAD() en el scripting.\nConflicto en Linea: " + procleft + " - Columna: " + procright);
+                                                        }
                                                         RESULT = proc.toString();
                                                     :}
                         ;
