@@ -271,10 +271,10 @@ public class OperacionesBooleanas extends TablasDeOperaciones {
         if(!dato1.getTipo().equals(booleano)) {
             bandera = false;
         }
-        if(dato2.getTipo().equals(booleano)) {
+        if(!dato2.getTipo().equals(booleano)) {
             bandera = false;
         }
-        return false;
+        return bandera;
     }
     
     /**
