@@ -26,7 +26,11 @@ public class TablaDeSimbolos {
     public boolean insertarSimbolo(Simbolo simbolo) {
         for(Simbolo simb : tablaSimbolos) {
             //Detecta si un simbolo ya existe en el procedimiento solicitado dentro de la tabla de simbolos
-            if(simb.getIdentificador().equals(simbolo.getIdentificador()) && simb.getProcedimiento().equals(simbolo.getProcedimiento())) {
+            if(simbolo.getModo().equals("@global")) {
+                if(simb.getIdentificador().equals(simbolo.getIdentificador())) {
+                    return false;
+                }
+            } else if(simb.getIdentificador().equals(simbolo.getIdentificador()) && (simb.getProcedimiento().equals(simbolo.getProcedimiento()) || simb.getModo().equals("@global"))) {
                 return false;
             }
         }

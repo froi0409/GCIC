@@ -4405,7 +4405,10 @@ class CUP$EtiquetadoParser$actions {
                                                                                                             if(valor.getValor() != null && valor.getTipo().equals(error) && valor.getValor().equals("vacio")){
                                                                                                                 if(!tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, null, mode.toString(), procesoActual))) {
                                                                                                                     Advertencia errorNuevo = new Advertencia("Semantico");
-                                                                                                                    errorNuevo.setMensaje("El simbolo " + id + " ya existe en el procedimiento " + procesoActual);
+                                                                                                                    if(mode.toString().equals("@global"))
+                                                                                                                        errorNuevo.setMensaje("El simbolo " + id + " ya existe.\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
+                                                                                                                    else 
+                                                                                                                        errorNuevo.setMensaje("El simbolo " + id + " ya existe en el procedimiento " + procesoActual + " o es una variable global" + ".\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
                                                                                                                     listaErrores.add(errorNuevo);
                                                                                                                 }
                                                                                                             } else if(valor.getTipo().equals(error)) {
@@ -4414,7 +4417,7 @@ class CUP$EtiquetadoParser$actions {
                                                                                                                 if(tipoVar.equals(valor.getTipo())) {
                                                                                                                     if(!tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, valor.getValor(), mode.toString(), procesoActual))){
                                                                                                                         Advertencia errorNuevo = new Advertencia("Semantico");
-                                                                                                                        errorNuevo.setMensaje("El simbolo " + id + " ya existe en el procedimiento " + procesoActual);
+                                                                                                                        errorNuevo.setMensaje("El simbolo " + id + " ya existe en el procedimiento " + procesoActual + " o es una variable global" + ".\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
                                                                                                                         listaErrores.add(errorNuevo);
                                                                                                                     }
                                                                                                                 } else {
