@@ -137,6 +137,15 @@ parser code {:
         return nombreProceso;
     }
 
+    public boolean verificarTipo(Dato dato, String tipo, int linea, int columna) {
+        if(dato.getTipo().equals(tipo)) {
+            return true;
+        } else {
+            agregarErrorSemantico("La función solo recibe parametros del tipo: " + tipo + ". (Se recibió parametro de tipo: " + dato.getTipo() + ").\nConflicto en la Linea: " + linea + " - Columna: " + columna);
+            return false;
+        }
+    }
+
 :}
 
 //Declaración de símbolos terminales
@@ -844,7 +853,11 @@ parametros_proceso_simples ::=  variables:var PUNTO_COMA                {:RESULT
 funciones_especiales ::=    funciones_strings
                             | CARACTER_ALEATORIO PARA PARC
                             | NUM_ALEATORIO PARA PARC
-                            | ALERT_INFO PARA strings_concatenados PARC
+                            | ALERT_INFO:ini PARA condicion:con PARC    {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
                             | EXIT PARA PARC
                             | INSERT PARA cuerpo_insert PARC
                             ;
@@ -858,11 +871,31 @@ parametros_insert ::=   ALLCHAR_COMSIMP
                         | IDENTIFICADOR
                         ;
 
-funciones_strings ::=   ASC PARA strings_concatenados PARC
-                        | DESC PARA strings_concatenados PARC
-                        | LETPAR_NUM PARA strings_concatenados PARC
-                        | LETIMPAR_NUM PARA strings_concatenados PARC
-                        | REVERSE PARA strings_concatenados PARC
+funciones_strings ::=   ASC:ini PARA condicion:con PARC                 {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
+                        | DESC:ini PARA condicion:con PARC              {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
+                        | LETPAR_NUM:ini PARA condicion:con PARC        {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
+                        | LETIMPAR_NUM:ini PARA condicion:con PARC      {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
+                        | REVERSE:ini PARA condicion:con PARC           {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
                         ;
 
 /* ASIGNACION DE VALORES A VARIABLES */
