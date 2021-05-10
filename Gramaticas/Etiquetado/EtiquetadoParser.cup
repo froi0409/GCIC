@@ -1,10 +1,21 @@
-package com.froi.pruebas.gramaticas;
+package com.froi.gcic.gramaticas.etiquetado;
 
+import com.froi.gcic.entidades.Advertencia;
+import com.froi.gcic.entidades.Captcha;
+import com.froi.gcic.entidades.Identificador;
+import com.froi.gcic.manejodesimbolos.Dato;
+import com.froi.gcic.manejodesimbolos.OperacionesBooleanas;
+import com.froi.gcic.manejodesimbolos.Simbolo;
+import com.froi.gcic.manejodesimbolos.TablaDeSimbolos;
+import com.froi.gcic.manejodesimbolos.TablasDeOperaciones;
+import com.froi.gcic.manejodesimbolos.TipoDeDato;
 import java_cup.runtime.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java_cup.runtime.*;
+import java_cup.runtime.XMLElement;
 
 class EtiquetadoParser;
 

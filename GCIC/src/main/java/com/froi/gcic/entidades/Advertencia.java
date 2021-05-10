@@ -11,12 +11,18 @@ package com.froi.gcic.entidades;
  */
 public class Advertencia {
     
+    private String tipo;
     private int linea;
     private int columna;
     private String token;
     private String texto;
     private String solucion;
+    private String mensaje;
 
+    public Advertencia(String tipo) {
+        this.tipo = tipo;
+    }
+    
     public int getLinea() {
         return linea;
     }
@@ -56,10 +62,32 @@ public class Advertencia {
     public void setSolucion(String solucion) {
         this.solucion = "Se esperaba(n) el(los) simbolo(s): " + solucion;
     }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
     
     @Override
     public String toString() {
-        return "linea: " + linea + " - Columna: " + columna + "\nToken: " + token + "\nTexto: " + texto + "\nSolucion: " + solucion;
+        if(tipo.equals("Sintactico")) {
+            return "linea: " + linea + " - Columna: " + columna + "\nToken: " + token + "\nTexto: " + texto + "\nSolucion: " + solucion;
+        } else if(tipo.equals("Semantico")) {
+            return "Advertencia: " + mensaje;
+        } else {
+            return "Error irrecuperable";
+        }
     }
     
 }
