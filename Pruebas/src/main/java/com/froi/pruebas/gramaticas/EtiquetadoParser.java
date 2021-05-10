@@ -2029,6 +2029,7 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
     private String error = TipoDeDato.ERROR;
 
     private String procesoActual;
+    private String insertCompletoPorProceso;
     private int cantOnLoad;
     private int totalOnLoad;
     private int procesoRepetido;
@@ -2043,6 +2044,7 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
         this.procesos = new ArrayList<>();
         this.identificadores = new ArrayList<>();
         this.procesoActual = "";
+        this.insertCompletoPorProceso = "";
         this.totalOnLoad = 0;
         this.cantOnLoad = 0;
         this.procesoRepetido = 0;
@@ -2465,7 +2467,7 @@ class CUP$EtiquetadoParser$actions {
           case 28: // apertura_scripting ::= MENOR_QUE SCRIPTING MAYOR_QUE 
             {
               Object RESULT =null;
-		cantOnLoad = 0;
+		cantOnLoad = 0; insertCompletoPorProceso = "";
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_scripting",104, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2510,7 +2512,12 @@ class CUP$EtiquetadoParser$actions {
           case 33: // cierre_scripting ::= MENOR_CIERRE SCRIPTING MAYOR_QUE 
             {
               Object RESULT =null;
-
+		
+                                                                    if(insertCompletoPorProceso.length() > 0) {
+                                                                        System.out.println("INSERT " + procesoActual);
+                                                                        System.out.println(insertCompletoPorProceso + "\n");
+                                                                    }
+                                                                
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cierre_scripting",132, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4034,20 +4041,7 @@ class CUP$EtiquetadoParser$actions {
 		int simleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
 		int simright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
 		ArrayList<Simbolo> sim = (ArrayList<Simbolo>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
-		
-                                                                                                /*if(sim != null) {
-                                                                                                    for(Simbolo simb: sim) {
-                                                                                                        simb.setProcedimiento(proc.toString());
-                                                                                                        if(tablaSimbolos.insertarSimbolo(simb)) {
-                                                                                                            System.out.println("Simbolo: " + simb.getIdentificador() + ". Se ha ingresado con éxito.");
-                                                                                                        } else {
-                                                                                                            Advertencia errorNuevo = new Advertencia("Semantico");
-                                                                                                            errorNuevo.setMensaje("El simbolo " + simb.getIdentificador() + " ya existe en el procedimiento " + proc.toString());
-                                                                                                            listaErrores.add(errorNuevo);
-                                                                                                        }
-                                                                                                    }
-                                                                                                }*/
-                                                                                            
+
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_scripting",64, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4303,7 +4297,10 @@ class CUP$EtiquetadoParser$actions {
           case 215: // funciones_especiales ::= INSERT PARA cuerpo_insert PARC 
             {
               Object RESULT =null;
-
+		int bodleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int bodright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String bod = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		insertCompletoPorProceso += bod + "\n";
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("funciones_especiales",73, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4311,8 +4308,14 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 216: // cuerpo_insert ::= cuerpo_insert COMA parametros_insert 
             {
-              Object RESULT =null;
-
+              String RESULT =null;
+		int bodleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int bodright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		String bod = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		int paramleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int paramright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		String param = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = bod + "\n" + param;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_insert",69, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4320,8 +4323,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 217: // cuerpo_insert ::= parametros_insert 
             {
-              Object RESULT =null;
-
+              String RESULT =null;
+		int paramleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int paramright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		String param = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = param;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_insert",69, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4329,8 +4335,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 218: // parametros_insert ::= ALLCHAR_COMSIMP 
             {
-              Object RESULT =null;
-
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = val.toString().replace("'", "").replace("’", "").replace("‘", "").trim();
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_insert",70, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4338,8 +4347,26 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 219: // parametros_insert ::= ALFANUMERICO 
             {
-              Object RESULT =null;
-
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                    if(variableExistente(val.toString(), procesoActual)) {
+                                                        Dato valorVariable = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                        if(variableValida(val.toString(), procesoActual, string)) {
+                                                            if(!valorVariable.getTipo().equals(error)) {
+                                                                RESULT = valorVariable.getValor();
+                                                            } else {
+                                                                agregarErrorSemantico("La variable " + val.toString() + " no es valida para la instrucción insert");
+                                                            }
+                                                        } else {
+                                                            agregarErrorSemantico("La variable " + val.toString() + " no es del tipo string (tipo de la variable: " + valorVariable.getTipo() + ")");
+                                                        }
+                                                    } else {
+                                                        agregarErrorSemantico("La variable " + val.toString() + " no está declarada en el proceso actual.\nConlficto en la Linea: " + valleft + " - Columna: " + valright);
+                                                    }
+                                                
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_insert",70, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -4347,8 +4374,26 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 220: // parametros_insert ::= IDENTIFICADOR 
             {
-              Object RESULT =null;
-
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		
+                                                    if(variableExistente(val.toString(), procesoActual)) {
+                                                        Dato valorVariable = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                        if(variableValida(val.toString(), procesoActual, string)) {
+                                                            if(!valorVariable.getTipo().equals(error)) {
+                                                                RESULT = valorVariable.getValor();
+                                                            } else {
+                                                                agregarErrorSemantico("La variable " + val.toString() + " no es valida para la instrucción insert");
+                                                            }
+                                                        } else {
+                                                            agregarErrorSemantico("La variable " + val.toString() + " no es del tipo string (tipo de la variable: " + valorVariable.getTipo() + ")");
+                                                        }
+                                                    } else {
+                                                        agregarErrorSemantico("La variable " + val.toString() + " no está declarada en el proceso actual.\nConlficto en la Linea: " + valleft + " - Columna: " + valright);
+                                                    }
+                                                
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_insert",70, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;

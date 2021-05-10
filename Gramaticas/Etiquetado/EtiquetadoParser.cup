@@ -27,6 +27,7 @@ parser code {:
     private String error = TipoDeDato.ERROR;
 
     private String procesoActual;
+    private String insertCompletoPorProceso;
     private int cantOnLoad;
     private int totalOnLoad;
     private int procesoRepetido;
@@ -41,6 +42,7 @@ parser code {:
         this.procesos = new ArrayList<>();
         this.identificadores = new ArrayList<>();
         this.procesoActual = "";
+        this.insertCompletoPorProceso = "";
         this.totalOnLoad = 0;
         this.cantOnLoad = 0;
         this.procesoRepetido = 0;
@@ -223,7 +225,7 @@ non terminal parametros_scripting;
 non terminal cuerpo_process, parametros_process;
 non terminal cuerpo_onload, parametros_onload;
 
-non terminal cuerpo_insert, parametros_insert;
+non terminal String cuerpo_insert, parametros_insert;
 
 non terminal parametros_etiquetas_texuales;
 non terminal parametros_etiquetas_texuales_p;
@@ -408,7 +410,7 @@ apertura_link ::=   MENOR_QUE:ini LINK cuerpo_parametros_link MAYOR_QUE     {:
 apertura_title ::=  MENOR_QUE TITLE MAYOR_QUE
                     ;
 
-apertura_scripting ::=  MENOR_QUE SCRIPTING MAYOR_QUE   {:cantOnLoad = 0;:}
+apertura_scripting ::=  MENOR_QUE SCRIPTING MAYOR_QUE   {:cantOnLoad = 0; insertCompletoPorProceso = "";:}
                         ;
 
 cierre_link ::= MENOR_CIERRE LINK MAYOR_QUE
@@ -419,7 +421,12 @@ cierre_title ::=    MENOR_CIERRE TITLE MAYOR_QUE
                     | error
                     ;
 
-cierre_scripting ::=    MENOR_CIERRE SCRIPTING MAYOR_QUE
+cierre_scripting ::=    MENOR_CIERRE SCRIPTING MAYOR_QUE        {:
+                                                                    if(insertCompletoPorProceso.length() > 0) {
+                                                                        System.out.println("INSERT " + procesoActual);
+                                                                        System.out.println(insertCompletoPorProceso + "\n");
+                                                                    }
+                                                                :}
                         | error
                         ;
 
@@ -767,35 +774,7 @@ cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
                         //| cuerpo_scripting error
                         ;
 
-parametros_scripting ::=    apertura_proceso:proc CORA cuerpo_parametros_proceso:sim CORC   {:
-                                                                                                /*if(sim != null) {
-                                                                                                    for(Simbolo simb: sim) {
-                                                                                                        simb.setProcedimiento(proc.toString());
-                                                                                                        if(tablaSimbolos.insertarSimbolo(simb)) {
-                                                                                                            System.out.println("Simbolo: " + simb.getIdentificador() + ". Se ha ingresado con éxito.");
-                                                                                                        } else {
-                                                                                                            Advertencia errorNuevo = new Advertencia("Semantico");
-                                                                                                            errorNuevo.setMensaje("El simbolo " + simb.getIdentificador() + " ya existe en el procedimiento " + proc.toString());
-                                                                                                            listaErrores.add(errorNuevo);
-                                                                                                        }
-                                                                                                    }
-                                                                                                }*/
-                                                                                            :}
-                            /*| ON_LOAD:proc PARA PARC CORA cuerpo_parametros_proceso:sim CORC    {:
-                                                                                                    if(sim != null) {
-                                                                                                        for(Simbolo simb: sim) {
-                                                                                                            simb.setProcedimiento(proc.toString());
-                                                                                                            if(tablaSimbolos.insertarSimbolo(simb)) {
-                                                                                                                System.out.println("Simbolo: " + simb.getIdentificador() + ". Se ha ingresado con éxito.");
-                                                                                                            } else {
-                                                                                                                Advertencia errorNuevo = new Advertencia("Semantico");
-                                                                                                                errorNuevo.setMensaje("El simbolo " + simb.getIdentificador() + " ya existe en el procedimiento " + proc.toString());
-                                                                                                                listaErrores.add(errorNuevo);
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                :}
-                            */
+parametros_scripting ::=    apertura_proceso:proc CORA cuerpo_parametros_proceso:sim CORC
                             | error PARA PARC CORA cuerpo_parametros_proceso CORC
                             //ERRORES PARA PROCESS
                             | PROCESS error PARC CORA cuerpo_parametros_proceso CORC
@@ -859,16 +838,46 @@ funciones_especiales ::=    funciones_strings
                                                                             }
                                                                         :}
                             | EXIT PARA PARC
-                            | INSERT PARA cuerpo_insert PARC
+                            | INSERT PARA cuerpo_insert:bod PARC         {:insertCompletoPorProceso += bod + "\n";:}
                             ;
 
-cuerpo_insert ::=   cuerpo_insert COMA parametros_insert
-                    | parametros_insert
+cuerpo_insert ::=   cuerpo_insert:bod COMA parametros_insert:param      {:RESULT = bod + "\n" + param;:}
+                    | parametros_insert:param                           {:RESULT = param;:}
                     ;
 
-parametros_insert ::=   ALLCHAR_COMSIMP
-                        | ALFANUMERICO
-                        | IDENTIFICADOR
+parametros_insert ::=   ALLCHAR_COMSIMP:val     {:RESULT = val.toString().replace("'", "").replace("’", "").replace("‘", "").trim();:}
+                        | ALFANUMERICO:val      {:
+                                                    if(variableExistente(val.toString(), procesoActual)) {
+                                                        Dato valorVariable = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                        if(variableValida(val.toString(), procesoActual, string)) {
+                                                            if(!valorVariable.getTipo().equals(error)) {
+                                                                RESULT = valorVariable.getValor();
+                                                            } else {
+                                                                agregarErrorSemantico("La variable " + val.toString() + " no es valida para la instrucción insert");
+                                                            }
+                                                        } else {
+                                                            agregarErrorSemantico("La variable " + val.toString() + " no es del tipo string (tipo de la variable: " + valorVariable.getTipo() + ")");
+                                                        }
+                                                    } else {
+                                                        agregarErrorSemantico("La variable " + val.toString() + " no está declarada en el proceso actual.\nConlficto en la Linea: " + valleft + " - Columna: " + valright);
+                                                    }
+                                                :}
+                        | IDENTIFICADOR:val     {:
+                                                    if(variableExistente(val.toString(), procesoActual)) {
+                                                        Dato valorVariable = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                        if(variableValida(val.toString(), procesoActual, string)) {
+                                                            if(!valorVariable.getTipo().equals(error)) {
+                                                                RESULT = valorVariable.getValor();
+                                                            } else {
+                                                                agregarErrorSemantico("La variable " + val.toString() + " no es valida para la instrucción insert");
+                                                            }
+                                                        } else {
+                                                            agregarErrorSemantico("La variable " + val.toString() + " no es del tipo string (tipo de la variable: " + valorVariable.getTipo() + ")");
+                                                        }
+                                                    } else {
+                                                        agregarErrorSemantico("La variable " + val.toString() + " no está declarada en el proceso actual.\nConlficto en la Linea: " + valleft + " - Columna: " + valright);
+                                                    }
+                                                :}
                         ;
 
 funciones_strings ::=   ASC:ini PARA condicion:con PARC                 {:

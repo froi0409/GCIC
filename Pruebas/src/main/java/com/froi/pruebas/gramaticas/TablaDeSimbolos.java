@@ -44,7 +44,7 @@ public class TablaDeSimbolos {
     
     public Dato obtenerDato(String identificador, String procedimiento) {
         for(Simbolo simb : tablaSimbolos) {
-            if(simb.getIdentificador().equals(identificador) && simb.getProcedimiento().equals(procedimiento)) {
+            if(simb.getIdentificador().equals(identificador) && (simb.getProcedimiento().equals(procedimiento) || simb.getModo().equals("@global"))) {
                 if(simb.getValorActual() == null) {
                     return new Dato(TipoDeDato.ERROR, "La variable " + simb.getIdentificador() + " no tiene valor para ser asignado");
                 } else {
