@@ -219,6 +219,7 @@ non terminal cuerpo_parametros_img, parametros_img;
 non terminal cuerpo_parametros_button, parametros_button;
 non terminal cuerpo_parametros_h1, parametros_h1;
 non terminal cuerpo_parametros_p, parametros_p;
+non terminal String cuerpo_texto_sin_etiqueta;
 non terminal ArrayList<Simbolo> cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_simples;
 
 non terminal parametros_scripting;
@@ -434,6 +435,10 @@ cuerpo_title ::=    cuerpo_title:ct texto:ent   {:RESULT= ct.toString() + " " + 
                     |                           {:RESULT="";:}
                     ;
 
+cuerpo_texto_sin_etiqueta ::=   cuerpo_texto_sin_etiqueta texto 
+                                | texto
+                                ;
+
 texto ::=   ALFANUMERICO:ent        {:RESULT=ent.toString();:}
             | IDENTIFICADOR:ent     {:RESULT=ent.toString();:}
             ;
@@ -454,6 +459,7 @@ etiquetas_cuerpo ::=    apertura_spam parametros_etiquetas_texuales cerradura_sp
                         | apertura_h1 parametros_etiquetas_texuales cerradura_h1
                         | apertura_p parametros_etiquetas_texuales cerradura_p
                         | apertura_scripting cuerpo_scripting cierre_scripting
+                        | texto
                         ;
 
 

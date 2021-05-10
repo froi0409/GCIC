@@ -117,6 +117,7 @@ non terminal cuerpo_parametros_button, parametros_button;
 non terminal cuerpo_parametros_h1, parametros_h1;
 non terminal cuerpo_parametros_p, parametros_p;
 non terminal ArrayList<Simbolo> cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_simples;
+non terminal String cuerpo_texto_sin_etiqueta;
 
 /* APERTURAS */
 non terminal apertura_cabecera;
@@ -188,6 +189,7 @@ etiquetas_posibles ::=  apertura_spam parametros_etiquetas_texuales cerradura_sp
                         | apertura_p parametros_etiquetas_texuales cerradura_p
                         | apertura_link cierre_link
                         | apertura_title cuerpo_title:ct cierre_title
+                        | texto
                         ;
 
 apertura_spam ::=   MENOR_QUE:ini SPAM cuerpo_parametros_spam MAYOR_QUE     {:
@@ -442,6 +444,10 @@ parametros_textuales ::=    CORA FONTSIZE IGUAL PIXELES CORC            {:parame
                             | CORA ID IGUAL ID_ETIQUETA:ide CORC        {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);:}
                             | CORA COLOR IGUAL colores CORC             {:parametros.add("color");:}
                             ;
+
+cuerpo_texto_sin_etiqueta ::=   cuerpo_texto_sin_etiqueta texto 
+                                | texto
+                                ;
 
 /* COMODINES */
 colores ::=  BLACK
