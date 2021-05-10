@@ -12,6 +12,6 @@
         <title>Inicio</title>
     </head>
     <body>
-        <% response.sendRedirect("editor.jsp");             %>
+        <% response.sendRedirect("AnalizadorInicial"); %>
     </body>
 </html>
