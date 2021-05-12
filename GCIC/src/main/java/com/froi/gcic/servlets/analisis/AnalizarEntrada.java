@@ -5,8 +5,14 @@
  */
 package com.froi.gcic.servlets.analisis;
 
+import com.froi.gcic.entidades.Advertencia;
+import com.froi.gcic.entidades.Captcha;
+import com.froi.gcic.gramaticas.etiquetado.EtiquetadoLexer;
+import com.froi.gcic.gramaticas.etiquetado.EtiquetadoParser;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,14 +51,39 @@ public class AnalizarEntrada extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         String entrada = request.getParameter("entrada");
+        String salida = "";
+        ArrayList<Advertencia> listaErrores = new ArrayList<>();
+        ArrayList<Captcha> listaCaptchas = new ArrayList<>();
         
-        /*
+        StringReader reader = new StringReader(entrada);
+        EtiquetadoLexer etiquetadoLexer = new EtiquetadoLexer(reader);
+        EtiquetadoParser etiquetadoParser = new EtiquetadoParser(etiquetadoLexer, listaErrores, listaCaptchas);
         
-        AQUÍ VA EL CODIGO PARA EL ANALISIS DE LA ENTRADA
-        
-        */
-        
+        try {
+            etiquetadoParser.parse();
+            
+            //Verificamos si el lenguaje de etiquetado posee errores
+            if(listaErrores.size() > 0) {
+                salida = "Errores de Análisis:\n\n";
+                for(Advertencia error: listaErrores) {
+                    salida += error + "\n\n";
+                }
+            } else {
+                //Debemos obtener el link del captcha
+                //para que el link del captcha pueda ser mostrado en la salida
+                salida = "Captcha analizado con éxito";
+            }
+            
+        } catch (Exception e) {
+            System.err.println("Error al analizar el lenguaje de etiquetado: " + e.getMessage());
+            e.printStackTrace();
+            salida = "Error Irrecuperable";
+        }
+        request.setAttribute("salida", salida);
+        request.setAttribute("entrada", entrada);
+        request.getRequestDispatcher("editor.jsp").forward(request, response);
     }
 
     /**

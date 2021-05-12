@@ -6,6 +6,8 @@
 package com.froi.pruebas;
 
 import com.froi.pruebas.frames.frame;
+import com.froi.pruebas.gramaticas.Dato;
+import java.util.Objects;
 
 /**
  *
@@ -22,4 +24,4 @@ public class Main {
         ventana.setVisible(true);
     }
     
-}
+} 

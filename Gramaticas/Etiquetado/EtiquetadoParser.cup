@@ -1,17 +1,72 @@
-package com.froi.pruebas.gramaticas;
+package com.froi.gcic.gramaticas.etiquetado;
 
+import com.froi.gcic.entidades.Advertencia;
+import com.froi.gcic.entidades.Captcha;
+import com.froi.gcic.entidades.Identificador;
+import com.froi.gcic.entidades.Parametro;
+import com.froi.gcic.manejodesimbolos.Dato;
+import com.froi.gcic.manejodesimbolos.OperacionesBooleanas;
+import com.froi.gcic.manejodesimbolos.Simbolo;
+import com.froi.gcic.manejodesimbolos.TablaDeSimbolos;
+import com.froi.gcic.manejodesimbolos.TablasDeOperaciones;
+import com.froi.gcic.manejodesimbolos.TipoDeDato;
+import com.froi.gcic.etiquetas.*;
 import java_cup.runtime.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java_cup.runtime.*;
+import java_cup.runtime.XMLElement;
 
 class EtiquetadoParser;
 
 parser code {:
 
+    private ArrayList<Captcha> listaCaptchas;
     private ArrayList<Advertencia> listaErrores;
-    
-    public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
+    private ArrayList<String> parametros;
+    private ArrayList<Identificador> procesos;
+    private ArrayList<Identificador> identificadores;
+    private Captcha captchaSolicitado;
+    private TablaDeSimbolos tablaSimbolos;
+    private TablasDeOperaciones tablaOperaciones;
+    private OperacionesBooleanas operacionesBooleanas;
+
+    private String integer = TipoDeDato.INTEGER;
+    private String string = TipoDeDato.STRING;
+    private String decimal = TipoDeDato.DECIMAL;
+    private String character = TipoDeDato.CHAR;
+    private String booleano = TipoDeDato.BOOLEAN;
+    private String error = TipoDeDato.ERROR;
+
+    private String procesoActual;
+    private String insertCompletoPorProceso;
+    private int cantOnLoad;
+    private int totalOnLoad;
+    private int procesoRepetido;
+
+    /* ETIQUETAS PRINCIPALES */
+    private EtiquetaGCIC gcicPrincipal = new EtiquetaGCIC();
+    private EtiquetaHead headPrincipal = new EtiquetaHead();
+    private EtiquetaBody bodyPrincipal = new EtiquetaBody();
+
+    public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores, ArrayList<Captcha> listaCaptchas) {
         super(lexer);
         this.listaErrores = listaErrores;
+        this.listaCaptchas = listaCaptchas;
+        this.captchaSolicitado = new Captcha();
+        this.tablaOperaciones = new TablasDeOperaciones();
+        this.operacionesBooleanas = new OperacionesBooleanas();
+        this.parametros = new ArrayList<>();
+        this.procesos = new ArrayList<>();
+        this.identificadores = new ArrayList<>();
+        this.procesoActual = "";
+        this.insertCompletoPorProceso = "";
+        this.totalOnLoad = 0;
+        this.cantOnLoad = 0;
+        this.procesoRepetido = 0;
+        this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
     }
     public void report_error(String message, Object info) {
         System.out.println("reporterror");;
@@ -21,7 +76,7 @@ parser code {:
     }
     @Override
     public void syntax_error(Symbol s) {
-        Advertencia errorNuevo = new Advertencia();
+        Advertencia errorNuevo = new Advertencia("Sintactico");
         //System.out.println("linea: " + s.left + "   columna: " + s.right + "   token: " + symbl_name_from_id(s.sym) + "     texto: " + s.value);
         errorNuevo.setLinea(s.left);
         errorNuevo.setColumna(s.right);
@@ -29,9 +84,7 @@ parser code {:
         errorNuevo.setTexto(s.value.toString());
         //Agregamos los simbolos que se esperan
         String solucion = "";
-        //System.out.print("Se esperaban el(los) simbolo(s): ");
         for(int i = 0; i < expected_token_ids().size(); i++) {
-            //System.out.print(symbl_name_from_id(expected_token_ids().get(i)) + " ");
             if(i != 0) {
                 solucion += ",";
             }
@@ -42,6 +95,77 @@ parser code {:
     }
     protected int error_sync_size() {
         return 1;
+    }
+
+    public void agregarErrorSemantico(String mensaje) {
+        Advertencia errorNuevo = new Advertencia("Semantico");
+        errorNuevo.setMensaje(mensaje);
+        listaErrores.add(errorNuevo);
+    }
+
+    public boolean etiquetasDuplicadas(int linea, int columna) {
+        boolean comprobante = false;
+        Set<String> datosSinDuplicar = new HashSet<String>(parametros); //Creamos un Set de los parametros
+        for(String param : datosSinDuplicar) {
+            int repeticion = Collections.frequency(parametros, param);
+            if(repeticion > 1) {
+                agregarErrorSemantico("El parametro " + param + " se ha repetido " + repeticion + " veces.\nConflicto en Linea: " + linea + " - Columna: " + columna);
+                comprobante = true;
+            }
+        }
+        return comprobante;
+    }
+
+    public void agregarIdentificador(String id, int linea, int columna) {
+        boolean comprobante = true;
+        for(Identificador ident : identificadores) {
+            if(ident.getId().equals(id)) {
+                agregarErrorSemantico("El identificador " + id + " ya fue declarado en la Linea: " + ident.getLinea() + " - Columna: " + ident.getColumna() + ".\nConflicto en Linea: " + linea + " - Columna: " + columna);
+                comprobante = false;
+                break;
+            }
+        }
+        if(comprobante) {
+            identificadores.add(new Identificador(id, linea, columna));
+        }
+    }
+
+    public boolean variableExistente(String id, String procesoActual) {
+        for(Simbolo simb : tablaSimbolos.getTablaSimbolos()) {
+            if(simb.getIdentificador().equals(id) && (simb.getProcedimiento().equals(procesoActual) || simb.getModo().equals("@global"))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean variableValida(String id, String procesoActual, String tipo) {
+        for(Simbolo simb : tablaSimbolos.getTablaSimbolos()) {
+            if(simb.getIdentificador().equals(id) && (simb.getProcedimiento().equals(procesoActual) || simb.getModo().equals("@global")) && simb.getTipo().equals(tipo)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String agregarProceso(String nombreProceso, int linea, int columna) {
+        for(Identificador proc : procesos) {
+            if(proc.getId().equals(nombreProceso)) {
+                agregarErrorSemantico("El proceso " + nombreProceso + " Ya está declarado en la Linea: " + proc.getLinea() + " - Columna: " + proc.getColumna() + ".\nConflicto en Linea: " + linea + " - Columna: " + columna); 
+                procesoRepetido++;
+                return nombreProceso + procesoRepetido;
+            }
+        }
+        return nombreProceso;
+    }
+
+    public boolean verificarTipo(Dato dato, String tipo, int linea, int columna) {
+        if(dato.getTipo().equals(tipo)) {
+            return true;
+        } else {
+            agregarErrorSemantico("La función solo recibe parametros del tipo: " + tipo + ". (Se recibió parametro de tipo: " + dato.getTipo() + ").\nConflicto en la Linea: " + linea + " - Columna: " + columna);
+            return false;
+        }
     }
 
 :}
@@ -79,12 +203,13 @@ terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA,
 terminal ID_ETIQUETA, ALFANUMERICO, TEXTO, ALLCHAR_COMSIMP, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
 
 //Declaración de símbolos no terminales
-non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, variables, modo, strings, strings_concatenados, booleanos;
+non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, modo, strings, strings_concatenados, booleanos;
+non terminal ArrayList<Simbolo> variables;
 
 /* no terminales de cuerpo */
 non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo, cuerpo_title;
 non terminal etiquetas_cabecera, etiquetas_cuerpo, etiqueta_option;
-non terminal texto, texto_comillas_complete, fondos, colores, font_family, alineaciones, clases, tamaños, parametros_textuales, tipos_input, identificadores;
+non terminal String texto, texto_comillas_complete, fondos, colores, font_family, alineaciones, clases, tamaños, parametros_textuales, tipos_input, identificadores;
 
 //non terminal cuerpo_spam;
 //non terminal cuerpo_input;
@@ -102,8 +227,10 @@ non terminal cuerpo_scripting;
 non terminal cierre_gcic;
 
 /* Parametros de etiquetas */
-non terminal cuerpo_parametros_gcic, parametros_gcic;
-non terminal cuerpo_parametros_link, parametros_link;
+non terminal ArrayList<Parametro> cuerpo_parametros_gcic;
+non terminal Parametro parametros_gcic;
+non terminal ArrayList<Parametro> cuerpo_parametros_link;
+non terminal Parametro parametros_link;
 non terminal cuerpo_parametros_body, parametros_body;
 non terminal cuerpo_parametros_spam, parametros_spam;
 non terminal cuerpo_parametros_input, parametros_input;
@@ -114,13 +241,14 @@ non terminal cuerpo_parametros_img, parametros_img;
 non terminal cuerpo_parametros_button, parametros_button;
 non terminal cuerpo_parametros_h1, parametros_h1;
 non terminal cuerpo_parametros_p, parametros_p;
-non terminal cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_simples;
+non terminal String cuerpo_texto_sin_etiqueta;
+non terminal ArrayList<Simbolo> cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_simples;
 
 non terminal parametros_scripting;
 non terminal cuerpo_process, parametros_process;
 non terminal cuerpo_onload, parametros_onload;
 
-non terminal cuerpo_insert, parametros_insert;
+non terminal String cuerpo_insert, parametros_insert;
 
 non terminal parametros_etiquetas_texuales;
 non terminal parametros_etiquetas_texuales_p;
@@ -138,22 +266,22 @@ non terminal condicion_else_if, parametros_else_if;
 non terminal condicion_else;
 non terminal asignacion_valor;
 
-non terminal condicion;
-non terminal valor_condicion;
+non terminal Dato condicion;
+non terminal Dato valor_condicion;
 
 
 non terminal valores_de_asignacion;
-non terminal tipos_variables;
-non terminal igual_variable;
+non terminal String tipos_variables;
+non terminal Dato igual_variable;
 non terminal igual_integer;
 non terminal igual_string;
 non terminal igual_boolean;
 non terminal igual_char;
 non terminal igual_decimal;
 non terminal Double expresion_aritmetica;
-non terminal valor_numerico;
+non terminal Dato valor_numerico;
 
-non terminal cuerpo_identificadores;
+non terminal ArrayList<String> cuerpo_identificadores;
 
 /* APERTURAS */
 non terminal apertura_gcic;
@@ -191,6 +319,8 @@ non terminal cerradura_p;
 non terminal apertura_if;
 non terminal apertura_if_complete;
 
+non terminal String apertura_proceso;
+
 /* CIERRES */
 //non terminal cierre_gcic;
 non terminal cierre_cabecera;
@@ -203,7 +333,7 @@ non terminal cierre_scripting;
 //Precedencia
 precedence left SUMA, RESTA;
 precedence left MULTIPLICACION, DIVISION;
-precedence right UNARY;
+precedence left UNARY;
 precedence left IGUAL_IGUAL, DIFERENTE_IGUAL, MENOR_QUE, MAYOR_QUE, MENOR_IGUAL, MAYOR_IGUAL;
 precedence left OR;
 precedence left AND;
@@ -213,10 +343,23 @@ precedence left NOT;
 start with inicio;
 
 //Reglas de Producción
-inicio ::=  apertura_gcic cuerpo_gcic             {:System.out.println("Se ha llegado al final del reconocimiento");:}
+inicio ::=  apertura_gcic cuerpo_gcic           {:
+                                                    System.out.println("Se ha llegado al final del reconocimiento. Los simbolos encontrados son: ");
+                                                    for(Simbolo simb: tablaSimbolos.getTablaSimbolos()) {
+                                                        System.out.println(simb);
+                                                    }
+                                                    System.out.println(" \n\n");
+                                                    System.out.println("Id del captcha " + gcicPrincipal.getId() + " - Name: " + gcicPrincipal.getName());
+                                                :}
             ;
 
-apertura_gcic ::=   MENOR_QUE GCIC cuerpo_parametros_gcic MAYOR_QUE
+apertura_gcic ::=   MENOR_QUE:ini GCIC cuerpo_parametros_gcic:param MAYOR_QUE           {:
+                                                                                            if(!etiquetasDuplicadas(inileft, iniright)) {
+                                                                                                for(Parametro element: param) {
+                                                                                                    gcicPrincipal.setByString(element, listaErrores);
+                                                                                                }
+                                                                                            }
+                                                                                        :}
                     | error
                     ;
 
@@ -255,7 +398,11 @@ cierre_cabecera ::= MENOR_CIERRE HEAD MAYOR_QUE
 cuerpo ::=  apertura_body cuerpo_cuerpo cierre_body
             ;
 
-apertura_body ::=   MENOR_QUE BODY cuerpo_parametros_body MAYOR_QUE
+apertura_body ::=   MENOR_QUE:ini BODY cuerpo_parametros_body MAYOR_QUE     {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+                                                                                    
+                                                                                }
+                                                                            :}
                     | error
                     ;
 
@@ -279,13 +426,17 @@ etiquetas_cabecera ::=  apertura_link cierre_link
                         */
                         ;
 
-apertura_link ::=   MENOR_QUE LINK cuerpo_parametros_link MAYOR_QUE
+apertura_link ::=   MENOR_QUE:ini LINK cuerpo_parametros_link MAYOR_QUE     {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                }
+                                                                            :}
                     ;
 
 apertura_title ::=  MENOR_QUE TITLE MAYOR_QUE
                     ;
 
-apertura_scripting ::=  MENOR_QUE SCRIPTING MAYOR_QUE
+apertura_scripting ::=  MENOR_QUE SCRIPTING MAYOR_QUE   {:cantOnLoad = 0; insertCompletoPorProceso = "";:}
                         ;
 
 cierre_link ::= MENOR_CIERRE LINK MAYOR_QUE
@@ -296,13 +447,22 @@ cierre_title ::=    MENOR_CIERRE TITLE MAYOR_QUE
                     | error
                     ;
 
-cierre_scripting ::=    MENOR_CIERRE SCRIPTING MAYOR_QUE
+cierre_scripting ::=    MENOR_CIERRE SCRIPTING MAYOR_QUE        {:
+                                                                    if(insertCompletoPorProceso.length() > 0) {
+                                                                        System.out.println("INSERT " + procesoActual);
+                                                                        System.out.println(insertCompletoPorProceso + "\n");
+                                                                    }
+                                                                :}
                         | error
                         ;
 
 cuerpo_title ::=    cuerpo_title:ct texto:ent   {:RESULT= ct.toString() + " " + ent.toString();:}
                     |                           {:RESULT="";:}
                     ;
+
+cuerpo_texto_sin_etiqueta ::=   cuerpo_texto_sin_etiqueta texto 
+                                | texto
+                                ;
 
 texto ::=   ALFANUMERICO:ent        {:RESULT=ent.toString();:}
             | IDENTIFICADOR:ent     {:RESULT=ent.toString();:}
@@ -324,37 +484,74 @@ etiquetas_cuerpo ::=    apertura_spam parametros_etiquetas_texuales cerradura_sp
                         | apertura_h1 parametros_etiquetas_texuales cerradura_h1
                         | apertura_p parametros_etiquetas_texuales cerradura_p
                         | apertura_scripting cuerpo_scripting cierre_scripting
+                        | texto
                         ;
 
 
-apertura_spam ::=   MENOR_QUE SPAM cuerpo_parametros_spam MAYOR_QUE
+apertura_spam ::=   MENOR_QUE:ini SPAM cuerpo_parametros_spam MAYOR_QUE     {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                }
+                                                                            :}
                     ;
 
-apertura_input ::=   MENOR_QUE INPUT cuerpo_parametros_input MAYOR_QUE
+apertura_input ::=   MENOR_QUE:ini INPUT cuerpo_parametros_input MAYOR_QUE  {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                }
+                                                                            :}
                     ;
 
-apertura_textarea ::=   MENOR_QUE TEXTAREA cuerpo_parametros_textarea MAYOR_QUE
+apertura_textarea ::=   MENOR_QUE:ini TEXTAREA cuerpo_parametros_textarea MAYOR_QUE     {:
+                                                                                            if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                            }
+                                                                                        :}
                         ;
 
-apertura_select ::= MENOR_QUE SELECT cuerpo_parametros_select MAYOR_QUE 
+apertura_select ::= MENOR_QUE:ini SELECT cuerpo_parametros_select MAYOR_QUE     {:
+                                                                                    if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                    }
+                                                                                :}
                     ;
 
-apertura_div ::=    MENOR_QUE DIV cuerpo_parametros_div MAYOR_QUE
+apertura_div ::=    MENOR_QUE:ini DIV cuerpo_parametros_div MAYOR_QUE       {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+                                                                                    
+                                                                                }
+                                                                            :}
                     ;
 
-apertura_img ::=    MENOR_QUE IMG cuerpo_parametros_img MAYOR_QUE
+apertura_img ::=    MENOR_QUE:ini IMG cuerpo_parametros_img MAYOR_QUE       {:
+                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                }
+                                                                            :}
                     ;
 
 apertura_br ::= MENOR_QUE BR MAYOR_QUE
                 ;
 
-apertura_button ::= MENOR_QUE BUTTON cuerpo_parametros_button MAYOR_QUE
+apertura_button ::= MENOR_QUE:ini BUTTON cuerpo_parametros_button MAYOR_QUE     {:
+                                                                                    if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                                    }
+                                                                                :}
                     ;
 
-apertura_h1 ::= MENOR_QUE H1 cuerpo_parametros_h1 MAYOR_QUE
+apertura_h1 ::= MENOR_QUE:ini H1 cuerpo_parametros_h1 MAYOR_QUE     {:
+                                                                        if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                        }
+                                                                    :}
                 ;
 
-apertura_p ::=  MENOR_QUE P cuerpo_parametros_p MAYOR_QUE
+apertura_p ::=  MENOR_QUE:ini P cuerpo_parametros_p MAYOR_QUE       {:
+                                                                        if(!etiquetasDuplicadas(inileft, iniright)) {
+
+                                                                        }
+                                                                    :}
                 ;
 
 
@@ -423,37 +620,38 @@ parametros_etiquetas_texuales_p ::= texto
                                     ;
 
 /* Parametros de etiquetas */
-cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic parametros_gcic
-                            |
+cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic:l parametros_gcic:p  {:l.add(p); RESULT = l;:}  
+                            |                                           {:parametros.clear(); ArrayList<Parametro> parametrosGCIC = new ArrayList<>(); RESULT = parametrosGCIC;:}
                             | cuerpo_parametros_gcic error
                             ;
 
-parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA CORC
-                    | CORA NAME IGUAL texto_comillas_complete CORC
+parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA:ide CORC                  {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright); RESULT = new Parametro("id", ide.toString().replace("\"", "").trim());:}
+                    | CORA NAME IGUAL texto_comillas_complete:ide CORC  {:parametros.add("name"); RESULT = new Parametro("name", ide.toString().replace("\"", "").trim());:}
                     ;
 
 cuerpo_parametros_link ::=  cuerpo_parametros_link parametros_link
-                            |
+                            |                                       {:parametros.clear();:}
                             | cuerpo_parametros_link error
                             ;
 
-parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE CORC
+parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE CORC     {:parametros.add("href");:}
                         ;
 
-texto_comillas_complete ::= ALLCHAR
-                            | ALLCHARNOSPACE
+texto_comillas_complete ::= ALLCHAR:par             {:RESULT = par.toString().replace("\"", "").trim();:}
+                            | ALLCHARNOSPACE:par    {:RESULT = par.toString().replace("\"", "").trim();:}
+                            | ID_ETIQUETA:par       {:RESULT = par.toString().replace("\"", "").trim();:}
                             ;
 
 cuerpo_parametros_body ::=  cuerpo_parametros_body parametros_body
-                            |
+                            |                                           {:parametros.clear();:}
                             | cuerpo_parametros_body error
                             ;
 
-parametros_body ::= CORA BACKGROUND IGUAL colores CORC
+parametros_body ::= CORA BACKGROUND IGUAL colores CORC  {:parametros.add("background");:}
                     ;
 
 cuerpo_parametros_spam ::=  cuerpo_parametros_spam parametros_spam
-                            |
+                            |                                           {:parametros.clear();:}
                             | cuerpo_parametros_spam error
                             ;
 
@@ -461,59 +659,59 @@ parametros_spam ::= parametros_textuales
                     ;
 
 cuerpo_parametros_input ::= cuerpo_parametros_input parametros_input
-                            |
+                            |                                           {:parametros.clear();:}
                             | cuerpo_parametros_input error
                             ;
 
-parametros_input ::=    CORA TYPE IGUAL tipos_input CORC
+parametros_input ::=    CORA TYPE IGUAL tipos_input CORC    {:parametros.add("type");:}
                         | parametros_textuales
                         ;
 
 cuerpo_parametros_textarea ::=  cuerpo_parametros_textarea parametros_textarea
-                                |
+                                |                                               {:parametros.clear();:}
                                 | cuerpo_parametros_textarea error
                                 ;
 
-parametros_textarea ::= CORA FONTSIZE IGUAL PIXELES CORC
-                        | CORA FONTFAMILY IGUAL font_family CORC
-                        | CORA TEXTALIGN IGUAL alineaciones CORC
-                        | CORA ID IGUAL ID_ETIQUETA CORC
-                        | CORA COLS IGUAL DIGITO_COM CORC
-                        | CORA ROWS IGUAL DIGITO_COM CORC
+parametros_textarea ::= CORA FONTSIZE IGUAL PIXELES CORC            {:parametros.add("font-size");:}
+                        | CORA FONTFAMILY IGUAL font_family CORC    {:parametros.add("font-family");:}
+                        | CORA TEXTALIGN IGUAL alineaciones CORC    {:parametros.add("text-align");:}
+                        | CORA ID IGUAL ID_ETIQUETA:ide CORC        {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);:}
+                        | CORA COLS IGUAL DIGITO_COM CORC           {:parametros.add("cols");:}
+                        | CORA ROWS IGUAL DIGITO_COM CORC           {:parametros.add("rows");:}
                         ;
 
 cuerpo_parametros_select ::=    cuerpo_parametros_select parametros_select
-                                |
+                                |                                           {:parametros.clear();:}
                                 | cuerpo_parametros_select error
                                 ;
 
 parametros_select ::=   parametros_textuales
                         ;
 
-cuerpo_parametros_div ::=   cuerpo_parametros_div parametros_div
-                            |
+cuerpo_parametros_div ::=   cuerpo_parametros_div parametros_div    
+                            |                                       {:parametros.clear();:}
                             | cuerpo_parametros_div error
                             ;
 
 parametros_div ::=  parametros_textuales
-                    | CORA CLASS IGUAL clases CORC
-                    | CORA BACKGROUND IGUAL colores CORC
+                    | CORA CLASS IGUAL clases CORC          {:parametros.add("class");:}
+                    | CORA BACKGROUND IGUAL colores CORC    {:parametros.add("background");:}
                     ;
 
 cuerpo_parametros_img ::=   cuerpo_parametros_img parametros_img
-                            |
+                            |                                       {:parametros.clear();:}
                             | cuerpo_parametros_img error
                             ;
 
-parametros_img ::=  CORA SRC IGUAL ALLCHARNOSPACE CORC
-                    | CORA WIDTH IGUAL tamaños CORC
-                    | CORA HEIGHT IGUAL tamaños CORC
-                    | CORA ALT IGUAL texto_comillas_complete CORC
-                    | CORA ID IGUAL ID_ETIQUETA CORC
+parametros_img ::=  CORA SRC IGUAL ALLCHARNOSPACE CORC              {:parametros.add("src");:}
+                    | CORA WIDTH IGUAL tamaños CORC                 {:parametros.add("width");:}
+                    | CORA HEIGHT IGUAL tamaños CORC                {:parametros.add("height");:}
+                    | CORA ALT IGUAL texto_comillas_complete CORC   {:parametros.add("alt");:}
+                    | CORA ID IGUAL ID_ETIQUETA:ide CORC            {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);:}
                     ;
 
 cuerpo_parametros_button ::=    cuerpo_parametros_button parametros_button 
-                                |
+                                |                                               {:parametros.clear();:}
                                 | cuerpo_parametros_button error
                                 ;
 
@@ -521,7 +719,7 @@ parametros_button ::=   parametros_textuales
                         ;
 
 cuerpo_parametros_h1 ::=    cuerpo_parametros_h1 parametros_h1
-                            |
+                            |                                   {:parametros.clear();:}
                             | cuerpo_parametros_h1 error
                             ;
 
@@ -529,7 +727,7 @@ parametros_h1 ::=   parametros_textuales
                     ;
 
 cuerpo_parametros_p ::= cuerpo_parametros_p parametros_p
-                        |
+                        |                                   {:parametros.clear();:}
                         | cuerpo_parametros_p error
                         ;
 
@@ -538,11 +736,11 @@ parametros_p ::=    parametros_textuales
 
 
 
-parametros_textuales ::=    CORA FONTSIZE IGUAL PIXELES CORC
-                            | CORA FONTFAMILY IGUAL font_family CORC
-                            | CORA TEXTALIGN IGUAL alineaciones CORC
-                            | CORA ID IGUAL ID_ETIQUETA CORC
-                            | CORA COLOR IGUAL colores CORC
+parametros_textuales ::=    CORA FONTSIZE IGUAL PIXELES CORC            {:parametros.add("font-size");:}
+                            | CORA FONTFAMILY IGUAL font_family CORC    {:parametros.add("font-family");:}
+                            | CORA TEXTALIGN IGUAL alineaciones CORC    {:parametros.add("text-align");:}
+                            | CORA ID IGUAL ID_ETIQUETA:ide CORC        {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);:}
+                            | CORA COLOR IGUAL colores CORC             {:parametros.add("color");:}
                             ;
 
 /* COMODINES */
@@ -599,7 +797,7 @@ tipos_input ::= TEXT
                 ;
 
 /* SCRIPTING */
-scripting ::=   MENOR_QUE SCRIPTING MAYOR_QUE cuerpo_scripting MENOR_CIERRE SCRIPTING MAYOR_QUE
+scripting ::=   apertura_scripting cuerpo_scripting MENOR_CIERRE SCRIPTING MAYOR_QUE
                 ;
 
 cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
@@ -607,93 +805,200 @@ cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
                         //| cuerpo_scripting error
                         ;
 
-parametros_scripting ::=    PROCESS PARA PARC CORA cuerpo_parametros_proceso CORC
-                            | ON_LOAD PARA PARC CORA cuerpo_parametros_proceso CORC
+parametros_scripting ::=    apertura_proceso:proc CORA cuerpo_parametros_proceso:sim CORC
                             | error PARA PARC CORA cuerpo_parametros_proceso CORC
                             //ERRORES PARA PROCESS
                             | PROCESS error PARC CORA cuerpo_parametros_proceso CORC
                             | PROCESS PARA error CORA cuerpo_parametros_proceso CORC
                             | PROCESS PARA PARC error cuerpo_parametros_proceso CORC
-                            //ERORES PARA ON_LOAD
+                            /*//ERORES PARA ON_LOAD
                             | ON_LOAD error PARC CORA cuerpo_parametros_proceso CORC
                             | ON_LOAD PARA error CORA cuerpo_parametros_proceso CORC
                             | ON_LOAD PARA PARC error cuerpo_parametros_proceso CORC
+                            */
                             ;             
 
-cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso parametros_proceso
-                                |
+apertura_proceso ::=    PROCESS:proc PARA PARC      {:
+                                                        procesoActual = agregarProceso(proc.toString(), procleft, procright);
+                                                        procesos.add(new Identificador(procesoActual, procleft, procright));
+                                                        RESULT = procesoActual;
+                                                    :}
+                        | ON_LOAD:proc PARA PARC    {:
+                                                        cantOnLoad++; totalOnLoad++;
+                                                        procesoActual = proc.toString() + totalOnLoad;
+                                                        procesos.add(new Identificador(procesoActual, procleft, procright));
+                                                        if(cantOnLoad > 1) {
+                                                            agregarErrorSemantico("Ya existe un bloque ON_LOAD() en el scripting.\nConflicto en Linea: " + procleft + " - Columna: " + procright);
+                                                        }
+                                                        RESULT = proc.toString();
+                                                    :}
+                        ;
+
+cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso:listaSimb parametros_proceso:listaSecond   {:
+                                                                                                        if(listaSecond != null) {
+                                                                                                            for(Simbolo simb: listaSecond) {
+                                                                                                                listaSimb.add(simb);
+                                                                                                            }
+                                                                                                        }
+                                                                                                        RESULT = listaSimb;
+                                                                                                    :}
+                                |                                                                   {:RESULT = new ArrayList<Simbolo>();:}
                                 | cuerpo_parametros_proceso error   {:System.out.println("Se ha encontrado un error de prueba");:}
                                 ;
 
-parametros_proceso ::=  variables PUNTO_COMA
-                        | parametros_proceso_simples
+parametros_proceso ::=  parametros_proceso_simples:listaSimb    {:
+                                                                    RESULT = listaSimb;
+                                                                :}
                         | condicion_if 
                         | ciclo_repeat 
                         | ciclo_while
                         | error PUNTO_COMA
                         ;
 
-parametros_proceso_simples ::=  asignacion_valor PUNTO_COMA
+parametros_proceso_simples ::=  variables:var PUNTO_COMA                {:RESULT = var;:}
+                                | asignacion_valor PUNTO_COMA           {::}
                                 | funciones_especiales PUNTO_COMA
                                 ;
 
 funciones_especiales ::=    funciones_strings
                             | CARACTER_ALEATORIO PARA PARC
                             | NUM_ALEATORIO PARA PARC
-                            | ALERT_INFO PARA strings_concatenados PARC
+                            | ALERT_INFO:ini PARA condicion:con PARC    {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
                             | EXIT PARA PARC
-                            | INSERT PARA cuerpo_insert PARC
+                            | INSERT PARA cuerpo_insert:bod PARC         {:insertCompletoPorProceso += bod + "\n";:}
                             ;
 
-cuerpo_insert ::=   cuerpo_insert COMA parametros_insert
-                    | parametros_insert
+cuerpo_insert ::=   cuerpo_insert:bod COMA parametros_insert:param      {:RESULT = bod + "\n" + param;:}
+                    | parametros_insert:param                           {:RESULT = param;:}
                     ;
 
-parametros_insert ::=   ALLCHAR_COMSIMP
-                        | ALFANUMERICO
-                        | IDENTIFICADOR
+parametros_insert ::=   ALLCHAR_COMSIMP:val     {:RESULT = val.toString().replace("'", "").replace("’", "").replace("‘", "").trim();:}
+                        | ALFANUMERICO:val      {:
+                                                    if(variableExistente(val.toString(), procesoActual)) {
+                                                        Dato valorVariable = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                        if(variableValida(val.toString(), procesoActual, string)) {
+                                                            if(!valorVariable.getTipo().equals(error)) {
+                                                                RESULT = valorVariable.getValor();
+                                                            } else {
+                                                                agregarErrorSemantico("La variable " + val.toString() + " no es valida para la instrucción insert");
+                                                            }
+                                                        } else {
+                                                            agregarErrorSemantico("La variable " + val.toString() + " no es del tipo string (tipo de la variable: " + valorVariable.getTipo() + ")");
+                                                        }
+                                                    } else {
+                                                        agregarErrorSemantico("La variable " + val.toString() + " no está declarada en el proceso actual.\nConlficto en la Linea: " + valleft + " - Columna: " + valright);
+                                                    }
+                                                :}
+                        | IDENTIFICADOR:val     {:
+                                                    if(variableExistente(val.toString(), procesoActual)) {
+                                                        Dato valorVariable = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                        if(variableValida(val.toString(), procesoActual, string)) {
+                                                            if(!valorVariable.getTipo().equals(error)) {
+                                                                RESULT = valorVariable.getValor();
+                                                            } else {
+                                                                agregarErrorSemantico("La variable " + val.toString() + " no es valida para la instrucción insert");
+                                                            }
+                                                        } else {
+                                                            agregarErrorSemantico("La variable " + val.toString() + " no es del tipo string (tipo de la variable: " + valorVariable.getTipo() + ")");
+                                                        }
+                                                    } else {
+                                                        agregarErrorSemantico("La variable " + val.toString() + " no está declarada en el proceso actual.\nConlficto en la Linea: " + valleft + " - Columna: " + valright);
+                                                    }
+                                                :}
                         ;
 
-funciones_strings ::=   ASC PARA strings_concatenados PARC
-                        | DESC PARA strings_concatenados PARC
-                        | LETPAR_NUM PARA strings_concatenados PARC
-                        | LETIMPAR_NUM PARA strings_concatenados PARC
-                        | REVERSE PARA strings_concatenados PARC
+funciones_strings ::=   ASC:ini PARA condicion:con PARC                 {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
+                        | DESC:ini PARA condicion:con PARC              {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
+                        | LETPAR_NUM:ini PARA condicion:con PARC        {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
+                        | LETIMPAR_NUM:ini PARA condicion:con PARC      {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
+                        | REVERSE:ini PARA condicion:con PARC           {:
+                                                                            if(verificarTipo(con, string, inileft, iniright)) {
+
+                                                                            }
+                                                                        :}
                         ;
 
 /* ASIGNACION DE VALORES A VARIABLES */
-variables ::=   /*INTEGER modo cuerpo_identificadores igual_integer
+variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igual_variable:valor   {:
+                                                                                                        ArrayList<Simbolo> listaSimbolosNuevos = new ArrayList<>();
+                                                                                                        for(String id: ids) {
+                                                                                                            if(valor.getValor() != null && valor.getTipo().equals(error) && valor.getValor().equals("vacio")){
+                                                                                                                if(!tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, null, mode.toString(), procesoActual))) {
+                                                                                                                    Advertencia errorNuevo = new Advertencia("Semantico");
+                                                                                                                    if(mode.toString().equals("@global"))
+                                                                                                                        errorNuevo.setMensaje("El simbolo " + id + " ya existe.\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
+                                                                                                                    else 
+                                                                                                                        errorNuevo.setMensaje("El simbolo " + id + " ya existe en el procedimiento " + procesoActual + " o es una variable global" + ".\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
+                                                                                                                    listaErrores.add(errorNuevo);
+                                                                                                                }
+                                                                                                            } else if(valor.getTipo().equals(error)) {
+                                                                                                                agregarErrorSemantico(valor.getValor() + ".\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
+                                                                                                            } else {
+                                                                                                                if(tipoVar.equals(valor.getTipo())) {
+                                                                                                                    if(!tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, valor.getValor(), mode.toString(), procesoActual))){
+                                                                                                                        Advertencia errorNuevo = new Advertencia("Semantico");
+                                                                                                                        errorNuevo.setMensaje("El simbolo " + id + " ya existe en el procedimiento " + procesoActual + " o es una variable global" + ".\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
+                                                                                                                        listaErrores.add(errorNuevo);
+                                                                                                                    }
+                                                                                                                } else {
+                                                                                                                    agregarErrorSemantico("El valor asignado a la(s) variable(s) no es compatible. Conflicto en Linea " + tipoVarleft + " - Columna " + tipoVarright);
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                        RESULT = listaSimbolosNuevos;
+                                                                                                    :}
+                /*INTEGER modo cuerpo_identificadores igual_integer
                 | DECIMAL modo cuerpo_identificadores igual_decimal
                 | STRING modo cuerpo_identificadores igual_string
                 | BOOLEAN modo cuerpo_identificadores igual_boolean
                 | CHAR modo cuerpo_identificadores igual_char
-                |*/ tipos_variables modo cuerpo_identificadores igual_variable
+                |*/ 
                 ;
 
-tipos_variables ::= INTEGER
-                    | DECIMAL
-                    | STRING
-                    | BOOLEAN
-                    | CHAR
+tipos_variables ::= INTEGER     {:RESULT = integer;:}
+                    | DECIMAL   {:RESULT = decimal;:}
+                    | STRING    {:RESULT = string;:}
+                    | BOOLEAN   {:RESULT = booleano;:}
+                    | CHAR      {:RESULT = character;:}
                     ;
 
-igual_variable ::=  IGUAL expresion_aritmetica
-                    |
+igual_variable ::=  IGUAL condicion:val     {:RESULT = val;:}
+                    |                       {:RESULT = new Dato(error, "vacio");:}
                     ;
 
-cuerpo_identificadores ::=  cuerpo_identificadores COMA identificadores
-                            | identificadores
+cuerpo_identificadores ::=  cuerpo_identificadores:ids COMA identificadores:id  {:ids.add(id); RESULT = ids;:}
+                            | identificadores:id                                {:ArrayList<String> identificadoresNuevos = new ArrayList<>(); identificadoresNuevos.add(id); RESULT = identificadoresNuevos;:}
                             | cuerpo_identificadores error
                             | cuerpo_identificadores COMA error
                             ;
 
-identificadores ::= IDENTIFICADOR
-                    | ALFANUMERICO
+identificadores ::= IDENTIFICADOR:id    {:RESULT = id.toString();:}
+                    | ALFANUMERICO:id   {:RESULT = id.toString();:}
                     //| error
                     ;
 
-modo ::=    GLOBAL
-            |
+modo ::=    GLOBAL  {:RESULT = "@global";:}
+            |       {:RESULT = "-";:}
             ;
 
 igual_integer ::=   IGUAL expresion_aritmetica
@@ -736,7 +1041,19 @@ strings ::= ALLCHAR
             ;
 
 /* ASIGNACION DE VALORES */
-asignacion_valor ::=    cuerpo_identificadores IGUAL expresion_aritmetica
+asignacion_valor ::=    cuerpo_identificadores:ids IGUAL condicion:con      {:
+                                                                                String tipoVar = con.getTipo();
+                                                                                for(String iden: ids) {
+                                                                                    if(variableExistente(iden, procesoActual)) {
+                                                                                        if(!variableValida(iden, procesoActual, tipoVar)) {
+                                                                                            agregarErrorSemantico("La variable: " + iden + " no es del tipo " + tipoVar + ".\nConflicto en la Linea: " + idsleft + " - Columna: " + idsright);
+                                                                                        }
+                                                                                    } else {
+                                                                                        agregarErrorSemantico("La variable " + iden + " no está declarada en el proceso " + procesoActual + ".\nConflicto en la Linea: " + idsleft + " - Columna: " + idsright);
+                                                                                    }
+                                                                                }
+                                                                                
+                                                                            :}
                         ;
 /*
 valores_de_asignacion ::=   expresion_aritmetica
@@ -806,6 +1123,7 @@ condicion_else ::=  ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC 
 
 /* CICLO REPEAT */
 ciclo_repeat ::=    REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC parametros_proceso_simples
                     | error PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
                     | REPEAT error repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
                     | REPEAT PARA error PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
@@ -821,10 +1139,40 @@ ciclo_repeat ::=    REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_lim
                     | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
                     | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
                     | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite PARC INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
+                    //Errores repeat de una instruccion
+                    | REPEAT error repetir_declaracion PARC HUNTIL PARA repetir_limite PARC parametros_proceso_simples
+                    | REPEAT PARA error PARC HUNTIL PARA repetir_limite PARC parametros_proceso_simples
+                    | REPEAT PARA repetir_declaracion error HUNTIL PARA repetir_limite PARC parametros_proceso_simples
+                    | REPEAT PARA repetir_declaracion PARC error PARA repetir_limite PARC parametros_proceso_simples
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL error repetir_limite PARC parametros_proceso_simples
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA error PARC parametros_proceso_simples
+                    | REPEAT PARA repetir_declaracion PARC HUNTIL PARA repetir_limite error parametros_proceso_simples
                     ;
 
-repetir_declaracion ::= INTEGER identificadores IGUAL igual_repeat
-                        | identificadores IGUAL igual_repeat
+repetir_declaracion ::= INTEGER:ent identificadores:ide IGUAL condicion:val {:
+                                                                                if(val.getTipo().equals(integer)) {
+                                                                                    if(!tablaSimbolos.insertarSimbolo(new Simbolo(ide.toString(), integer, val.getValor(), "-", procesoActual))){
+                                                                                        agregarErrorSemantico("El simbolo " + ide.toString() + " ya existe en el procedimiento " + procesoActual + ".\nConflicto en Linea: " + entleft + " - Columna: " + entright);
+                                                                                    }
+                                                                                } else {
+                                                                                    agregarErrorSemantico("El valor asignado a la variable no es compatible.\n Conflicto en Linea: " + entleft + " - Columna: " + entright);
+                                                                                }
+                                                                                
+                                                                            :}
+                        | identificadores:ide IGUAL condicion:val           {:
+                                                                                if(!val.getTipo().equals(integer)) {
+                                                                                    agregarErrorSemantico("El valor a asignar no es de tipo integer, recuerde que REPEAT solo acepta parametros de tipo integer.\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                                                }
+                                                                                if(variableExistente(ide.toString(), procesoActual)) {
+                                                                                    if(variableValida(ide.toString(), procesoActual, integer)) {
+                                                                                        
+                                                                                    } else {
+                                                                                        agregarErrorSemantico("La variable " + ide.toString() + " no es una variable de tipo integer.\nConflicto en Linea: " + ideleft + " - Columna: " + ideright);
+                                                                                    }
+                                                                                } else {
+                                                                                    agregarErrorSemantico("La variable " + ide.toString() + " no está declarada en el proceso " + procesoActual + ".\nConflicto en Linea: " + ideleft + " - Columna: " + ideright);
+                                                                                }
+                                                                            :}
                         ;
 
 repetir_limite ::=  D_INTEGER
@@ -836,6 +1184,7 @@ igual_repeat ::=    D_INTEGER
 
 /* CICLO WHILE */
 ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                    | WHILE PARA condicion PARC THENWHILE parametros_proceso_simples
                     | error PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
                     | WHILE error condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
                     | WHILE PARA error PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
@@ -848,31 +1197,155 @@ ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_
                     | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
                     | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
                     | WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
+                    // errores para while simple
+                    | WHILE error condicion PARC THENWHILE parametros_proceso_simples
+                    | WHILE PARA error PARC THENWHILE parametros_proceso_simples
+                    | WHILE PARA condicion error THENWHILE parametros_proceso_simples
+                    | WHILE PARA condicion PARC error parametros_proceso_simples
                     ;
 
 /* CONDICION */
-condicion ::=   condicion       IGUAL_IGUAL         condicion
-                | condicion     DIFERENTE_IGUAL     condicion
-                | condicion     MENOR_QUE           condicion
-                | condicion     MENOR_IGUAL         condicion
-                | condicion     MAYOR_QUE           condicion
-                | condicion     MAYOR_IGUAL         condicion
-                | NOT           condicion
-                | condicion     AND                 condicion
-                | condicion     OR                  condicion
-                | RESTA         condicion
-                | condicion     SUMA                condicion
-                | condicion     RESTA               condicion
-                | condicion     MULTIPLICACION      condicion
-                | condicion     DIVISION            condicion
-                | valor_condicion
-                | PARA condicion PARC
+condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.igualIgual(dato1, dato2);
+                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " == " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     DIFERENTE_IGUAL     condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.diferenteIgual(dato1, dato2);
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     MENOR_QUE           condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.menorQue(dato1, dato2);
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     MENOR_IGUAL         condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.menorIgual(dato1, dato2);
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     MAYOR_QUE           condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.mayorQue(dato1, dato2);
+                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " > " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     MAYOR_IGUAL         condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.mayorIgual(dato1, dato2);
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | NOT           condicion:dato                              {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.not(dato);
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + datoleft + " - Columna " + datoright);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     AND                 condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.and(dato1, dato2);
+                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " && " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                | condicion:dato1     OR                  condicion:dato2   {:
+                                                                                Dato datoCondicionado = operacionesBooleanas.or(dato1, dato2);
+                                                                                if(datoCondicionado.getTipo().equals(error)) {
+                                                                                    agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                }
+                                                                                RESULT = datoCondicionado;
+                                                                            :}
+                /* operaciones aritméticas */
+                | RESTA         condicion:dato                              {:
+                                                                                Dato datoMultiplicado = tablaOperaciones.menosUnario(dato);
+                                                                                if(datoMultiplicado.getTipo().equals(error)) {
+                                                                                    if(datoMultiplicado.getValor() != null) {
+                                                                                        agregarErrorSemantico("El dato " + dato.getValor() + " no es compatible para operar de manera unaria.\nConflicto en Linea " + datoleft + " - Columna " + datoright);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoMultiplicado.getValor() + ".\nConflicto en Linea " + datoleft + " - Columna " + datoright);
+                                                                                    }
+                                                                                    RESULT = datoMultiplicado;
+                                                                                } else {
+                                                                                    RESULT = datoMultiplicado;
+                                                                                }
+                                                                            :}%prec UNARY
+                | condicion:dato1     SUMA                condicion:dato2   {:
+                                                                                Dato datoSumado = tablaOperaciones.sumar(dato1, dato2);
+                                                                                if(datoSumado.getTipo().equals(error)) {
+                                                                                    if(datoSumado.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para sumar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoSumado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                    RESULT = datoSumado;
+                                                                                } else {
+                                                                                    RESULT = datoSumado;
+                                                                                }
+                                                                            :}
+                | condicion:dato1     RESTA               condicion:dato2   {:
+                                                                                Dato datoRestado = tablaOperaciones.restar(dato1, dato2);
+                                                                                if(datoRestado.getTipo().equals(error)) {
+                                                                                    if(datoRestado.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para restar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoRestado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                    RESULT = datoRestado;
+                                                                                } else {
+                                                                                    RESULT = datoRestado;
+                                                                                }
+                                                                            :}
+                | condicion:dato1     MULTIPLICACION      condicion:dato2   {:
+                                                                                Dato datoMultiplicado = tablaOperaciones.multiplicar(dato1, dato2);
+                                                                                if(datoMultiplicado.getTipo().equals(error)) {
+                                                                                    if(datoMultiplicado.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para multiplicar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoMultiplicado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                    RESULT = datoMultiplicado;
+                                                                                } else {
+                                                                                    RESULT = datoMultiplicado;
+                                                                                }
+                                                                            :}
+                | condicion:dato1     DIVISION            condicion:dato2   {:
+                                                                                Dato datoDividido = tablaOperaciones.dividir(dato1, dato2);
+                                                                                if(datoDividido.getTipo().equals(error)) {
+                                                                                    if(datoDividido.getValor() != null) {
+                                                                                        agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para dividir.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    } else {
+                                                                                        agregarErrorSemantico(datoDividido.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
+                                                                                    }
+                                                                                    RESULT = datoDividido;
+                                                                                } else {
+                                                                                    RESULT = datoDividido;
+                                                                                }
+                                                                            :}
+                | valor_condicion:dato                                      {:RESULT = dato;:}
+                | PARA condicion:dato PARC                                  {:RESULT = dato;:}
                 ;
 
-valor_condicion ::= valor_numerico
+valor_condicion ::= valor_numerico:val  {:RESULT = val;:}
                     ;
 
 /* EXPRESIONES ARITMETICAS */
+/*
 expresion_aritmetica ::=    RESTA                           expresion_aritmetica:va1                            {:RESULT=va1*-1;:}%prec UNARY
                             | expresion_aritmetica:va1      SUMA                    expresion_aritmetica:va2    {:RESULT=va1+va2;:}
                             | expresion_aritmetica:va1      RESTA                   expresion_aritmetica:va2    {:RESULT=va1-va2;:}
@@ -881,17 +1354,31 @@ expresion_aritmetica ::=    RESTA                           expresion_aritmetica
                             | valor_numerico:va1                                                                {:RESULT = new Double(va1.toString());:}
                             | PARA expresion_aritmetica:va1 PARC                                                {:RESULT = new Double(va1.toString());:}
                             ;
+*/
 
-valor_numerico ::=  D_INTEGER:val       {:RESULT = val;:}
-                    | D_DECIMAL:val     {:RESULT = val;:}
-                    | IDENTIFICADOR:val {:RESULT = 0;:}
-                    | ALFANUMERICO:val  {:RESULT = 0;:}
-                    | D_CHAR:val        {:RESULT = 0;:}
-                    | ALLCHAR           {:RESULT = 0;:}
-                    | ALLCHARNOSPACE    {:RESULT = 0;:}
-                    | D_STRING          {:RESULT = 0;:}
-                    | ID_ETIQUETA       {:RESULT = 0;:}
-                    | TRUE              {:RESULT = 1;:}
-                    | FALSE             {:RESULT = 0;:}
+valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toString());:}
+                    | D_DECIMAL:val         {:RESULT = new Dato(decimal, val.toString());:}
+                    | IDENTIFICADOR:val     {:
+                                                Dato nuevoDato = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                if(nuevoDato.getTipo().equals(error)) {
+                                                    agregarErrorSemantico(nuevoDato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                }
+                                                RESULT = nuevoDato;
+                                            :}
+                    | ALFANUMERICO:val      {:
+                                                Dato nuevoDato = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                if(nuevoDato.getTipo().equals(error)) {
+                                                    agregarErrorSemantico(nuevoDato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                }
+                                                RESULT = nuevoDato;
+                                            :}
+                    | D_CHAR:val            {:String caracterSt = val.toString().substring(1,2); RESULT = new Dato(character, caracterSt);:}
+                    | ALLCHAR:val           {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | ALLCHARNOSPACE:val    {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | D_STRING:val          {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | ID_ETIQUETA:val       {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | TRUE:val              {:RESULT = new Dato(booleano, "true");:}
+                    | FALSE:val             {:RESULT = new Dato(booleano, "false");:}
+                    /* agregar getElementById */
                     ;
  

@@ -1,0 +1,51 @@
+<!-- -Mi primer captcha
+     en el curso de Organización de Lenguajes y Compiladores 1
+ -->
+<C_GCIC [id= "captcha_matematico_1"] [name= "Captcha Matemático 1"]>
+    !! El encabezado de la página que tendrá mi captcha
+    <C_HEAD>
+        <C_LINK [href="www.facebook.com"]> </C_LINK>
+        <C_TITLE>Hola Mundo</C_TITLE>
+        <C_SCRIPTING></C_SCRIPTING>
+        <C_SCRIPTING></C_SCRIPTING>
+    </C_HEAD>
+    <C_BODY [background="black"]>
+        <C_SPAM [color="#00cd38"] [font-size="20px"]></C_SPAM>
+        <C_INPUT [font-family="Arial" ] [ text-align = " left " ]></C_INPUT>
+        <C_TEXTAREA [id="hola_mundo"] [ cols = "20" ] [rows="5"]></C_TEXTAREA>
+        <C_SELECT [id="hola"] [ color   = "green" ] >
+            <C_OPTION>hola</C_OPTION>
+            <C_OPTION>adios</C_OPTION>
+        </C_SELECT>
+        <C_DIV [class="row"] [background="red"] >
+            <C_INPUT></C_INPUT>
+            <C_SPAM></C_SPAM>
+        </C_DIV>
+        <C_IMG [src="www.google.com"] [id="holis"] [width="30%"] [ heigth="20%" ] [alt="Mensaje aleatorio"]></C_IMG>
+        <C_BR>
+        <C_H1 [text-align="center"] >HOLA <C_SPAM> ADIOS </C_SPAM> <C_BR> MUNDO</C_H1>
+        <C_P [font-size="20px"] >  </C_P>
+        <C_SCRIPTING>
+            PROCESS_ADIOS() [
+
+            ]
+        </C_SCRIPTING>
+        <C_SCRIPTING>
+            ON_LOAD()[
+                string hola = "hola";
+                IF(((5+6+9*9) > 12) && (3 == 3)) THEN
+                    INIT{:
+                        hola = "adios";
+                    :} END
+            ]
+            PROCESS_HOLA()[
+                integer hola_mundo_1;
+                REPEAT(hola_mundo_1 = 12) HUNTIL(12) 
+                    INIT{:
+                    :} END
+            ]
+        </C_SCRIPTING>
+        <c_p>HOLA_MUNDO HOLA MUNDO</c_p>
+    </C_BODY>
+    <C_SCRIPTING> </C_SCRIPTING>
+</C_GCIC>

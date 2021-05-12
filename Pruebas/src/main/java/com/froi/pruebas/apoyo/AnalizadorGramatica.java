@@ -33,6 +33,7 @@ public class AnalizadorGramatica {
             }
         } catch (Exception e) {
             System.out.println("Error al ejecutar el parser: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     

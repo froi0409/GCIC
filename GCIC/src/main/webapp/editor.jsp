@@ -13,6 +13,17 @@
         <title>Generador de Captchas - GCIC</title>
     </head>
     <body>
+        
+        <%
+        String entrada = request.getAttribute("entrada").toString();
+        String salida = request.getAttribute("salida").toString();
+        if(entrada == null) {
+            entrada = "";
+        }
+        if(salida == null) {
+            salida = "";
+        }
+        %>
         <!-- Cabecera que tendrá el editor -->
         <div class="row fondoInicio">
             <div class="row container-fluid align-items-center">
@@ -49,7 +60,7 @@
                 <br>
                 <!-- Se añade el editor de texto como tal -->
                 <div class="row container-fluid">
-                    <textarea class="form-control" onkeyup="actualizarPosicion()" onkeydown="actualizarPosicion()" onclick="actualizarPosicion()" name="entrada" id="entrada" style="height: 500px;"></textarea>
+                    <textarea class="form-control" onkeyup="actualizarPosicion()" onkeydown="actualizarPosicion()" onclick="actualizarPosicion()" name="entrada" id="entrada" style="height: 500px;"><% out.print(entrada); %></textarea>
                 </div>
             </div>
             <div class="col-1"></div>
@@ -61,7 +72,7 @@
             <div class="col-1"></div>
             <div class="col-10">
                 <div class="row container-fluid">
-                    <textarea class="form-control" id="salida" style="height: 200px; background-color: beige;"></textarea>
+                    <textarea class="form-control" id="salida" style="height: 200px; background-color: beige;"><% out.print(salida); %></textarea>
                 </div>
             </div>
             <div class="col-1"></div>

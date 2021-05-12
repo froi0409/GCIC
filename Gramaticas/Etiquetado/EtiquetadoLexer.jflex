@@ -1,7 +1,7 @@
 //Sección de Importaciones
-package com.froi.pruebas.gramaticas;
+package com.froi.gcic.gramaticas.etiquetado;
 import java_cup.runtime.*;
-import static com.froi.pruebas.gramaticas.EtiquetadoParserSym.*;
+import static com.froi.gcic.gramaticas.etiquetado.EtiquetadoParserSym.*;
 
 %%
 %public
