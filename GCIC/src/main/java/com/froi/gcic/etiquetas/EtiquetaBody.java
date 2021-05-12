@@ -7,6 +7,7 @@ package com.froi.gcic.etiquetas;
 
 import com.froi.gcic.entidades.Advertencia;
 import com.froi.gcic.entidades.Captcha;
+import com.froi.gcic.entidades.Parametro;
 import java.util.ArrayList;
 
 /**
@@ -17,8 +18,7 @@ public class EtiquetaBody extends Etiqueta {
 
     private String background;
     
-    public EtiquetaBody(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
-        super(listaCaptchas, listaErrores);
+    public EtiquetaBody() {
         this.background = "white";
     }
 
@@ -28,6 +28,11 @@ public class EtiquetaBody extends Etiqueta {
 
     public void setBackground(String background) {
         this.background = background;
+    }
+
+    @Override
+    public void setByString(Parametro arg0, ArrayList<Advertencia> arg1) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

@@ -15,8 +15,7 @@ import java.util.ArrayList;
  */
 public class EtiquetaSelect extends EtiquetaTextual {
 
-    public EtiquetaSelect(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
-        super(listaCaptchas, listaErrores);
+    public EtiquetaSelect() {
     }
     
 }

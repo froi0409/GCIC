@@ -8,12 +8,14 @@ package com.froi.gcic.gramaticas.etiquetado;
 import com.froi.gcic.entidades.Advertencia;
 import com.froi.gcic.entidades.Captcha;
 import com.froi.gcic.entidades.Identificador;
+import com.froi.gcic.entidades.Parametro;
 import com.froi.gcic.manejodesimbolos.Dato;
 import com.froi.gcic.manejodesimbolos.OperacionesBooleanas;
 import com.froi.gcic.manejodesimbolos.Simbolo;
 import com.froi.gcic.manejodesimbolos.TablaDeSimbolos;
 import com.froi.gcic.manejodesimbolos.TablasDeOperaciones;
 import com.froi.gcic.manejodesimbolos.TipoDeDato;
+import com.froi.gcic.etiquetas.*;
 import java_cup.runtime.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -2035,6 +2037,7 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
 
 
 
+    private ArrayList<Captcha> listaCaptchas;
     private ArrayList<Advertencia> listaErrores;
     private ArrayList<String> parametros;
     private ArrayList<Identificador> procesos;
@@ -2057,9 +2060,15 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
     private int totalOnLoad;
     private int procesoRepetido;
 
-    public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
+    /* ETIQUETAS PRINCIPALES */
+    private EtiquetaGCIC gcicPrincipal = new EtiquetaGCIC();
+    private EtiquetaHead headPrincipal = new EtiquetaHead();
+    private EtiquetaBody bodyPrincipal = new EtiquetaBody();
+
+    public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores, ArrayList<Captcha> listaCaptchas) {
         super(lexer);
         this.listaErrores = listaErrores;
+        this.listaCaptchas = listaCaptchas;
         this.captchaSolicitado = new Captcha();
         this.tablaOperaciones = new TablasDeOperaciones();
         this.operacionesBooleanas = new OperacionesBooleanas();
@@ -2223,6 +2232,7 @@ class CUP$EtiquetadoParser$actions {
                                                         System.out.println(simb);
                                                     }
                                                     System.out.println(" \n\n");
+                                                    System.out.println("Id del captcha " + gcicPrincipal.getId() + " - Name: " + gcicPrincipal.getName());
                                                 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("inicio",0, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -2235,11 +2245,16 @@ class CUP$EtiquetadoParser$actions {
 		int inileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).left;
 		int iniright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).right;
 		Object ini = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).value;
+		int paramleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int paramright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> param = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
-                                                                                    if(!etiquetasDuplicadas(inileft, iniright)) {
-
-                                                                                    }
-                                                                                
+                                                                                            if(!etiquetasDuplicadas(inileft, iniright)) {
+                                                                                                for(Parametro element: param) {
+                                                                                                    gcicPrincipal.setByString(element, listaErrores);
+                                                                                                }
+                                                                                            }
+                                                                                        
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_gcic",99, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2379,7 +2394,7 @@ class CUP$EtiquetadoParser$actions {
 		Object ini = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).value;
 		
                                                                                 if(!etiquetasDuplicadas(inileft, iniright)) {
-
+                                                                                    
                                                                                 }
                                                                             
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_body",101, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
@@ -2828,7 +2843,7 @@ class CUP$EtiquetadoParser$actions {
 		Object ini = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).value;
 		
                                                                                 if(!etiquetasDuplicadas(inileft, iniright)) {
-
+                                                                                    
                                                                                 }
                                                                             
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_div",110, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
@@ -3118,8 +3133,14 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 89: // cuerpo_parametros_gcic ::= cuerpo_parametros_gcic parametros_gcic 
             {
-              Object RESULT =null;
-
+              ArrayList<Parametro> RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> l = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		int pleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro p = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		l.add(p); RESULT = l;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_gcic",37, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3127,8 +3148,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 90: // cuerpo_parametros_gcic ::= 
             {
-              Object RESULT =null;
-		parametros.clear();
+              ArrayList<Parametro> RESULT =null;
+		parametros.clear(); ArrayList<Parametro> parametrosGCIC = new ArrayList<>(); RESULT = parametrosGCIC;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_gcic",37, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3136,7 +3157,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 91: // cuerpo_parametros_gcic ::= cuerpo_parametros_gcic error 
             {
-              Object RESULT =null;
+              ArrayList<Parametro> RESULT =null;
 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_gcic",37, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3145,11 +3166,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 92: // parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA CORC 
             {
-              Object RESULT =null;
+              Parametro RESULT =null;
 		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
 		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
 		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
-		parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);
+		parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright); RESULT = new Parametro("id", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_gcic",38, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3157,8 +3178,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 93: // parametros_gcic ::= CORA NAME IGUAL texto_comillas_complete CORC 
             {
-              Object RESULT =null;
-		parametros.add("name");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String ide = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("name"); RESULT = new Parametro("name", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_gcic",38, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3166,7 +3190,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 94: // cuerpo_parametros_link ::= cuerpo_parametros_link parametros_link 
             {
-              Object RESULT =null;
+              ArrayList<Parametro> RESULT =null;
 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_link",39, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3175,7 +3199,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 95: // cuerpo_parametros_link ::= 
             {
-              Object RESULT =null;
+              ArrayList<Parametro> RESULT =null;
 		parametros.clear();
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_link",39, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3184,7 +3208,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 96: // cuerpo_parametros_link ::= cuerpo_parametros_link error 
             {
-              Object RESULT =null;
+              ArrayList<Parametro> RESULT =null;
 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_link",39, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3193,7 +3217,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 97: // parametros_link ::= CORA HREF IGUAL ALLCHARNOSPACE CORC 
             {
-              Object RESULT =null;
+              Parametro RESULT =null;
 		parametros.add("href");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_link",40, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3203,7 +3227,10 @@ class CUP$EtiquetadoParser$actions {
           case 98: // texto_comillas_complete ::= ALLCHAR 
             {
               String RESULT =null;
-
+		int parleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int parright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object par = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = par.toString().replace("\"", "").trim();
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("texto_comillas_complete",18, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3212,7 +3239,10 @@ class CUP$EtiquetadoParser$actions {
           case 99: // texto_comillas_complete ::= ALLCHARNOSPACE 
             {
               String RESULT =null;
-
+		int parleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int parright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object par = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = par.toString().replace("\"", "").trim();
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("texto_comillas_complete",18, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3221,7 +3251,10 @@ class CUP$EtiquetadoParser$actions {
           case 100: // texto_comillas_complete ::= ID_ETIQUETA 
             {
               String RESULT =null;
-
+		int parleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int parright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Object par = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = par.toString().replace("\"", "").trim();
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("texto_comillas_complete",18, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;

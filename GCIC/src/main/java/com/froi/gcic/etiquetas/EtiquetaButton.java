@@ -18,8 +18,7 @@ public class EtiquetaButton extends EtiquetaTextual {
     private String background;
     private String onClick;
     
-    public EtiquetaButton(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
-        super(listaCaptchas, listaErrores);
+    public EtiquetaButton() {
         this.background = "white";
         this.onClick = "";
     }

@@ -15,8 +15,7 @@ import java.util.ArrayList;
  */
 public class EtiquetaTextarea extends EtiquetaTextual {
 
-    public EtiquetaTextarea(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
-        super(listaCaptchas, listaErrores);
+    public EtiquetaTextarea() {
     }
     
 }

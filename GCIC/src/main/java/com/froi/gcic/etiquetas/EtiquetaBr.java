@@ -7,6 +7,7 @@ package com.froi.gcic.etiquetas;
 
 import com.froi.gcic.entidades.Advertencia;
 import com.froi.gcic.entidades.Captcha;
+import com.froi.gcic.entidades.Parametro;
 import java.util.ArrayList;
 
 /**
@@ -15,8 +16,12 @@ import java.util.ArrayList;
  */
 public class EtiquetaBr extends Etiqueta {
 
-    public EtiquetaBr(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
-        super(listaCaptchas, listaErrores);
+    public EtiquetaBr() {
+    }
+
+    @Override
+    public void setByString(Parametro arg0, ArrayList<Advertencia> arg1) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -6,6 +6,7 @@
 package com.froi.gcic.servlets.analisis;
 
 import com.froi.gcic.entidades.Advertencia;
+import com.froi.gcic.entidades.Captcha;
 import com.froi.gcic.gramaticas.etiquetado.EtiquetadoLexer;
 import com.froi.gcic.gramaticas.etiquetado.EtiquetadoParser;
 import java.io.IOException;
@@ -50,13 +51,15 @@ public class AnalizarEntrada extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         String entrada = request.getParameter("entrada");
         String salida = "";
         ArrayList<Advertencia> listaErrores = new ArrayList<>();
+        ArrayList<Captcha> listaCaptchas = new ArrayList<>();
         
         StringReader reader = new StringReader(entrada);
         EtiquetadoLexer etiquetadoLexer = new EtiquetadoLexer(reader);
-        EtiquetadoParser etiquetadoParser = new EtiquetadoParser(etiquetadoLexer, listaErrores);
+        EtiquetadoParser etiquetadoParser = new EtiquetadoParser(etiquetadoLexer, listaErrores, listaCaptchas);
         
         try {
             etiquetadoParser.parse();

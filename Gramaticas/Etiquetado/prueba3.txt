@@ -32,9 +32,10 @@
         </C_SCRIPTING>
         <C_SCRIPTING>
             ON_LOAD()[
+                string hola = "hola";
                 IF(((5+6+9*9) > 12) && (3 == 3)) THEN
                     INIT{:
-
+                        hola = "adios";
                     :} END
             ]
             PROCESS_HOLA()[

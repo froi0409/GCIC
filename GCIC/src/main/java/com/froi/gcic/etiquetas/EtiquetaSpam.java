@@ -15,8 +15,7 @@ import java.util.ArrayList;
  */
 public class EtiquetaSpam extends EtiquetaTextual {
 
-    public EtiquetaSpam(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
-        super(listaCaptchas, listaErrores);
+    public EtiquetaSpam() {
     }
     
 }

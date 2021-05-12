@@ -7,6 +7,7 @@ package com.froi.gcic.etiquetas;
 
 import com.froi.gcic.entidades.Advertencia;
 import com.froi.gcic.entidades.Captcha;
+import com.froi.gcic.entidades.Parametro;
 import java.util.ArrayList;
 
 /**
@@ -21,8 +22,7 @@ public class EtiquetaImg extends Etiqueta {
     private String alt;
     private String id;
     
-    public EtiquetaImg(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
-        super(listaCaptchas, listaErrores);
+    public EtiquetaImg() {
         this.src = "https://www.universidadesonline.com.gt/logos/original/logo-centro-universitario-de-occidente.png";
         this.width = "30px";
         this.height = "30px";
@@ -68,6 +68,11 @@ public class EtiquetaImg extends Etiqueta {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public void setByString(Parametro arg0, ArrayList<Advertencia> arg1) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

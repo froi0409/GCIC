@@ -18,8 +18,7 @@ public class EtiquetaDiv extends EtiquetaTextual {
     private String clase;
     private String background;
     
-    public EtiquetaDiv(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
-        super(listaCaptchas, listaErrores);
+    public EtiquetaDiv() {
         this.clase = "row";
         this.background = "white";
     }

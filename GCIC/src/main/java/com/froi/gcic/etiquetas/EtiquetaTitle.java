@@ -11,6 +11,18 @@ package com.froi.gcic.etiquetas;
  */
 public class EtiquetaTitle {
     
+    private String titulo;
+
+    public EtiquetaTitle() {
+        this.titulo = "";
+    }
     
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
     
 }

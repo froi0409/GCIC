@@ -17,8 +17,7 @@ public class EtiquetaInput extends EtiquetaTextual {
 
     private String type;
     
-    public EtiquetaInput(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
-        super(listaCaptchas, listaErrores);
+    public EtiquetaInput() {
         this.type = "text";
     }
 

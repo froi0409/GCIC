@@ -21,8 +21,7 @@ public class EtiquetaTextual extends Etiqueta {
     private String id;
     private String color;
     
-    public EtiquetaTextual(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
-        super(listaCaptchas, listaErrores);
+    public EtiquetaTextual() {
         this.fontSize = 12;
         this.fontFamily = "";
         this.textAlign = "left";

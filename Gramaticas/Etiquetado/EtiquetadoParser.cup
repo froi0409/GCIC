@@ -3,12 +3,14 @@ package com.froi.gcic.gramaticas.etiquetado;
 import com.froi.gcic.entidades.Advertencia;
 import com.froi.gcic.entidades.Captcha;
 import com.froi.gcic.entidades.Identificador;
+import com.froi.gcic.entidades.Parametro;
 import com.froi.gcic.manejodesimbolos.Dato;
 import com.froi.gcic.manejodesimbolos.OperacionesBooleanas;
 import com.froi.gcic.manejodesimbolos.Simbolo;
 import com.froi.gcic.manejodesimbolos.TablaDeSimbolos;
 import com.froi.gcic.manejodesimbolos.TablasDeOperaciones;
 import com.froi.gcic.manejodesimbolos.TipoDeDato;
+import com.froi.gcic.etiquetas.*;
 import java_cup.runtime.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +23,7 @@ class EtiquetadoParser;
 
 parser code {:
 
+    private ArrayList<Captcha> listaCaptchas;
     private ArrayList<Advertencia> listaErrores;
     private ArrayList<String> parametros;
     private ArrayList<Identificador> procesos;
@@ -43,9 +46,15 @@ parser code {:
     private int totalOnLoad;
     private int procesoRepetido;
 
-    public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores) {
+    /* ETIQUETAS PRINCIPALES */
+    private EtiquetaGCIC gcicPrincipal = new EtiquetaGCIC();
+    private EtiquetaHead headPrincipal = new EtiquetaHead();
+    private EtiquetaBody bodyPrincipal = new EtiquetaBody();
+
+    public EtiquetadoParser(EtiquetadoLexer lexer, ArrayList<Advertencia> listaErrores, ArrayList<Captcha> listaCaptchas) {
         super(lexer);
         this.listaErrores = listaErrores;
+        this.listaCaptchas = listaCaptchas;
         this.captchaSolicitado = new Captcha();
         this.tablaOperaciones = new TablasDeOperaciones();
         this.operacionesBooleanas = new OperacionesBooleanas();
@@ -218,8 +227,10 @@ non terminal cuerpo_scripting;
 non terminal cierre_gcic;
 
 /* Parametros de etiquetas */
-non terminal cuerpo_parametros_gcic, parametros_gcic;
-non terminal cuerpo_parametros_link, parametros_link;
+non terminal ArrayList<Parametro> cuerpo_parametros_gcic;
+non terminal Parametro parametros_gcic;
+non terminal ArrayList<Parametro> cuerpo_parametros_link;
+non terminal Parametro parametros_link;
 non terminal cuerpo_parametros_body, parametros_body;
 non terminal cuerpo_parametros_spam, parametros_spam;
 non terminal cuerpo_parametros_input, parametros_input;
@@ -338,14 +349,17 @@ inicio ::=  apertura_gcic cuerpo_gcic           {:
                                                         System.out.println(simb);
                                                     }
                                                     System.out.println(" \n\n");
+                                                    System.out.println("Id del captcha " + gcicPrincipal.getId() + " - Name: " + gcicPrincipal.getName());
                                                 :}
             ;
 
-apertura_gcic ::=   MENOR_QUE:ini GCIC cuerpo_parametros_gcic MAYOR_QUE         {:
-                                                                                    if(!etiquetasDuplicadas(inileft, iniright)) {
-
-                                                                                    }
-                                                                                :}
+apertura_gcic ::=   MENOR_QUE:ini GCIC cuerpo_parametros_gcic:param MAYOR_QUE           {:
+                                                                                            if(!etiquetasDuplicadas(inileft, iniright)) {
+                                                                                                for(Parametro element: param) {
+                                                                                                    gcicPrincipal.setByString(element, listaErrores);
+                                                                                                }
+                                                                                            }
+                                                                                        :}
                     | error
                     ;
 
@@ -386,7 +400,7 @@ cuerpo ::=  apertura_body cuerpo_cuerpo cierre_body
 
 apertura_body ::=   MENOR_QUE:ini BODY cuerpo_parametros_body MAYOR_QUE     {:
                                                                                 if(!etiquetasDuplicadas(inileft, iniright)) {
-
+                                                                                    
                                                                                 }
                                                                             :}
                     | error
@@ -504,7 +518,7 @@ apertura_select ::= MENOR_QUE:ini SELECT cuerpo_parametros_select MAYOR_QUE     
 
 apertura_div ::=    MENOR_QUE:ini DIV cuerpo_parametros_div MAYOR_QUE       {:
                                                                                 if(!etiquetasDuplicadas(inileft, iniright)) {
-
+                                                                                    
                                                                                 }
                                                                             :}
                     ;
@@ -606,13 +620,13 @@ parametros_etiquetas_texuales_p ::= texto
                                     ;
 
 /* Parametros de etiquetas */
-cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic parametros_gcic
-                            |                                           {:parametros.clear();:}
+cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic:l parametros_gcic:p  {:l.add(p); RESULT = l;:}  
+                            |                                           {:parametros.clear(); ArrayList<Parametro> parametrosGCIC = new ArrayList<>(); RESULT = parametrosGCIC;:}
                             | cuerpo_parametros_gcic error
                             ;
 
-parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA:ide CORC              {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);:}
-                    | CORA NAME IGUAL texto_comillas_complete CORC  {:parametros.add("name");:}
+parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA:ide CORC                  {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright); RESULT = new Parametro("id", ide.toString().replace("\"", "").trim());:}
+                    | CORA NAME IGUAL texto_comillas_complete:ide CORC  {:parametros.add("name"); RESULT = new Parametro("name", ide.toString().replace("\"", "").trim());:}
                     ;
 
 cuerpo_parametros_link ::=  cuerpo_parametros_link parametros_link
@@ -623,9 +637,9 @@ cuerpo_parametros_link ::=  cuerpo_parametros_link parametros_link
 parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE CORC     {:parametros.add("href");:}
                         ;
 
-texto_comillas_complete ::= ALLCHAR
-                            | ALLCHARNOSPACE
-                            | ID_ETIQUETA
+texto_comillas_complete ::= ALLCHAR:par             {:RESULT = par.toString().replace("\"", "").trim();:}
+                            | ALLCHARNOSPACE:par    {:RESULT = par.toString().replace("\"", "").trim();:}
+                            | ID_ETIQUETA:par       {:RESULT = par.toString().replace("\"", "").trim();:}
                             ;
 
 cuerpo_parametros_body ::=  cuerpo_parametros_body parametros_body
