@@ -17,9 +17,12 @@ import java.util.ArrayList;
 public class EtiquetaBody extends Etiqueta {
 
     private String background;
+    private ArrayList<Etiqueta> etiquetasBody;
     
     public EtiquetaBody() {
+        super();
         this.background = "white";
+        etiquetasBody = new ArrayList<>();
     }
 
     public String getBackground() {
@@ -35,6 +38,20 @@ public class EtiquetaBody extends Etiqueta {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public String generarParametros() {
+        String codigo = " style=\"background-color: " + background + ";\" ";
+        return codigo;
+    }
     
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<body " + generarParametros() + ">\n";
+        for(Etiqueta element: etiquetasBody) {
+            codigo += element.generarHTML() + "\n";
+        }
+        codigo += "</body>";
+        return codigo;
+    }
     
 }

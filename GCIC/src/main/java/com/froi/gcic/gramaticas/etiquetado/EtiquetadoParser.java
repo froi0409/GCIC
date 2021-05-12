@@ -2232,7 +2232,7 @@ class CUP$EtiquetadoParser$actions {
                                                         System.out.println(simb);
                                                     }
                                                     System.out.println(" \n\n");
-                                                    System.out.println("Id del captcha " + gcicPrincipal.getId() + " - Name: " + gcicPrincipal.getName());
+                                                    System.out.println(gcicPrincipal.generarHTML());
                                                 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("inicio",0, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -2353,7 +2353,7 @@ class CUP$EtiquetadoParser$actions {
           case 13: // cabecera ::= apertura_cabecera cuerpo_cabecera cierre_cabecera 
             {
               Object RESULT =null;
-
+		gcicPrincipal.getListaEtiquetas().add(headPrincipal);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cabecera",1, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2450,7 +2450,7 @@ class CUP$EtiquetadoParser$actions {
           case 23: // etiquetas_cabecera ::= apertura_link cierre_link 
             {
               Object RESULT =null;
-
+		headPrincipal.getEtiquetasHead().add(new EtiquetaLink());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cabecera",14, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2462,7 +2462,7 @@ class CUP$EtiquetadoParser$actions {
 		int ctleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
 		int ctright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
 		Object ct = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
-
+		EtiquetaTitle et = new EtiquetaTitle(); et.setTitulo(ct.toString()); headPrincipal.getEtiquetasHead().add(et);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cabecera",14, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;

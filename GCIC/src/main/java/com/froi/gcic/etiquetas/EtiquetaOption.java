@@ -16,7 +16,8 @@ import java.util.ArrayList;
  */
 public class EtiquetaOption extends Etiqueta {
 
-    public EtiquetaOption(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
+    public EtiquetaOption() {
+        super();
     }
 
     @Override

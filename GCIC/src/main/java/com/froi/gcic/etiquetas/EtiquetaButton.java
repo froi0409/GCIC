@@ -19,10 +19,35 @@ public class EtiquetaButton extends EtiquetaTextual {
     private String onClick;
     
     public EtiquetaButton() {
+        super();
         this.background = "white";
         this.onClick = "";
     }
 
+    @Override
+    public String generarParametros() {
+        String parametros = "";
+        parametros += " id=\"" + getId() + "\"";
+        if(onClick.length() > 0) {
+            parametros += " onClick=\"" + onClick + "\"";
+        }
+        parametros += " style=\"";
+        parametros += " font-size: " + getFontSize() + ";";
+        parametros += " font-family: " + getFontFamily() + ";";
+        parametros += " text-align: " + getTextAlign() + ";";
+        parametros += " backgroung-color: " + background + ";";
+        parametros += " color: " + getColor() + ";";
+        parametros += " \"";
+        return parametros;
+    }
+    
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<button" + generarParametros() + ">";
+        return codigo;
+    }
+    
     public String getBackground() {
         return background;
     }

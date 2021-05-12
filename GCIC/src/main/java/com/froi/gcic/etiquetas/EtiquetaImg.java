@@ -23,6 +23,7 @@ public class EtiquetaImg extends Etiqueta {
     private String id;
     
     public EtiquetaImg() {
+        super();
         this.src = "https://www.universidadesonline.com.gt/logos/original/logo-centro-universitario-de-occidente.png";
         this.width = "30px";
         this.height = "30px";

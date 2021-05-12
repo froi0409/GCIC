@@ -18,6 +18,7 @@ public class EtiquetaInput extends EtiquetaTextual {
     private String type;
     
     public EtiquetaInput() {
+        super();
         this.type = "text";
     }
 

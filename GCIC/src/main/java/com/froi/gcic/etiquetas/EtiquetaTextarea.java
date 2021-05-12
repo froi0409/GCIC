@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class EtiquetaTextarea extends EtiquetaTextual {
 
     public EtiquetaTextarea() {
+        
     }
     
 }

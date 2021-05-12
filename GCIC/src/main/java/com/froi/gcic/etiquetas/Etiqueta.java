@@ -25,4 +25,8 @@ public class Etiqueta {
         
     }
     
+    public String generarHTML() {
+        return "";
+    }
+    
 }

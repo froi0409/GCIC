@@ -29,6 +29,24 @@ public class EtiquetaTextual extends Etiqueta {
         this.color = "black";
     }
 
+    public String generarParametros() {
+        String parametros = "";
+        parametros += " id=\"" + id + "\"";
+        parametros += " style=\"";
+        parametros += " font-size: " + fontSize + ";";
+        parametros += " font-family: " + fontFamily + ";";
+        parametros += " text-align: " + textAlign + ";";
+        parametros += " color: " + color + ";";
+        parametros += " \"";
+        return parametros;
+    }
+    
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        return codigo;
+    }
+    
     public int getFontSize() {
         return fontSize;
     }

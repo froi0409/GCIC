@@ -19,6 +19,7 @@ public class EtiquetaDiv extends EtiquetaTextual {
     private String background;
     
     public EtiquetaDiv() {
+        super();
         this.clase = "row";
         this.background = "white";
     }

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class EtiquetaP extends EtiquetaTextual {
 
     public EtiquetaP() {
+        super();
     }
     
 }

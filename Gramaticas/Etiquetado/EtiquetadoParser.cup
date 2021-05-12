@@ -349,7 +349,7 @@ inicio ::=  apertura_gcic cuerpo_gcic           {:
                                                         System.out.println(simb);
                                                     }
                                                     System.out.println(" \n\n");
-                                                    System.out.println("Id del captcha " + gcicPrincipal.getId() + " - Name: " + gcicPrincipal.getName());
+                                                    System.out.println(gcicPrincipal.generarHTML());
                                                 :}
             ;
 
@@ -383,7 +383,7 @@ cierre_gcic ::= MENOR_CIERRE GCIC MAYOR_QUE
                 ;
 
 /* CABECERA */
-cabecera ::=    apertura_cabecera cuerpo_cabecera cierre_cabecera
+cabecera ::=    apertura_cabecera cuerpo_cabecera cierre_cabecera   {:gcicPrincipal.getListaEtiquetas().add(headPrincipal);:}
                 ;
 
 apertura_cabecera ::=   MENOR_QUE HEAD MAYOR_QUE
@@ -415,8 +415,8 @@ cuerpo_cabecera ::= cuerpo_cabecera etiquetas_cabecera
                     | cuerpo_cabecera error
                     ;
 
-etiquetas_cabecera ::=  apertura_link cierre_link
-                        | apertura_title cuerpo_title:ct cierre_title
+etiquetas_cabecera ::=  apertura_link cierre_link                                   {:headPrincipal.getEtiquetasHead().add(new EtiquetaLink());:}
+                        | apertura_title cuerpo_title:ct cierre_title               {:EtiquetaTitle et = new EtiquetaTitle(); et.setTitulo(ct.toString()); headPrincipal.getEtiquetasHead().add(et);:}
                         | apertura_scripting cuerpo_scripting cierre_scripting
                         /*
                         | error cuerpo_parametros_link MAYOR_QUE cierre_link

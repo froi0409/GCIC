@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class EtiquetaH1 extends EtiquetaTextual {
 
     public EtiquetaH1() {
+        super();
     }
     
 }

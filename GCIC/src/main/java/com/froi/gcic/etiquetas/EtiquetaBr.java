@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class EtiquetaBr extends Etiqueta {
 
     public EtiquetaBr() {
+        super();
     }
 
     @Override
