@@ -16,6 +16,12 @@ import java.util.ArrayList;
  */
 public class Etiqueta {
     
+    private String textoInterno;
+    
+    public Etiqueta() {
+        this.textoInterno = "";
+    }
+    
     public String generarId() {
         String id = "";
         return id;
@@ -27,6 +33,14 @@ public class Etiqueta {
     
     public String generarHTML() {
         return "";
+    }
+
+    public String getTextoInterno() {
+        return textoInterno;
+    }
+
+    public void setTextoInterno(String textoInterno) {
+        this.textoInterno = textoInterno;
     }
     
 }

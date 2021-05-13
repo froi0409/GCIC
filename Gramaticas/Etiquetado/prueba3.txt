@@ -46,7 +46,7 @@
             ]
         </C_SCRIPTING>
         <c_p>HOLA_MUNDO HOLA MUNDO</c_p>
-        <C_BUTTON [id= "boton_1"] [onclick= "PROCESS_calc()"] [background="green"]></C_BUTTON>
+        <C_BUTTON [id= "boton_1"] [onclick= "PROCESS_calc()"] [background="green"]>HOLA MUNDO</C_BUTTON>
 
     </C_BODY>
     <C_SCRIPTING> </C_SCRIPTING>

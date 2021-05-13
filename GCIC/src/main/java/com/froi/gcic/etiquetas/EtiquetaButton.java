@@ -73,7 +73,8 @@ public class EtiquetaButton extends EtiquetaTextual {
     public String generarHTML() {
         String codigo = "";
         codigo += "<button" + generarParametros() + ">";
-        codigo += "</buton>";
+        codigo += getTextoInterno();
+        codigo += "</button>";
         return codigo;
     }
     

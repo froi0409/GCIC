@@ -52,7 +52,7 @@ public class EtiquetaTextarea extends EtiquetaTextual {
     @Override
     public String generarHTML() {
         String codigo = "";
-        codigo += "<textarea" + generarParametros() + ">" + "</textarea>";
+        codigo += "<textarea" + generarParametros() + ">" + getTextoInterno() + "</textarea>";
         return codigo;
     }   
 

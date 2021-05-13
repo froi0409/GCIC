@@ -64,7 +64,7 @@ public class EtiquetaInput extends EtiquetaTextual {
     @Override
     public String generarHTML() {
         String codigo = "";
-        codigo += "<input" + generarParametros() + "/>";
+        codigo += "<input" + generarParametros() + ">" + getTextoInterno() + "</input>";
         return codigo;
     }
     

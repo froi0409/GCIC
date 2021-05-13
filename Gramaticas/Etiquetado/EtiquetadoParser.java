@@ -2692,7 +2692,10 @@ class CUP$EtiquetadoParser$actions {
 		int etileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
 		int etiright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
 		EtiquetaInput eti = (EtiquetaInput)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
-		bodyPrincipal.getEtiquetasBody().add(eti);
+		int txtleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int txtright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String txt = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cuerpo",15, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2704,7 +2707,10 @@ class CUP$EtiquetadoParser$actions {
 		int etileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
 		int etiright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
 		EtiquetaTextarea eti = (EtiquetaTextarea)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
-		bodyPrincipal.getEtiquetasBody().add(eti);
+		int txtleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int txtright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String txt = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cuerpo",15, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2764,7 +2770,10 @@ class CUP$EtiquetadoParser$actions {
 		int etileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
 		int etiright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
 		EtiquetaButton eti = (EtiquetaButton)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
-		bodyPrincipal.getEtiquetasBody().add(eti);
+		int txtleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int txtright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String txt = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cuerpo",15, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3139,8 +3148,14 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 78: // cuerpo_texto ::= cuerpo_texto texto 
             {
-              Object RESULT =null;
-
+              String RESULT =null;
+		int cleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String c = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		int tleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		String t = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = c + t + " ";
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_texto",33, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3148,8 +3163,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 79: // cuerpo_texto ::= 
             {
-              Object RESULT =null;
-
+              String RESULT =null;
+		RESULT = "";
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_texto",33, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;

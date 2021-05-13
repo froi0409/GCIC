@@ -221,7 +221,7 @@ non terminal cuerpo_div;
 //non terminal cuerpo_button;
 non terminal cuerpo_h1, parametros_cuerpo_h1;
 non terminal cuerpo_p, parametros_cuerpo_p;
-non terminal cuerpo_texto;
+non terminal String cuerpo_texto;
 non terminal cuerpo_scripting;
 
 non terminal cierre_gcic;
@@ -483,16 +483,16 @@ cuerpo_cuerpo ::=   cuerpo_cuerpo etiquetas_cuerpo
                     | cuerpo_cuerpo error
                     ;
 
-etiquetas_cuerpo ::=    apertura_spam:eti parametros_etiquetas_texuales cerradura_spam  {:bodyPrincipal.getEtiquetasBody().add(eti);:}
-                        | apertura_input:eti cuerpo_texto cerradura_input               {:bodyPrincipal.getEtiquetasBody().add(eti);:}
-                        | apertura_textarea:eti cuerpo_texto cerradura_textarea         {:bodyPrincipal.getEtiquetasBody().add(eti);:}
-                        | apertura_select:eti cuerpo_select cerradura_select            {:bodyPrincipal.getEtiquetasBody().add(eti);:}
+etiquetas_cuerpo ::=    apertura_spam:eti parametros_etiquetas_texuales cerradura_spam      {:bodyPrincipal.getEtiquetasBody().add(eti);:}
+                        | apertura_input:eti cuerpo_texto:txt cerradura_input               {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
+                        | apertura_textarea:eti cuerpo_texto:txt cerradura_textarea         {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
+                        | apertura_select:eti cuerpo_select cerradura_select                {:bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_div:eti cuerpo_div cerradura_div
-                        | apertura_img:eti cerradura_img                                {:bodyPrincipal.getEtiquetasBody().add(eti);:}
-                        | apertura_br:eti                                               {:bodyPrincipal.getEtiquetasBody().add(eti);:}
-                        | apertura_button:eti cuerpo_texto cerradura_button             {:bodyPrincipal.getEtiquetasBody().add(eti);:}
-                        | apertura_h1:eti parametros_etiquetas_texuales cerradura_h1    {:bodyPrincipal.getEtiquetasBody().add(eti);:}
-                        | apertura_p:eti parametros_etiquetas_texuales cerradura_p      {:bodyPrincipal.getEtiquetasBody().add(eti);:}
+                        | apertura_img:eti cerradura_img                                    {:bodyPrincipal.getEtiquetasBody().add(eti);:}
+                        | apertura_br:eti                                                   {:bodyPrincipal.getEtiquetasBody().add(eti);:}
+                        | apertura_button:eti cuerpo_texto:txt cerradura_button             {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
+                        | apertura_h1:eti parametros_etiquetas_texuales cerradura_h1        {:bodyPrincipal.getEtiquetasBody().add(eti);:}
+                        | apertura_p:eti parametros_etiquetas_texuales cerradura_p          {:bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_scripting cuerpo_scripting cierre_scripting
                         | texto
                         ;
@@ -636,8 +636,8 @@ cuerpo_select ::=   cuerpo_select etiqueta_option
 etiqueta_option ::=     MENOR_QUE OPTION MAYOR_QUE cuerpo_texto MENOR_CIERRE OPTION MAYOR_QUE
                         ;
 
-cuerpo_texto ::=    cuerpo_texto texto
-                    |
+cuerpo_texto ::=    cuerpo_texto:c texto:t      {:RESULT = c + t + " ";:}
+                    |                           {:RESULT = "";:}
                     ;
 
 cuerpo_div ::=      cuerpo_div etiquetas_cuerpo
