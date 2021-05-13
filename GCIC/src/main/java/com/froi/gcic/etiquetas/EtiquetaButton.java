@@ -7,6 +7,7 @@ package com.froi.gcic.etiquetas;
 
 import com.froi.gcic.entidades.Advertencia;
 import com.froi.gcic.entidades.Captcha;
+import com.froi.gcic.entidades.Parametro;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +25,33 @@ public class EtiquetaButton extends EtiquetaTextual {
         this.onClick = "";
     }
 
+    @Override
+    public void setByString(Parametro parametro, ArrayList<Advertencia> listaErrores) {
+        switch(parametro.getNombre()) {
+            case "background":
+                setBackground(parametro.getValor());
+                break;
+            case "onClick":
+                setOnClick(parametro.getValor());
+                break;
+            case "font-size":
+                setFontSize(parametro.getValor());
+                break;
+            case "font-family":
+                setFontFamily(parametro.getValor());
+                break;
+            case "text-align":
+                setTextAlign(parametro.getValor());
+                break;
+            case "id":
+                setId(parametro.getValor());
+                break;
+            case "color":
+                setColor(parametro.getValor());
+                break;
+        }
+    }
+    
     @Override
     public String generarParametros() {
         String parametros = "";
@@ -45,6 +73,7 @@ public class EtiquetaButton extends EtiquetaTextual {
     public String generarHTML() {
         String codigo = "";
         codigo += "<button" + generarParametros() + ">";
+        codigo += "</buton>";
         return codigo;
     }
     

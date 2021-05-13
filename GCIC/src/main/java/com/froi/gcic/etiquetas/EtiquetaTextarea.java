@@ -16,7 +16,13 @@ import java.util.ArrayList;
 public class EtiquetaTextarea extends EtiquetaTextual {
 
     public EtiquetaTextarea() {
-        
+        super();
     }
+    
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<textarea" + generarParametros() + ">" + "</textarea>";
+        return codigo;
+    }   
     
 }

@@ -33,6 +33,14 @@ public class EtiquetaBody extends Etiqueta {
         this.background = background;
     }
 
+    public ArrayList<Etiqueta> getEtiquetasBody() {
+        return etiquetasBody;
+    }
+
+    public void setEtiquetasBody(ArrayList<Etiqueta> etiquetasBody) {
+        this.etiquetasBody = etiquetasBody;
+    }
+
     @Override
     public void setByString(Parametro arg0, ArrayList<Advertencia> arg1) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

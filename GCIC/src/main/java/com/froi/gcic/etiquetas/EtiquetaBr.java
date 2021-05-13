@@ -25,4 +25,9 @@ public class EtiquetaBr extends Etiqueta {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    @Override
+    public String generarHTML() {
+        return "<br>";
+    }
+    
 }

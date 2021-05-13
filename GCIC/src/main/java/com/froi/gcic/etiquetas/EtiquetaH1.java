@@ -19,4 +19,11 @@ public class EtiquetaH1 extends EtiquetaTextual {
         super();
     }
     
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<h1" + generarParametros() + ">" + "</h1>";
+        return codigo;
+    }
+    
 }
