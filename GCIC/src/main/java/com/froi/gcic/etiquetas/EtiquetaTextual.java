@@ -66,7 +66,7 @@ public class EtiquetaTextual extends Etiqueta {
     
     @Override
     public String generarHTML() {
-        String codigo = "";
+        String codigo = ""; 
         return codigo;
     }
     

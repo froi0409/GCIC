@@ -56,6 +56,7 @@ public class EtiquetaBody extends Etiqueta {
         String codigo = "";
         codigo += "<body " + generarParametros() + ">\n";
         for(Etiqueta element: etiquetasBody) {
+            System.out.println(element.generarHTML());
             codigo += element.generarHTML() + "\n";
         }
         codigo += "</body>";

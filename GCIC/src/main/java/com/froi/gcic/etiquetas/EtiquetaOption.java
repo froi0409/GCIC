@@ -19,10 +19,5 @@ public class EtiquetaOption extends Etiqueta {
     public EtiquetaOption() {
         super();
     }
-
-    @Override
-    public void setByString(Parametro arg0, ArrayList<Advertencia> arg1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }

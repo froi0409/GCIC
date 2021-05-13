@@ -2260,7 +2260,7 @@ class CUP$EtiquetadoParser$actions {
 		int paramright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
 		ArrayList<Parametro> param = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
-                                                                                            if(!etiquetasDuplicadas(inileft, iniright)) {
+                                                                                            if(!etiquetasDuplicadas(inileft, iniright) && param != null) {
                                                                                                 for(Parametro element: param) {
                                                                                                     gcicPrincipal.setByString(element, listaErrores);
                                                                                                 }
@@ -2677,7 +2677,10 @@ class CUP$EtiquetadoParser$actions {
           case 44: // etiquetas_cuerpo ::= apertura_spam parametros_etiquetas_texuales cerradura_spam 
             {
               Object RESULT =null;
-
+		int etileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int etiright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		EtiquetaSpam eti = (EtiquetaSpam)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		bodyPrincipal.getEtiquetasBody().add(eti);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cuerpo",15, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2698,7 +2701,10 @@ class CUP$EtiquetadoParser$actions {
           case 46: // etiquetas_cuerpo ::= apertura_textarea cuerpo_texto cerradura_textarea 
             {
               Object RESULT =null;
-
+		int etileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int etiright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		EtiquetaTextarea eti = (EtiquetaTextarea)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		bodyPrincipal.getEtiquetasBody().add(eti);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cuerpo",15, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2707,7 +2713,10 @@ class CUP$EtiquetadoParser$actions {
           case 47: // etiquetas_cuerpo ::= apertura_select cuerpo_select cerradura_select 
             {
               Object RESULT =null;
-
+		int etileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int etiright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		EtiquetaSelect eti = (EtiquetaSelect)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		bodyPrincipal.getEtiquetasBody().add(eti);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cuerpo",15, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2716,6 +2725,9 @@ class CUP$EtiquetadoParser$actions {
           case 48: // etiquetas_cuerpo ::= apertura_div cuerpo_div cerradura_div 
             {
               Object RESULT =null;
+		int etileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int etiright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		EtiquetaDiv eti = (EtiquetaDiv)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cuerpo",15, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -2725,7 +2737,10 @@ class CUP$EtiquetadoParser$actions {
           case 49: // etiquetas_cuerpo ::= apertura_img cerradura_img 
             {
               Object RESULT =null;
-
+		int etileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int etiright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		EtiquetaImg eti = (EtiquetaImg)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		bodyPrincipal.getEtiquetasBody().add(eti);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cuerpo",15, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2734,7 +2749,10 @@ class CUP$EtiquetadoParser$actions {
           case 50: // etiquetas_cuerpo ::= apertura_br 
             {
               Object RESULT =null;
-
+		int etileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int etiright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		EtiquetaBr eti = (EtiquetaBr)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		bodyPrincipal.getEtiquetasBody().add(eti);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cuerpo",15, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2755,7 +2773,10 @@ class CUP$EtiquetadoParser$actions {
           case 52: // etiquetas_cuerpo ::= apertura_h1 parametros_etiquetas_texuales cerradura_h1 
             {
               Object RESULT =null;
-
+		int etileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int etiright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		EtiquetaH1 eti = (EtiquetaH1)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		bodyPrincipal.getEtiquetasBody().add(eti);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cuerpo",15, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2764,7 +2785,10 @@ class CUP$EtiquetadoParser$actions {
           case 53: // etiquetas_cuerpo ::= apertura_p parametros_etiquetas_texuales cerradura_p 
             {
               Object RESULT =null;
-
+		int etileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).left;
+		int etiright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).right;
+		EtiquetaP eti = (EtiquetaP)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)).value;
+		bodyPrincipal.getEtiquetasBody().add(eti);
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("etiquetas_cuerpo",15, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2790,15 +2814,22 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 56: // apertura_spam ::= MENOR_QUE SPAM cuerpo_parametros_spam MAYOR_QUE 
             {
-              Object RESULT =null;
+              EtiquetaSpam RESULT =null;
 		int inileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).left;
 		int iniright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).right;
 		Object ini = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).value;
+		int paramleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int paramright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> param = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
-                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+                                                                                        EtiquetaSpam spam = new EtiquetaSpam();
+                                                                                        if(!etiquetasDuplicadas(inileft, iniright) && param != null) {
+                                                                                            for(Parametro element: param) {
+                                                                                                spam.setByString(element, listaErrores);
+                                                                                            }
+                                                                                        }
+                                                                                        RESULT = spam;
                                                                                     
-                                                                                }
-                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_spam",106, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2815,7 +2846,7 @@ class CUP$EtiquetadoParser$actions {
 		ArrayList<Parametro> param = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
                                                                                         EtiquetaInput input = new EtiquetaInput();
-                                                                                        if(!etiquetasDuplicadas(inileft, iniright)) {
+                                                                                        if(!etiquetasDuplicadas(inileft, iniright) && param != null) {
                                                                                             System.out.println("filtro input: ");
                                                                                             for(Parametro element: param) {
                                                                                                 input.setByString(element, listaErrores);
@@ -2830,15 +2861,22 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 58: // apertura_textarea ::= MENOR_QUE TEXTAREA cuerpo_parametros_textarea MAYOR_QUE 
             {
-              Object RESULT =null;
+              EtiquetaTextarea RESULT =null;
 		int inileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).left;
 		int iniright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).right;
 		Object ini = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).value;
+		int paramleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int paramright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> param = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
-                                                                                            if(!etiquetasDuplicadas(inileft, iniright)) {
-
-                                                                                            }
-                                                                                        
+                                                                                                    EtiquetaTextarea textarea = new EtiquetaTextarea();
+                                                                                                    if(!etiquetasDuplicadas(inileft, iniright) && param != null) {
+                                                                                                        for(Parametro element: param) {
+                                                                                                            textarea.setByString(element, listaErrores);
+                                                                                                        }
+                                                                                                    }
+                                                                                                    RESULT = textarea;
+                                                                                                
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_textarea",108, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2846,15 +2884,22 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 59: // apertura_select ::= MENOR_QUE SELECT cuerpo_parametros_select MAYOR_QUE 
             {
-              Object RESULT =null;
+              EtiquetaSelect RESULT =null;
 		int inileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).left;
 		int iniright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).right;
 		Object ini = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).value;
+		int paramleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int paramright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> param = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
-                                                                                    if(!etiquetasDuplicadas(inileft, iniright)) {
-
-                                                                                    }
-                                                                                
+                                                                                            EtiquetaSelect select = new EtiquetaSelect();
+                                                                                            if(!etiquetasDuplicadas(inileft, iniright) && param != null) {
+                                                                                                for(Parametro element: param) {
+                                                                                                    select.setByString(element, listaErrores);
+                                                                                                }
+                                                                                            }
+                                                                                            RESULT = select;
+                                                                                        
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_select",109, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2862,15 +2907,22 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 60: // apertura_div ::= MENOR_QUE DIV cuerpo_parametros_div MAYOR_QUE 
             {
-              Object RESULT =null;
+              EtiquetaDiv RESULT =null;
 		int inileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).left;
 		int iniright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).right;
 		Object ini = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).value;
+		int paramleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int paramright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> param = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
-                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
+                                                                                        EtiquetaDiv div = new EtiquetaDiv();
+                                                                                        if(!etiquetasDuplicadas(inileft, iniright) && param != null) {
+                                                                                            for(Parametro element: param) {
+                                                                                                div.setByString(element, listaErrores);
+                                                                                            }
+                                                                                        }
+                                                                                        RESULT = div;
                                                                                     
-                                                                                }
-                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_div",110, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2878,15 +2930,22 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 61: // apertura_img ::= MENOR_QUE IMG cuerpo_parametros_img MAYOR_QUE 
             {
-              Object RESULT =null;
+              EtiquetaImg RESULT =null;
 		int inileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).left;
 		int iniright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).right;
 		Object ini = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).value;
+		int paramleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int paramright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> param = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
-                                                                                if(!etiquetasDuplicadas(inileft, iniright)) {
-
-                                                                                }
-                                                                            
+                                                                                        EtiquetaImg img = new EtiquetaImg();
+                                                                                        if(!etiquetasDuplicadas(inileft, iniright) && param != null) {
+                                                                                            for(Parametro element: param) {
+                                                                                                img.setByString(element, listaErrores);
+                                                                                            }
+                                                                                        }
+                                                                                        RESULT = img;
+                                                                                    
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_img",111, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2894,8 +2953,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 62: // apertura_br ::= MENOR_QUE BR MAYOR_QUE 
             {
-              Object RESULT =null;
-
+              EtiquetaBr RESULT =null;
+		RESULT = new EtiquetaBr();
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_br",112, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2912,14 +2971,10 @@ class CUP$EtiquetadoParser$actions {
 		ArrayList<Parametro> param = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
                                                                                             EtiquetaButton button = new EtiquetaButton();
-                                                                                            System.out.println("Tamaño del array de parametros para el button: " + param.size());
-                                                                                            if(!etiquetasDuplicadas(inileft, iniright)) {
-                                                                                                System.out.println("filtro1");
+                                                                                            if(!etiquetasDuplicadas(inileft, iniright) && param != null) {
                                                                                                 for(Parametro element: param) {
-                                                                                                    System.out.println("filtro2");
                                                                                                     button.setByString(element, listaErrores);
                                                                                                 }
-                                                                                                
                                                                                             }
                                                                                             RESULT = button;
                                                                                         
@@ -2930,15 +2985,22 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 64: // apertura_h1 ::= MENOR_QUE H1 cuerpo_parametros_h1 MAYOR_QUE 
             {
-              Object RESULT =null;
+              EtiquetaH1 RESULT =null;
 		int inileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).left;
 		int iniright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).right;
 		Object ini = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).value;
+		int paramleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int paramright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> param = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
-                                                                        if(!etiquetasDuplicadas(inileft, iniright)) {
-
-                                                                        }
-                                                                    
+                                                                                EtiquetaH1 h1 = new EtiquetaH1();
+                                                                                if(!etiquetasDuplicadas(inileft, iniright) && param != null) {
+                                                                                    for(Parametro element: param) {
+                                                                                        h1.setByString(element, listaErrores);
+                                                                                    }
+                                                                                }
+                                                                                RESULT = h1;
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_h1",114, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -2946,15 +3008,22 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 65: // apertura_p ::= MENOR_QUE P cuerpo_parametros_p MAYOR_QUE 
             {
-              Object RESULT =null;
+              EtiquetaP RESULT =null;
 		int inileft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).left;
 		int iniright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).right;
 		Object ini = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)).value;
+		int paramleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int paramright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> param = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
-                                                                        if(!etiquetasDuplicadas(inileft, iniright)) {
-
-                                                                        }
-                                                                    
+                                                                                EtiquetaP p = new EtiquetaP();
+                                                                                if(!etiquetasDuplicadas(inileft, iniright) && param != null) {
+                                                                                    for(Parametro element: param) {
+                                                                                        p.setByString(element, listaErrores);
+                                                                                    }
+                                                                                }
+                                                                                RESULT = p;
+                                                                            
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_p",115, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3334,8 +3403,14 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 105: // cuerpo_parametros_spam ::= cuerpo_parametros_spam parametros_spam 
             {
-              Object RESULT =null;
-
+              ArrayList<Parametro> RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> l = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		int pleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro p = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		l.add(p); RESULT = l;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_spam",43, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3343,8 +3418,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 106: // cuerpo_parametros_spam ::= 
             {
-              Object RESULT =null;
-		parametros.clear();
+              ArrayList<Parametro> RESULT =null;
+		parametros.clear(); ArrayList<Parametro> parametrosSpam = new ArrayList<>(); RESULT = parametrosSpam;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_spam",43, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3352,7 +3427,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 107: // cuerpo_parametros_spam ::= cuerpo_parametros_spam error 
             {
-              Object RESULT =null;
+              ArrayList<Parametro> RESULT =null;
 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_spam",43, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3361,8 +3436,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 108: // parametros_spam ::= parametros_textuales 
             {
-              Object RESULT =null;
-
+              Parametro RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro val = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = val;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_spam",44, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3427,8 +3505,14 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 114: // cuerpo_parametros_textarea ::= cuerpo_parametros_textarea parametros_textarea 
             {
-              Object RESULT =null;
-
+              ArrayList<Parametro> RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> l = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		int pleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro p = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		l.add(p); RESULT = l;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_textarea",47, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3436,8 +3520,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 115: // cuerpo_parametros_textarea ::= 
             {
-              Object RESULT =null;
-		parametros.clear();
+              ArrayList<Parametro> RESULT =null;
+		parametros.clear(); ArrayList<Parametro> parametrosTextarea = new ArrayList<>(); RESULT = parametrosTextarea;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_textarea",47, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3445,7 +3529,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 116: // cuerpo_parametros_textarea ::= cuerpo_parametros_textarea error 
             {
-              Object RESULT =null;
+              ArrayList<Parametro> RESULT =null;
 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_textarea",47, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3454,8 +3538,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 117: // parametros_textarea ::= CORA FONTSIZE IGUAL PIXELES CORC 
             {
-              Object RESULT =null;
-		parametros.add("font-size");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("font-size"); RESULT = new Parametro("font-size", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_textarea",48, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3463,8 +3550,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 118: // parametros_textarea ::= CORA FONTFAMILY IGUAL font_family CORC 
             {
-              Object RESULT =null;
-		parametros.add("font-family");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String ide = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("font-family"); RESULT = new Parametro("font-family", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_textarea",48, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3472,8 +3562,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 119: // parametros_textarea ::= CORA TEXTALIGN IGUAL alineaciones CORC 
             {
-              Object RESULT =null;
-		parametros.add("text-align");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String ide = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("text-align"); RESULT = new Parametro("text-align", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_textarea",48, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3481,11 +3574,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 120: // parametros_textarea ::= CORA ID IGUAL ID_ETIQUETA CORC 
             {
-              Object RESULT =null;
+              Parametro RESULT =null;
 		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
 		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
 		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
-		parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);
+		parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright); RESULT = new Parametro("id", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_textarea",48, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3493,8 +3586,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 121: // parametros_textarea ::= CORA COLS IGUAL DIGITO_COM CORC 
             {
-              Object RESULT =null;
-		parametros.add("cols");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("cols"); RESULT = new Parametro("cols", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_textarea",48, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3502,8 +3598,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 122: // parametros_textarea ::= CORA ROWS IGUAL DIGITO_COM CORC 
             {
-              Object RESULT =null;
-		parametros.add("rows");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("rows"); RESULT = new Parametro("rows", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_textarea",48, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3511,8 +3610,14 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 123: // cuerpo_parametros_select ::= cuerpo_parametros_select parametros_select 
             {
-              Object RESULT =null;
-
+              ArrayList<Parametro> RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> l = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		int pleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro p = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		l.add(p); RESULT = l;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_select",49, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3520,8 +3625,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 124: // cuerpo_parametros_select ::= 
             {
-              Object RESULT =null;
-		parametros.clear();
+              ArrayList<Parametro> RESULT =null;
+		parametros.clear(); ArrayList<Parametro> listaParametros = new ArrayList<>(); RESULT = listaParametros;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_select",49, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3529,7 +3634,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 125: // cuerpo_parametros_select ::= cuerpo_parametros_select error 
             {
-              Object RESULT =null;
+              ArrayList<Parametro> RESULT =null;
 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_select",49, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3538,8 +3643,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 126: // parametros_select ::= parametros_textuales 
             {
-              Object RESULT =null;
-
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro ide = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = ide;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_select",50, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3547,8 +3655,14 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 127: // cuerpo_parametros_div ::= cuerpo_parametros_div parametros_div 
             {
-              Object RESULT =null;
-
+              ArrayList<Parametro> RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> l = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		int pleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro p = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		l.add(p); RESULT = l;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_div",51, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3556,8 +3670,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 128: // cuerpo_parametros_div ::= 
             {
-              Object RESULT =null;
-		parametros.clear();
+              ArrayList<Parametro> RESULT =null;
+		parametros.clear(); ArrayList<Parametro> listaParametros = new ArrayList<>(); RESULT = listaParametros;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_div",51, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3565,7 +3679,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 129: // cuerpo_parametros_div ::= cuerpo_parametros_div error 
             {
-              Object RESULT =null;
+              ArrayList<Parametro> RESULT =null;
 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_div",51, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3574,8 +3688,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 130: // parametros_div ::= parametros_textuales 
             {
-              Object RESULT =null;
-
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro ide = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = ide;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_div",52, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3583,8 +3700,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 131: // parametros_div ::= CORA CLASS IGUAL clases CORC 
             {
-              Object RESULT =null;
-		parametros.add("class");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String ide = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("class"); RESULT = new Parametro("class", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_div",52, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3592,8 +3712,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 132: // parametros_div ::= CORA BACKGROUND IGUAL colores CORC 
             {
-              Object RESULT =null;
-		parametros.add("background");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String ide = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("background"); RESULT = new Parametro("background", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_div",52, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3601,8 +3724,14 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 133: // cuerpo_parametros_img ::= cuerpo_parametros_img parametros_img 
             {
-              Object RESULT =null;
-
+              ArrayList<Parametro> RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> l = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		int pleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro p = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		l.add(p); RESULT = l;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_img",53, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3610,8 +3739,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 134: // cuerpo_parametros_img ::= 
             {
-              Object RESULT =null;
-		parametros.clear();
+              ArrayList<Parametro> RESULT =null;
+		parametros.clear(); ArrayList<Parametro> parametrosInput = new ArrayList<>(); RESULT = parametrosInput;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_img",53, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3619,7 +3748,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 135: // cuerpo_parametros_img ::= cuerpo_parametros_img error 
             {
-              Object RESULT =null;
+              ArrayList<Parametro> RESULT =null;
 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_img",53, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3628,8 +3757,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 136: // parametros_img ::= CORA SRC IGUAL ALLCHARNOSPACE CORC 
             {
-              Object RESULT =null;
-		parametros.add("src");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("src"); RESULT = new Parametro("src", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_img",54, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3637,8 +3769,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 137: // parametros_img ::= CORA WIDTH IGUAL tamaños CORC 
             {
-              Object RESULT =null;
-		parametros.add("width");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String ide = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("width"); RESULT = new Parametro("width", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_img",54, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3646,8 +3781,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 138: // parametros_img ::= CORA HEIGHT IGUAL tamaños CORC 
             {
-              Object RESULT =null;
-		parametros.add("height");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String ide = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("height"); RESULT = new Parametro("height", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_img",54, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3655,8 +3793,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 139: // parametros_img ::= CORA ALT IGUAL texto_comillas_complete CORC 
             {
-              Object RESULT =null;
-		parametros.add("alt");
+              Parametro RESULT =null;
+		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		String ide = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("alt"); RESULT = new Parametro("alt", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_img",54, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3664,11 +3805,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 140: // parametros_img ::= CORA ID IGUAL ID_ETIQUETA CORC 
             {
-              Object RESULT =null;
+              Parametro RESULT =null;
 		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
 		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
 		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
-		parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright);
+		parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright); RESULT = new Parametro("id", ide.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_img",54, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3745,8 +3886,14 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 147: // cuerpo_parametros_h1 ::= cuerpo_parametros_h1 parametros_h1 
             {
-              Object RESULT =null;
-
+              ArrayList<Parametro> RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> l = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		int pleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro p = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		l.add(p); RESULT = l;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_h1",57, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3754,8 +3901,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 148: // cuerpo_parametros_h1 ::= 
             {
-              Object RESULT =null;
-		parametros.clear();
+              ArrayList<Parametro> RESULT =null;
+		parametros.clear(); ArrayList<Parametro> listaParametros = new ArrayList<>(); RESULT = listaParametros;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_h1",57, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3763,7 +3910,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 149: // cuerpo_parametros_h1 ::= cuerpo_parametros_h1 error 
             {
-              Object RESULT =null;
+              ArrayList<Parametro> RESULT =null;
 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_h1",57, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3772,8 +3919,11 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 150: // parametros_h1 ::= parametros_textuales 
             {
-              Object RESULT =null;
-
+              Parametro RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro val = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		RESULT = val;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_h1",58, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3781,8 +3931,14 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 151: // cuerpo_parametros_p ::= cuerpo_parametros_p parametros_p 
             {
-              Object RESULT =null;
-
+              ArrayList<Parametro> RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		ArrayList<Parametro> l = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		int pleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
+		Parametro p = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
+		l.add(p); RESULT = l;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_p",59, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3790,8 +3946,8 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 152: // cuerpo_parametros_p ::= 
             {
-              Object RESULT =null;
-		parametros.clear();
+              ArrayList<Parametro> RESULT =null;
+		parametros.clear(); ArrayList<Parametro> listaParametros = new ArrayList<>(); RESULT = listaParametros;
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_p",59, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3799,7 +3955,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 153: // cuerpo_parametros_p ::= cuerpo_parametros_p error 
             {
-              Object RESULT =null;
+              ArrayList<Parametro> RESULT =null;
 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("cuerpo_parametros_p",59, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3808,7 +3964,7 @@ class CUP$EtiquetadoParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 154: // parametros_p ::= parametros_textuales 
             {
-              Object RESULT =null;
+              Parametro RESULT =null;
 		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).left;
 		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
 		Parametro ide = (Parametro)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
