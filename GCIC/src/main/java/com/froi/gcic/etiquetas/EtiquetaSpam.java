@@ -19,9 +19,12 @@ public class EtiquetaSpam extends EtiquetaTextual {
         super();
     }
     
+    @Override
     public String generarHTML() {
         String codigo = "";
-        codigo += "<span" + generarParametros() + ">" + "</span>";
+        codigo += "<span" + generarParametros() + ">";
+        codigo += getTextoInterno() + "\n";
+        codigo += "</span>";
         return codigo;
     }
     

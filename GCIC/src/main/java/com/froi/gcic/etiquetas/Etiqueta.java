@@ -17,9 +17,11 @@ import java.util.ArrayList;
 public class Etiqueta {
     
     private String textoInterno;
+    private ArrayList<Etiqueta> etiquetasInternas;
     
     public Etiqueta() {
         this.textoInterno = "";
+        this.etiquetasInternas = new ArrayList<>();
     }
     
     public String generarId() {
@@ -41,6 +43,14 @@ public class Etiqueta {
 
     public void setTextoInterno(String textoInterno) {
         this.textoInterno = textoInterno;
+    }
+
+    public ArrayList<Etiqueta> getEtiquetasInternas() {
+        return etiquetasInternas;
+    }
+
+    public void setEtiquetasInternas(ArrayList<Etiqueta> etiquetasInternas) {
+        this.etiquetasInternas = etiquetasInternas;
     }
     
 }

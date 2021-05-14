@@ -22,7 +22,9 @@ public class EtiquetaP extends EtiquetaTextual {
     @Override
     public String generarHTML() {
         String codigo = "";
-        codigo += "<p" + generarParametros() + ">" + "</p>";
+        codigo += "<p" + generarParametros() + ">" + "\n";
+        codigo += getTextoInterno() + "\n";
+        codigo += "</p>";
         return codigo;
     }
     

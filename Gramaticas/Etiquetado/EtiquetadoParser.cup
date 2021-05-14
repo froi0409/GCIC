@@ -260,8 +260,8 @@ non terminal cuerpo_onload, parametros_onload;
 
 non terminal String cuerpo_insert, parametros_insert;
 
-non terminal parametros_etiquetas_texuales;
-non terminal parametros_etiquetas_texuales_p;
+non terminal String parametros_etiquetas_texuales;
+non terminal String parametros_etiquetas_texuales_p;
 
 /* NO TERMINALES ESPECIALES DEL SCRIPTING */
 non terminal funciones_especiales;
@@ -483,7 +483,7 @@ cuerpo_cuerpo ::=   cuerpo_cuerpo etiquetas_cuerpo
                     | cuerpo_cuerpo error
                     ;
 
-etiquetas_cuerpo ::=    apertura_spam:eti parametros_etiquetas_texuales cerradura_spam      {:bodyPrincipal.getEtiquetasBody().add(eti);:}
+etiquetas_cuerpo ::=    apertura_spam:eti parametros_etiquetas_texuales:txt cerradura_spam  {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_input:eti cuerpo_texto:txt cerradura_input               {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_textarea:eti cuerpo_texto:txt cerradura_textarea         {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_select:eti cuerpo_select cerradura_select                {:bodyPrincipal.getEtiquetasBody().add(eti);:}
@@ -491,8 +491,8 @@ etiquetas_cuerpo ::=    apertura_spam:eti parametros_etiquetas_texuales cerradur
                         | apertura_img:eti cerradura_img                                    {:bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_br:eti                                                   {:bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_button:eti cuerpo_texto:txt cerradura_button             {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
-                        | apertura_h1:eti parametros_etiquetas_texuales cerradura_h1        {:bodyPrincipal.getEtiquetasBody().add(eti);:}
-                        | apertura_p:eti parametros_etiquetas_texuales cerradura_p          {:bodyPrincipal.getEtiquetasBody().add(eti);:}
+                        | apertura_h1:eti parametros_etiquetas_texuales:txt cerradura_h1    {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
+                        | apertura_p:eti parametros_etiquetas_texuales:txt cerradura_p      {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_scripting cuerpo_scripting cierre_scripting
                         | texto
                         ;
@@ -655,15 +655,15 @@ parametros_cuerpo_p ::= cuerpo_texto
                         | apertura_h1 cuerpo_h1 cerradura_h1
                         ;
 */
-parametros_etiquetas_texuales ::=   parametros_etiquetas_texuales parametros_etiquetas_texuales_p
-                                    |
+parametros_etiquetas_texuales ::=   parametros_etiquetas_texuales:c parametros_etiquetas_texuales_p:p     {:RESULT = c + " " + p;:}
+                                    |                                                                     {:RESULT = "";:}
                                     ;
 
-parametros_etiquetas_texuales_p ::= texto
-                                    | apertura_br
-                                    | apertura_h1 parametros_etiquetas_texuales cerradura_h1
-                                    | apertura_p parametros_etiquetas_texuales cerradura_p
-                                    | apertura_spam parametros_etiquetas_texuales cerradura_spam
+parametros_etiquetas_texuales_p ::= texto:ide                                                           {:RESULT = ide.toString();;:}
+                                    | apertura_br:ide                                                   {:RESULT = "<br>";:}
+                                    | apertura_h1 parametros_etiquetas_texuales:ide cerradura_h1        {:RESULT = ide.toString();:}
+                                    | apertura_p parametros_etiquetas_texuales:ide cerradura_p          {:RESULT = ide.toString();:}
+                                    | apertura_spam parametros_etiquetas_texuales:ide cerradura_spam    {:RESULT = ide.toString();:}
                                     ;
 
 /* Parametros de etiquetas */

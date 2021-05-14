@@ -15,6 +15,7 @@ import java.util.ArrayList;
  */
 public class EtiquetaH1 extends EtiquetaTextual {
 
+    
     public EtiquetaH1() {
         super();
     }
@@ -22,8 +23,10 @@ public class EtiquetaH1 extends EtiquetaTextual {
     @Override
     public String generarHTML() {
         String codigo = "";
-        codigo += "<h1" + generarParametros() + ">" + "</h1>";
+        codigo += "<h1" + generarParametros() + ">\n";
+        codigo += getTextoInterno() + "\n";
+        codigo += "</h1>";
         return codigo;
     }
-    
+
 }
