@@ -2192,6 +2192,10 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
         }
     }
 
+    public Captcha getCaptcha() {
+        return captchaSolicitado;
+    }
+
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -2243,6 +2247,7 @@ class CUP$EtiquetadoParser$actions {
                                                     }
                                                     System.out.println(" \n\n");
                                                     System.out.println(gcicPrincipal.generarHTML());
+                                                    captchaSolicitado.setContenidoCaptcha(gcicPrincipal);
                                                 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("inicio",0, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }

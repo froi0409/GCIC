@@ -9,6 +9,9 @@ import com.froi.gcic.entidades.Advertencia;
 import com.froi.gcic.entidades.Captcha;
 import com.froi.gcic.gramaticas.etiquetado.EtiquetadoLexer;
 import com.froi.gcic.gramaticas.etiquetado.EtiquetadoParser;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -74,6 +77,14 @@ public class AnalizarEntrada extends HttpServlet {
                 //Debemos obtener el link del captcha
                 //para que el link del captcha pueda ser mostrado en la salida
                 salida = "Captcha analizado con éxito";
+                String identificador = etiquetadoParser.getCaptcha().getContenidoCaptcha().getId();
+                try (BufferedWriter write = new BufferedWriter(new FileWriter(new File(identificador + ".html")))) {
+                    String html = etiquetadoParser.getCaptcha().getContenidoCaptcha().generarHTML();
+                    write.write(html);
+                } catch (Exception e) {
+                    System.err.println("Error al escribir HTML del captcha: " + e.getMessage());
+                }
+                
             }
             
         } catch (Exception e) {

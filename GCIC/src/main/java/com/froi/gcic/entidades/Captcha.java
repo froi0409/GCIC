@@ -51,5 +51,13 @@ public class Captcha {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public EtiquetaGCIC getContenidoCaptcha() {
+        return contenidoCaptcha;
+    }
+
+    public void setContenidoCaptcha(EtiquetaGCIC contenidoCaptcha) {
+        this.contenidoCaptcha = contenidoCaptcha;
+    }
     
 }
