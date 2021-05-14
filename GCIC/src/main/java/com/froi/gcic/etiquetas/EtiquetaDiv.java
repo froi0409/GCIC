@@ -7,6 +7,7 @@ package com.froi.gcic.etiquetas;
 
 import com.froi.gcic.entidades.Advertencia;
 import com.froi.gcic.entidades.Captcha;
+import com.froi.gcic.entidades.Parametro;
 import java.util.ArrayList;
 
 /**
@@ -38,6 +39,28 @@ public class EtiquetaDiv extends EtiquetaTextual {
 
     public void setBackground(String background) {
         this.background = background;
+    }
+    
+    @Override
+    public void setByString(Parametro parametro, ArrayList<Advertencia> listaErrores) {
+        
+    }
+    
+    @Override
+    public String generarParametros() {
+        String parametros = "";
+        return parametros;
+    }
+    
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<div>\n";
+        for(Etiqueta element: getEtiquetasInternas()) {
+            codigo += element.generarHTML() + "\n";
+        }
+        codigo += "</div>";
+        return codigo;
     }
     
 }

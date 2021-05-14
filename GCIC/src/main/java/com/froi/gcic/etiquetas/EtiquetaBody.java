@@ -42,8 +42,12 @@ public class EtiquetaBody extends Etiqueta {
     }
 
     @Override
-    public void setByString(Parametro arg0, ArrayList<Advertencia> arg1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setByString(Parametro parametro, ArrayList<Advertencia> listaErrores) {
+        switch(parametro.getNombre()) {
+            case "background":
+                setBackground(parametro.getValor());
+                break;
+        }
     }
     
     public String generarParametros() {

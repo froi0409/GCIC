@@ -14,6 +14,7 @@
         <c_br>
         <C_INPUT [font-family="Arial" ] [ text-align = " left " ]></C_INPUT>
         <c_br>
+        <c_div>
         <C_TEXTAREA [id="hola_mundo"] [ cols = "20" ] [rows="5"]></C_TEXTAREA>
         <c_br>
         <C_SELECT [id="hola"] [ color   = "green" ] >
@@ -30,6 +31,7 @@
         <C_IMG [src="https://i1.wp.com/www.universidadescr.com/blog/wp-content/uploads/2014/11/ing-industrial1-blog.jpg?fit=600%2C400&ssl=1"] [id="holis"] [width="30%"] [ heigth="20%" ] [alt="Mensaje aleatorio"]></C_IMG>
         <C_BR>
         <C_H1 [text-align="center"] >HOLA <C_SPAM> ADIOS </C_SPAM> <C_BR> MUNDO</C_H1>
+        </c_div>
         <c_br>
         <C_P [font-size="20px"] >  </C_P>
         <C_SCRIPTING>
