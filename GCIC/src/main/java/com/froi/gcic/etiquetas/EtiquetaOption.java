@@ -20,4 +20,11 @@ public class EtiquetaOption extends Etiqueta {
         super();
     }
     
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<option>" + getTextoInterno() + "</option>";
+        return codigo;
+    }
+    
 }

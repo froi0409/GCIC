@@ -28,7 +28,7 @@ public class EtiquetaSelect extends EtiquetaTextual {
         String codigo = "";
         codigo += "<select" + generarParametros() + ">\n";
         for(EtiquetaOption element: opciones) {
-            codigo += "<option>" + "</option>" + "\n";
+            codigo += element.generarHTML() + "\n";
         }
         codigo += "</select>";
         return codigo;
