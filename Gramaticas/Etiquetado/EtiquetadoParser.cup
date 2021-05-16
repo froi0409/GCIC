@@ -11,6 +11,7 @@ import com.froi.gcic.manejodesimbolos.TablaDeSimbolos;
 import com.froi.gcic.manejodesimbolos.TablasDeOperaciones;
 import com.froi.gcic.manejodesimbolos.TipoDeDato;
 import com.froi.gcic.etiquetas.*;
+import com.froi.gcic.herramientas.FuncionesEspeciales;
 import java_cup.runtime.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +33,7 @@ parser code {:
     private TablaDeSimbolos tablaSimbolos;
     private TablasDeOperaciones tablaOperaciones;
     private OperacionesBooleanas operacionesBooleanas;
+    private FuncionesEspeciales funcionesEspeciales;
 
     private String integer = TipoDeDato.INTEGER;
     private String string = TipoDeDato.STRING;
@@ -59,6 +61,7 @@ parser code {:
         this.captchaSolicitado = new Captcha();
         this.tablaOperaciones = new TablasDeOperaciones();
         this.operacionesBooleanas = new OperacionesBooleanas();
+        this.funcionesEspeciales = new FuncionesEspeciales();
         this.parametros = new ArrayList<>();
         this.procesos = new ArrayList<>();
         this.identificadores = new ArrayList<>();
@@ -1464,5 +1467,55 @@ valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toS
                     | TRUE:val              {:RESULT = new Dato(booleano, "true");:}
                     | FALSE:val             {:RESULT = new Dato(booleano, "false");:}
                     /* agregar getElementById */
+                    
+                    | ASC PARA condicion:val PARC           {:
+                                                                Dato dato = funcionesEspeciales.asc(val);
+                                                                if(!dato.getTipo().equals(string)) {
+                                                                    agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                                }
+                                                                RESULT = dato;
+                                                            :}
+                    | DESC PARA condicion:val PARC          {:
+                                                                Dato dato = funcionesEspeciales.desc(val);
+                                                                if(!dato.getTipo().equals(string)) {
+                                                                    agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                                }
+                                                                RESULT = dato;
+                                                            :}
+                    | LETPAR_NUM PARA condicion:val PARC    {:
+                                                                Dato dato = funcionesEspeciales.letparNum(val);
+                                                                if(!dato.getTipo().equals(string)) {
+                                                                    agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                                }
+                                                                RESULT = dato;
+                                                            :}
+                    | LETIMPAR_NUM PARA condicion:val PARC  {:
+                                                                Dato dato = funcionesEspeciales.letimparNum(val);
+                                                                if(!dato.getTipo().equals(string)) {
+                                                                    agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                                }
+                                                                RESULT = dato;
+                                                            :}
+                    | REVERSE PARA condicion:val PARC       {:
+                                                                Dato dato = funcionesEspeciales.reverse(val);
+                                                                if(!dato.getTipo().equals(string)) {
+                                                                    agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                                }
+                                                                RESULT = dato;
+                                                            :}
+                    | CARACTER_ALEATORIO:val PARA PARC      {:
+                                                                Dato dato = funcionesEspeciales.caracterAleatorio();
+                                                                if(!dato.getTipo().equals(character)) {
+                                                                    agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                                }
+                                                                RESULT = dato;
+                                                            :}
+                    | NUM_ALEATORIO:val PARA PARC           {:
+                                                                Dato dato = funcionesEspeciales.numAleatorio();
+                                                                if(!dato.getTipo().equals(integer)) {
+                                                                    agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
+                                                                }
+                                                                RESULT = dato;
+                                                            :}
                     ;
  

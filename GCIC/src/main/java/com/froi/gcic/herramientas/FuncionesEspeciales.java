@@ -102,7 +102,7 @@ public class FuncionesEspeciales {
             if(dato.getValor() != null) {
                 char[] array = dato.getValor().toCharArray();
                 String cadenaHecha = "";
-                for(int i = 1; i < array.length; i++) {
+                for(int i = 1; i <= array.length; i++) {
                     if(i % 2 == 0) {
                         int caracter = array[i-1];
                         cadenaHecha += caracter;
@@ -131,7 +131,7 @@ public class FuncionesEspeciales {
             if(dato.getValor() != null) {
                 char[] array = dato.getValor().toCharArray();
                 String cadenaHecha = "";
-                for(int i = 1; i < array.length; i++) {
+                for(int i = 1; i <= array.length; i++) {
                     if(i % 2 == 0) {
                         cadenaHecha += array[i-1];
                     } else {
