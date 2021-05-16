@@ -55,7 +55,8 @@ public class AnalizarEntrada extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        String entrada = request.getParameter("entrada");
+        String entradaSinAnalizar = request.getParameter("entrada");
+        String entrada = new String(entradaSinAnalizar.getBytes("ISO-8859-1"), "UTF-8");
         String salida = "";
         ArrayList<Advertencia> listaErrores = new ArrayList<>();
         ArrayList<Captcha> listaCaptchas = new ArrayList<>();
