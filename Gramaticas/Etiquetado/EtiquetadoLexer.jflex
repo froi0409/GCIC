@@ -126,6 +126,7 @@ CARACTER_ALEATORIO = "CARACTER_ALEATORIO"
 NUM_ALEATORIO = "NUM_ALEATORIO"
 ALERT_INFO = "ALERT_INFO"
 EXIT = "EXIT"
+REDIRECT = "REDIRECT"
 GETBYID = "getElementById"
 INIT = "INIT"
 END = "END"
@@ -297,6 +298,7 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {NUM_ALEATORIO}             {return new Symbol(NUM_ALEATORIO, yyline+1, yycolumn+1, yytext());}
     {ALERT_INFO}                {return new Symbol(ALERT_INFO, yyline+1, yycolumn+1, yytext());}
     {EXIT}                      {return new Symbol(EXIT, yyline+1, yycolumn+1, yytext());}
+    {REDIRECT}                  {return new Symbol(REDIRECT, yyline+1, yycolumn+1, yytext());}
     {GETBYID}                   {return new Symbol(GETBYID, yyline+1, yycolumn+1, yytext());}
     {INIT}                      {return new Symbol(INIT, yyline+1, yycolumn+1, yytext());}
     {END}                       {return new Symbol(END, yyline+1, yycolumn+1, yytext());}

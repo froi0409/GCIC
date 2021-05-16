@@ -191,7 +191,7 @@ terminal COURIER, VERDANA, ARIAL, GENEVA, SANS_SERIF;
 terminal LEFT, RIGHT, CENTER, JUSTIFY;
 terminal TEXT, NUMBER, RADIO, CHECKBOX, ROW, COLUMN;
 /* FUNCIONES ESPECIALES DE CLC */
-terminal ASC, DESC, LETPAR_NUM, LETIMPAR_NUM, REVERSE, CARACTER_ALEATORIO, NUM_ALEATORIO, ALERT_INFO, EXIT, GETBYID, INIT, END, IF, THEN, ELSE, REPEAT, HUNTIL, WHILE, THENWHILE, INSERT;
+terminal ASC, DESC, LETPAR_NUM, LETIMPAR_NUM, REVERSE, CARACTER_ALEATORIO, NUM_ALEATORIO, ALERT_INFO, EXIT, REDIRECT, GETBYID, INIT, END, IF, THEN, ELSE, REPEAT, HUNTIL, WHILE, THENWHILE, INSERT;
 /* LENGUAJE DE ALTO NIVEL EMBEBIDO */
 terminal ON_LOAD, PROCESS;
 /* TIPOS DE DATOS */
@@ -276,7 +276,7 @@ non terminal String parametros_etiquetas_texuales;
 non terminal String parametros_etiquetas_texuales_p;
 
 /* NO TERMINALES ESPECIALES DEL SCRIPTING */
-non terminal funciones_especiales;
+non terminal String funciones_especiales;
 non terminal funciones_strings;
 non terminal condicion_if;
 
@@ -943,18 +943,19 @@ parametros_proceso ::=  parametros_proceso_simples:par      {:
 
 parametros_proceso_simples ::=  variables:var PUNTO_COMA                {:RESULT = var;:}
                                 | asignacion_valor PUNTO_COMA           {:RESULT = "ASIGNACION DE VALORES";:}
-                                | funciones_especiales PUNTO_COMA       {:RESULT = "FUNCIONES ESPECIALES";:}
+                                | funciones_especiales:fun PUNTO_COMA   {:RESULT = fun;:}
                                 ;
 
 funciones_especiales ::=    funciones_strings
-                            | CARACTER_ALEATORIO PARA PARC              {:RESULT = "CARACTERES ALEATORIOS";:}
-                            | NUM_ALEATORIO PARA PARC                   {:RESULT = "NUMERO ALEATORIO";:}
+                            | CARACTER_ALEATORIO PARA PARC              {:RESULT = "";:}
+                            | NUM_ALEATORIO PARA PARC                   {:RESULT = "";:}
                             | ALERT_INFO:ini PARA condicion:con PARC    {:
                                                                             if(verificarTipo(con, string, inileft, iniright)) {
-                                                                                RESULT = "EXIT";
+                                                                                RESULT = "alert(" + con.getValor() + ");";
                                                                             }
                                                                         :}
                             | EXIT PARA PARC                            {:RESULT = "EXIT";:}
+                            | REDIRECT PARA PARC                        {:RESULT = "RESULT";:}
                             | INSERT PARA cuerpo_insert:bod PARC         {:insertCompletoPorProceso += bod + "\n";:}
                             ;
 
