@@ -5075,7 +5075,7 @@ class CUP$EtiquetadoParser$actions {
 		int parright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()).right;
 		String par = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.peek()).value;
 		
-                                                                RESULT = par;
+                                                                RESULT = par + "\n";
                                                             
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_proceso",64, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -5192,7 +5192,10 @@ class CUP$EtiquetadoParser$actions {
 		Dato con = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
                                                                             if(verificarTipo(con, string, inileft, iniright)) {
-                                                                                RESULT = "alert(\"" + con.getValor() + "\");";
+                                                                                if(!con.getValor().contains("getElementById"))
+                                                                                    RESULT = "alert(\"" + con.getValor() + "\");";
+                                                                                else 
+                                                                                    RESULT = "alert(" + con.getValor() + ");";
                                                                             }
                                                                         
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("funciones_especiales",75, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
@@ -7151,7 +7154,7 @@ class CUP$EtiquetadoParser$actions {
 		int valright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
 		Object val = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
 		
-                                                                RESULT = new Dato(string, "getElementById(\"" + val.toString().replace("\"", "").trim() + "\").value");
+                                                                RESULT = new Dato(string, "document.getElementById(\"" + val.toString().replace("\"", "").trim() + "\").value");
                                                             
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("valor_numerico",98, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }

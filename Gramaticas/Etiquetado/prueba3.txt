@@ -62,7 +62,7 @@
     </C_BODY>
     <C_SCRIPTING> 
         PROCESS_calc() [
-            ALERT_INFO("SIUUUU");
+            ALERT_INFO(getElementById("hola_mundo"));
         ]
     </C_SCRIPTING>
 </C_GCIC>

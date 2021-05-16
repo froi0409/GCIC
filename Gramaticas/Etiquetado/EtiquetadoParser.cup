@@ -938,7 +938,7 @@ cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso:l parametros_proceso:p
                                 ;
 
 parametros_proceso ::=  parametros_proceso_simples:par      {:
-                                                                RESULT = par;
+                                                                RESULT = par + "\n";
                                                             :}
                         | condicion_if                      {:RESULT = "IF";:}
                         | ciclo_repeat                      {:RESULT = "REPEAT";:}
@@ -956,7 +956,10 @@ funciones_especiales ::=    funciones_strings
                             | NUM_ALEATORIO PARA PARC                   {:RESULT = "";:}
                             | ALERT_INFO:ini PARA condicion:con PARC    {:
                                                                             if(verificarTipo(con, string, inileft, iniright)) {
-                                                                                RESULT = "alert(\"" + con.getValor() + "\");";
+                                                                                if(!con.getValor().contains("getElementById"))
+                                                                                    RESULT = "alert(\"" + con.getValor() + "\");";
+                                                                                else 
+                                                                                    RESULT = "alert(" + con.getValor() + ");";
                                                                             }
                                                                         :}
                             | EXIT PARA PARC                            {:RESULT = "EXIT";:}
@@ -1500,7 +1503,7 @@ valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toS
                     | TRUE:val              {:RESULT = new Dato(booleano, "true");:}
                     | FALSE:val             {:RESULT = new Dato(booleano, "false");:}
                     | GETBYID PARA ID_ETIQUETA:val PARC     {:
-                                                                RESULT = new Dato(string, "getElementById(\"" + val.toString().replace("\"", "").trim() + "\").value");
+                                                                RESULT = new Dato(string, "document.getElementById(\"" + val.toString().replace("\"", "").trim() + "\").value");
                                                             :}
                     
                     | ASC PARA condicion:val PARC           {:
