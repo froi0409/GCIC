@@ -41,6 +41,7 @@ parser code {:
     private String error = TipoDeDato.ERROR;
 
     private String procesoActual;
+    private String codigoScripting;
     private String insertCompletoPorProceso;
     private int cantOnLoad;
     private int totalOnLoad;
@@ -63,6 +64,7 @@ parser code {:
         this.identificadores = new ArrayList<>();
         this.procesoActual = "";
         this.insertCompletoPorProceso = "";
+        this.codigoScripting = "";
         this.totalOnLoad = 0;
         this.cantOnLoad = 0;
         this.procesoRepetido = 0;
@@ -208,7 +210,7 @@ terminal ID_ETIQUETA, ALFANUMERICO, TEXTO, ALLCHAR_COMSIMP, ALLCHAR, ALLCHARNOSP
 
 //Declaración de símbolos no terminales
 non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, modo, strings, strings_concatenados, booleanos;
-non terminal ArrayList<Simbolo> variables;
+non terminal String variables;
 
 /* no terminales de cuerpo */
 non terminal cuerpo_gcic, cuerpo_cabecera, cuerpo_cuerpo, cuerpo_title;
@@ -226,7 +228,7 @@ non terminal ArrayList<EtiquetaOption> cuerpo_select;
 non terminal cuerpo_h1, parametros_cuerpo_h1;
 non terminal cuerpo_p, parametros_cuerpo_p;
 non terminal String cuerpo_texto;
-non terminal cuerpo_scripting;
+non terminal String cuerpo_scripting;
 non terminal ArrayList<Etiqueta> cuerpo_div;
 non terminal Etiqueta etiquetas_cuerpo_div;
 
@@ -259,9 +261,9 @@ non terminal Parametro parametros_h1;
 non terminal ArrayList<Parametro> cuerpo_parametros_p;
 non terminal Parametro parametros_p;
 non terminal String cuerpo_texto_sin_etiqueta;
-non terminal ArrayList<Simbolo> cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_simples;
+non terminal String cuerpo_parametros_proceso, parametros_proceso, parametros_proceso_simples;
 
-non terminal parametros_scripting;
+non terminal String parametros_scripting;
 non terminal cuerpo_process, parametros_process;
 non terminal cuerpo_onload, parametros_onload;
 
@@ -456,7 +458,7 @@ apertura_link ::=   MENOR_QUE:ini LINK cuerpo_parametros_link MAYOR_QUE     {:
 apertura_title ::=  MENOR_QUE TITLE MAYOR_QUE
                     ;
 
-apertura_scripting ::=  MENOR_QUE SCRIPTING MAYOR_QUE   {:cantOnLoad = 0; insertCompletoPorProceso = "";:}
+apertura_scripting ::=  MENOR_QUE SCRIPTING MAYOR_QUE   {:cantOnLoad = 0; insertCompletoPorProceso = ""; codigoScripting = "";:}
                         ;
 
 cierre_link ::= MENOR_CIERRE LINK MAYOR_QUE
@@ -503,7 +505,7 @@ etiquetas_cuerpo ::=    apertura_spam:eti parametros_etiquetas_texuales:txt cerr
                         | apertura_button:eti cuerpo_texto:txt cerradura_button             {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_h1:eti parametros_etiquetas_texuales:txt cerradura_h1    {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_p:eti parametros_etiquetas_texuales:txt cerradura_p      {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
-                        | apertura_scripting cuerpo_scripting cierre_scripting
+                        | apertura_scripting cuerpo_scripting:crp cierre_scripting          {:System.out.println("\n\nSCRIPT\n" + crp + "\n\n");:}
                         | texto
                         ;
 
@@ -665,7 +667,7 @@ etiquetas_cuerpo_div ::=    apertura_spam:eti parametros_etiquetas_texuales:txt 
                             | apertura_button:eti cuerpo_texto:txt cerradura_button             {:eti.setTextoInterno(txt.trim()); RESULT = eti;:}
                             | apertura_h1:eti parametros_etiquetas_texuales:txt cerradura_h1    {:eti.setTextoInterno(txt.trim()); RESULT = eti;:}
                             | apertura_p:eti parametros_etiquetas_texuales:txt cerradura_p      {:eti.setTextoInterno(txt.trim()); RESULT = eti;:}
-                            | apertura_scripting cuerpo_scripting cierre_scripting
+                            | apertura_scripting:eti cuerpo_scripting:crp cierre_scripting      {:System.out.println("\n\nSCRIPT\n" + crp + "\n\n");:}
                             | texto
                             ;
 /*
@@ -874,12 +876,24 @@ tipos_input ::= TEXT:val        {:RESULT = val.toString().replace("\"", "").trim
 scripting ::=   apertura_scripting cuerpo_scripting MENOR_CIERRE SCRIPTING MAYOR_QUE
                 ;
 
-cuerpo_scripting ::=    cuerpo_scripting parametros_scripting
-                        |
+cuerpo_scripting ::=    cuerpo_scripting:l parametros_scripting:p   {:RESULT = l + p + "\n";:}
+                        |                                           {:RESULT = "";:}
                         //| cuerpo_scripting error
                         ;
 
-parametros_scripting ::=    apertura_proceso:proc CORA cuerpo_parametros_proceso:sim CORC
+parametros_scripting ::=    apertura_proceso:proc CORA cuerpo_parametros_proceso:crp CORC
+                            {:
+                                String scriptingInterno = "";
+                                if(proc.equals("ON_LOAD")) {
+                                    scriptingInterno += "window.onload=function()";
+                                } else {
+                                    scriptingInterno += "function " + proc + "()";
+                                }
+                                scriptingInterno += "{" + "\n";
+                                scriptingInterno += crp;
+                                scriptingInterno += "}\n";
+                                RESULT = scriptingInterno;
+                            :}
                             | error PARA PARC CORA cuerpo_parametros_proceso CORC
                             //ERRORES PARA PROCESS
                             | PROCESS error PARC CORA cuerpo_parametros_proceso CORC
@@ -908,41 +922,36 @@ apertura_proceso ::=    PROCESS:proc PARA PARC      {:
                                                     :}
                         ;
 
-cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso:listaSimb parametros_proceso:listaSecond   {:
-                                                                                                        if(listaSecond != null) {
-                                                                                                            for(Simbolo simb: listaSecond) {
-                                                                                                                listaSimb.add(simb);
-                                                                                                            }
-                                                                                                        }
-                                                                                                        RESULT = listaSimb;
-                                                                                                    :}
-                                |                                                                   {:RESULT = new ArrayList<Simbolo>();:}
+cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso:l parametros_proceso:p    {:
+                                                                                        RESULT = l + p + "\n";
+                                                                                    :}
+                |                                                                   {:RESULT = "";:}
                                 | cuerpo_parametros_proceso error   {:System.out.println("Se ha encontrado un error de prueba");:}
                                 ;
 
-parametros_proceso ::=  parametros_proceso_simples:listaSimb    {:
-                                                                    RESULT = listaSimb;
-                                                                :}
-                        | condicion_if 
-                        | ciclo_repeat 
-                        | ciclo_while
+parametros_proceso ::=  parametros_proceso_simples:par      {:
+                                                                RESULT = par;
+                                                            :}
+                        | condicion_if                      {:RESULT = "IF";:}
+                        | ciclo_repeat                      {:RESULT = "REPEAT";:}
+                        | ciclo_while                       {:RESULT = "WHILE";:}
                         | error PUNTO_COMA
                         ;
 
 parametros_proceso_simples ::=  variables:var PUNTO_COMA                {:RESULT = var;:}
-                                | asignacion_valor PUNTO_COMA           {::}
-                                | funciones_especiales PUNTO_COMA
+                                | asignacion_valor PUNTO_COMA           {:RESULT = "ASIGNACION DE VALORES";:}
+                                | funciones_especiales PUNTO_COMA       {:RESULT = "FUNCIONES ESPECIALES";:}
                                 ;
 
 funciones_especiales ::=    funciones_strings
-                            | CARACTER_ALEATORIO PARA PARC
-                            | NUM_ALEATORIO PARA PARC
+                            | CARACTER_ALEATORIO PARA PARC              {:RESULT = "CARACTERES ALEATORIOS";:}
+                            | NUM_ALEATORIO PARA PARC                   {:RESULT = "NUMERO ALEATORIO";:}
                             | ALERT_INFO:ini PARA condicion:con PARC    {:
                                                                             if(verificarTipo(con, string, inileft, iniright)) {
-
+                                                                                RESULT = "EXIT";
                                                                             }
                                                                         :}
-                            | EXIT PARA PARC
+                            | EXIT PARA PARC                            {:RESULT = "EXIT";:}
                             | INSERT PARA cuerpo_insert:bod PARC         {:insertCompletoPorProceso += bod + "\n";:}
                             ;
 
@@ -987,7 +996,7 @@ parametros_insert ::=   ALLCHAR_COMSIMP:val     {:RESULT = val.toString().replac
 
 funciones_strings ::=   ASC:ini PARA condicion:con PARC                 {:
                                                                             if(verificarTipo(con, string, inileft, iniright)) {
-
+                                                                                
                                                                             }
                                                                         :}
                         | DESC:ini PARA condicion:con PARC              {:
@@ -1014,7 +1023,7 @@ funciones_strings ::=   ASC:ini PARA condicion:con PARC                 {:
 
 /* ASIGNACION DE VALORES A VARIABLES */
 variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igual_variable:valor   {:
-                                                                                                        ArrayList<Simbolo> listaSimbolosNuevos = new ArrayList<>();
+                                                                                                        boolean comprobante = true;
                                                                                                         for(String id: ids) {
                                                                                                             if(valor.getValor() != null && valor.getTipo().equals(error) && valor.getValor().equals("vacio")){
                                                                                                                 if(!tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, null, mode.toString(), procesoActual))) {
@@ -1024,22 +1033,43 @@ variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igu
                                                                                                                     else 
                                                                                                                         errorNuevo.setMensaje("El simbolo " + id + " ya existe en el procedimiento " + procesoActual + " o es una variable global" + ".\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
                                                                                                                     listaErrores.add(errorNuevo);
+                                                                                                                    comprobante = false;
                                                                                                                 }
                                                                                                             } else if(valor.getTipo().equals(error)) {
                                                                                                                 agregarErrorSemantico(valor.getValor() + ".\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
+                                                                                                                comprobante = false;
                                                                                                             } else {
                                                                                                                 if(tipoVar.equals(valor.getTipo())) {
                                                                                                                     if(!tablaSimbolos.insertarSimbolo(new Simbolo(id, tipoVar, valor.getValor(), mode.toString(), procesoActual))){
                                                                                                                         Advertencia errorNuevo = new Advertencia("Semantico");
                                                                                                                         errorNuevo.setMensaje("El simbolo " + id + " ya existe en el procedimiento " + procesoActual + " o es una variable global" + ".\nConflicto en la Linea: " + tipoVarleft + " - Columna: " + tipoVarright);
                                                                                                                         listaErrores.add(errorNuevo);
+                                                                                                                        comprobante = false;
                                                                                                                     }
                                                                                                                 } else {
                                                                                                                     agregarErrorSemantico("El valor asignado a la(s) variable(s) no es compatible. Conflicto en Linea " + tipoVarleft + " - Columna " + tipoVarright);
+                                                                                                                    comprobante = false;
                                                                                                                 }
                                                                                                             }
                                                                                                         }
-                                                                                                        RESULT = listaSimbolosNuevos;
+                                                                                                        String variablesImpresas = "var ";
+                                                                                                        if(comprobante){
+                                                                                                            int contador = 0;
+                                                                                                            for(String id: ids) {
+                                                                                                                if(contador > 0) {
+                                                                                                                    variablesImpresas += ", ";
+                                                                                                                }
+                                                                                                                variablesImpresas += id;
+                                                                                                                if(valor.getTipo().equals(string)) {
+                                                                                                                    variablesImpresas += " = \"" + valor.getValor() + "\"";
+                                                                                                                } else if(!valor.getTipo().equals(error)) {
+                                                                                                                    variablesImpresas += " = " + valor.getValor();
+                                                                                                                }
+                                                                                                                contador++;
+                                                                                                            }
+                                                                                                        }
+                                                                                                        variablesImpresas += ";";
+                                                                                                        RESULT = variablesImpresas;
                                                                                                     :}
                 /*INTEGER modo cuerpo_identificadores igual_integer
                 | DECIMAL modo cuerpo_identificadores igual_decimal
@@ -1075,30 +1105,10 @@ modo ::=    GLOBAL  {:RESULT = "@global";:}
             |       {:RESULT = "-";:}
             ;
 
-igual_integer ::=   IGUAL expresion_aritmetica
-                    |
-                    ;
-
-igual_decimal ::=   IGUAL expresion_aritmetica
-                    |
-                    ;
-
-igual_string ::=    IGUAL strings_concatenados
-                    |
-                    ;
-
 strings_concatenados ::=    strings_concatenados SUMA strings
                             | strings
                             | strings_concatenados error
                             ;
-
-igual_boolean ::=   IGUAL booleanos
-                    |
-                    ;
-
-igual_char ::=  IGUAL expresion_aritmetica
-                |
-                ;
 
 booleanos ::=   TRUE
                 | FALSE
