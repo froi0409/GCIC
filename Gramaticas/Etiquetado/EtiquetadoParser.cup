@@ -286,7 +286,7 @@ non terminal repetir_declaracion, repetir_limite, igual_repeat;
 non terminal ciclo_while;
 non terminal condicion_else_if, parametros_else_if;
 non terminal condicion_else;
-non terminal asignacion_valor;
+non terminal String asignacion_valor;
 
 non terminal Dato condicion;
 non terminal Dato valor_condicion;
@@ -314,7 +314,7 @@ non terminal menor_que_inicial;
 
 non terminal apertura_link;
 non terminal apertura_title;
-non terminal apertura_scripting; 
+non terminal EtiquetaScripting apertura_scripting; 
 
 non terminal EtiquetaSpam apertura_spam;
 non terminal EtiquetaInput apertura_input;
@@ -461,7 +461,7 @@ apertura_link ::=   MENOR_QUE:ini LINK cuerpo_parametros_link MAYOR_QUE     {:
 apertura_title ::=  MENOR_QUE TITLE MAYOR_QUE
                     ;
 
-apertura_scripting ::=  MENOR_QUE SCRIPTING MAYOR_QUE   {:cantOnLoad = 0; insertCompletoPorProceso = ""; codigoScripting = "";:}
+apertura_scripting ::=  MENOR_QUE SCRIPTING MAYOR_QUE   {:cantOnLoad = 0; insertCompletoPorProceso = ""; codigoScripting = ""; RESULT = new EtiquetaScripting();:}
                         ;
 
 cierre_link ::= MENOR_CIERRE LINK MAYOR_QUE
@@ -508,7 +508,7 @@ etiquetas_cuerpo ::=    apertura_spam:eti parametros_etiquetas_texuales:txt cerr
                         | apertura_button:eti cuerpo_texto:txt cerradura_button             {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_h1:eti parametros_etiquetas_texuales:txt cerradura_h1    {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | apertura_p:eti parametros_etiquetas_texuales:txt cerradura_p      {:eti.setTextoInterno(txt.trim()); bodyPrincipal.getEtiquetasBody().add(eti);:}
-                        | apertura_scripting cuerpo_scripting:crp cierre_scripting          {:System.out.println("\n\nSCRIPT\n" + crp + "\n\n");:}
+                        | apertura_scripting:eti cuerpo_scripting:crp cierre_scripting      {:eti.setTextoInterno(crp); bodyPrincipal.getEtiquetasBody().add(eti);:}
                         | texto
                         ;
 
@@ -670,7 +670,7 @@ etiquetas_cuerpo_div ::=    apertura_spam:eti parametros_etiquetas_texuales:txt 
                             | apertura_button:eti cuerpo_texto:txt cerradura_button             {:eti.setTextoInterno(txt.trim()); RESULT = eti;:}
                             | apertura_h1:eti parametros_etiquetas_texuales:txt cerradura_h1    {:eti.setTextoInterno(txt.trim()); RESULT = eti;:}
                             | apertura_p:eti parametros_etiquetas_texuales:txt cerradura_p      {:eti.setTextoInterno(txt.trim()); RESULT = eti;:}
-                            | apertura_scripting:eti cuerpo_scripting:crp cierre_scripting      {:System.out.println("\n\nSCRIPT\n" + crp + "\n\n");:}
+                            | apertura_scripting:eti cuerpo_scripting:crp cierre_scripting      {:eti.setTextoInterno(crp); RESULT = eti;:}
                             | texto
                             ;
 /*
@@ -876,7 +876,12 @@ tipos_input ::= TEXT:val        {:RESULT = val.toString().replace("\"", "").trim
                 ;
 
 /* SCRIPTING */
-scripting ::=   apertura_scripting cuerpo_scripting MENOR_CIERRE SCRIPTING MAYOR_QUE
+scripting ::=   apertura_scripting cuerpo_scripting:crp MENOR_CIERRE SCRIPTING MAYOR_QUE
+                {:
+                    EtiquetaScripting etiqueta = new EtiquetaScripting();
+                    etiqueta.setTextoInterno(crp);
+                    gcicPrincipal.getListaEtiquetas().add(etiqueta);
+                :}
                 ;
 
 cuerpo_scripting ::=    cuerpo_scripting:l parametros_scripting:p   {:RESULT = l + p + "\n";:}
@@ -942,7 +947,7 @@ parametros_proceso ::=  parametros_proceso_simples:par      {:
                         ;
 
 parametros_proceso_simples ::=  variables:var PUNTO_COMA                {:RESULT = var;:}
-                                | asignacion_valor PUNTO_COMA           {:RESULT = "ASIGNACION DE VALORES";:}
+                                | asignacion_valor:var PUNTO_COMA       {:RESULT = var;:}
                                 | funciones_especiales:fun PUNTO_COMA   {:RESULT = fun;:}
                                 ;
 
@@ -951,7 +956,7 @@ funciones_especiales ::=    funciones_strings
                             | NUM_ALEATORIO PARA PARC                   {:RESULT = "";:}
                             | ALERT_INFO:ini PARA condicion:con PARC    {:
                                                                             if(verificarTipo(con, string, inileft, iniright)) {
-                                                                                RESULT = "alert(" + con.getValor() + ");";
+                                                                                RESULT = "alert(\"" + con.getValor() + "\");";
                                                                             }
                                                                         :}
                             | EXIT PARA PARC                            {:RESULT = "EXIT";:}
@@ -1056,8 +1061,9 @@ variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igu
                                                                                                                 }
                                                                                                             }
                                                                                                         }
-                                                                                                        String variablesImpresas = "var ";
+                                                                                                        String variablesImpresas = "";
                                                                                                         if(comprobante){
+                                                                                                            variablesImpresas += "var ";
                                                                                                             int contador = 0;
                                                                                                             for(String id: ids) {
                                                                                                                 if(contador > 0) {
@@ -1065,7 +1071,10 @@ variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igu
                                                                                                                 }
                                                                                                                 variablesImpresas += id;
                                                                                                                 if(valor.getTipo().equals(string)) {
-                                                                                                                    variablesImpresas += " = \"" + valor.getValor() + "\"";
+                                                                                                                    if(valor.getValor().contains("getElementById"))
+                                                                                                                        variablesImpresas += " = " + valor.getValor();
+                                                                                                                    else
+                                                                                                                        variablesImpresas += " = \"" + valor.getValor() + "\"";
                                                                                                                 } else if(!valor.getTipo().equals(error)) {
                                                                                                                     variablesImpresas += " = " + valor.getValor();
                                                                                                                 }
@@ -1130,17 +1139,40 @@ strings ::= ALLCHAR
 
 /* ASIGNACION DE VALORES */
 asignacion_valor ::=    cuerpo_identificadores:ids IGUAL condicion:con      {:
+                                                                                boolean comprobante = true;
                                                                                 String tipoVar = con.getTipo();
                                                                                 for(String iden: ids) {
                                                                                     if(variableExistente(iden, procesoActual)) {
                                                                                         if(!variableValida(iden, procesoActual, tipoVar)) {
                                                                                             agregarErrorSemantico("La variable: " + iden + " no es del tipo " + tipoVar + ".\nConflicto en la Linea: " + idsleft + " - Columna: " + idsright);
+                                                                                            comprobante = false;
                                                                                         }
                                                                                     } else {
                                                                                         agregarErrorSemantico("La variable " + iden + " no está declarada en el proceso " + procesoActual + ".\nConflicto en la Linea: " + idsleft + " - Columna: " + idsright);
+                                                                                        comprobante = false;
                                                                                     }
                                                                                 }
-                                                                                
+                                                                                String variablesImpresas = "";
+                                                                                if(comprobante) {
+                                                                                    int contador = 0;
+                                                                                    for(String id: ids) {
+                                                                                        if(contador > 0) {
+                                                                                            variablesImpresas += ", ";
+                                                                                        }
+                                                                                        variablesImpresas += id;
+                                                                                        if(con.getTipo().equals(string)) {
+                                                                                            if(con.getValor().contains("getElementById"))
+                                                                                                variablesImpresas += " = " + con.getValor();
+                                                                                            else
+                                                                                                variablesImpresas += " = \"" + con.getValor() + "\"";
+                                                                                        } else if(!con.getTipo().equals(error)) {
+                                                                                            variablesImpresas += " = " + con.getValor();
+                                                                                        }
+                                                                                        contador++;
+                                                                                    }
+                                                                                    variablesImpresas = ";";
+                                                                                }
+                                                                                RESULT = variablesImpresas;
                                                                             :}
                         ;
 /*
@@ -1467,7 +1499,9 @@ valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toS
                     | ID_ETIQUETA:val       {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
                     | TRUE:val              {:RESULT = new Dato(booleano, "true");:}
                     | FALSE:val             {:RESULT = new Dato(booleano, "false");:}
-                    /* agregar getElementById */
+                    | GETBYID PARA ID_ETIQUETA:val PARC     {:
+                                                                RESULT = new Dato(string, "getElementById(\"" + val.toString().replace("\"", "").trim() + "\").value");
+                                                            :}
                     
                     | ASC PARA condicion:val PARC           {:
                                                                 Dato dato = funcionesEspeciales.asc(val);

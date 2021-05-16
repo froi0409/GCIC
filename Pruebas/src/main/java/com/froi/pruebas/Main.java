@@ -20,10 +20,6 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        for(int i = 0; i < 100; i++) {
-            int num = (int) (Math.random() * 9);
-            System.out.println("Numero: " + num);
-        }
         frame ventana = new frame();
         ventana.setVisible(true);
     }
