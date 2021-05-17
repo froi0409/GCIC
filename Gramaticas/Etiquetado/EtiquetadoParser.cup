@@ -177,6 +177,10 @@ parser code {:
         return captchaSolicitado;
     }
 
+    public EtiquetaGCIC getGcicPrincipal() {
+        return gcicPrincipal;
+    }
+
 :}
 
 //Declaración de símbolos terminales
@@ -372,7 +376,7 @@ inicio ::=  apertura_gcic cuerpo_gcic           {:
                                                     }
                                                     System.out.println(" \n\n");
                                                     System.out.println(gcicPrincipal.generarHTML());
-                                                    captchaSolicitado.setContenidoCaptcha(gcicPrincipal);
+                                                    //captchaSolicitado.setContenidoCaptcha(gcicPrincipal);
                                                 :}
             ;
 
@@ -702,8 +706,22 @@ cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic:l parametros_gcic:p  {:l.add(
                             | cuerpo_parametros_gcic error
                             ;
 
-parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA:ide CORC                  {:parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright); RESULT = new Parametro("id", ide.toString().replace("\"", "").trim());:}
-                    | CORA NAME IGUAL texto_comillas_complete:ide CORC  {:parametros.add("name"); RESULT = new Parametro("name", ide.toString().replace("\"", "").trim());:}
+parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA:ide CORC                  {:
+                                                                            parametros.add("id"); 
+                                                                            captchaSolicitado.setId(ide.toString().replace("\"", "").trim());
+                                                                            for(Captcha element: listaCaptchas) {
+                                                                                if(element.getId().equals(gcicPrincipal.getId())) {
+                                                                                    agregarErrorSemantico("Ya existe otro captcha con el identificador " + ide.toString() + ". Utilice un identificador no asociado a otro captcha.\nConflicto en Linea: " + ideleft + " - Columna: " + ideright);
+                                                                                }
+                                                                            }
+                                                                            agregarIdentificador(ide.toString(), ideleft, ideright); 
+                                                                            RESULT = new Parametro("id", ide.toString().replace("\"", "").trim());
+                                                                        :}
+                    | CORA NAME IGUAL texto_comillas_complete:ide CORC  {:
+                                                                            parametros.add("name"); 
+                                                                            captchaSolicitado.setName(ide.toString());
+                                                                            RESULT = new Parametro("name", ide.toString().replace("\"", "").trim());
+                                                                        :}
                     ;
 
 cuerpo_parametros_link ::=  cuerpo_parametros_link parametros_link
@@ -1193,7 +1211,7 @@ condicion_if ::=    apertura_if_complete  cuerpo_parametros_proceso PUNTOS LLAC 
                     | apertura_if parametros_proceso_simples condicion_else_if condicion_else
                     ;
 
-apertura_if_complete ::=    IF PARA condicion PARC THEN INIT LLAA PUNTOS
+apertura_if_complete ::=    IF PARA condicion:con PARC THEN INIT LLAA PUNTOS        {:System.out.println("\n\nCondicion: " + con.toString() + "\n");:}
                             | IF PARA error PARC THEN INIT LLAA PUNTOS
                             | error PARA condicion PARC THEN INIT LLAA PUNTOS   {:listaErrores.get(listaErrores.size()-1).setSolucion("IF");:}
                             | IF error condicion PARC THEN INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("(");:}

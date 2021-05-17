@@ -1,0 +1,80 @@
+
+
+class GuardadoParser;
+
+parser code {:
+
+    private ArrayList<Captcha> listaCaptchas;
+
+    public GuardadoParser(GuardadoLexer lexer, ArrayList<Captcha> listaCaptchas) {
+        super();
+        this.listaCaptchas = listaCaptchas;
+    }
+
+:}
+
+
+//Declaración de simbolos terminales
+terminal DBCAPTCHAS, ID, NOMBRE, LINK, PATH, CANTUSOS, ACIERTOS, FALLOS;
+terminal PARA, PARC, LLAA, LLAC, COMA, PUNTOS, ALLCHAR;
+
+//Declaración de simbolos no terminales
+non terminal inicio, cuerpo_captchas, captcha_detectado;
+non terminal ArrayList<Parametro> parametros_captcha;
+non terminal Parametro parametros_captcha_p;
+
+start with inicio;
+
+inicio ::=  DBCAPTCHAS PARA cuerpo_captchas PARC
+            ;
+
+cuerpo_captchas ::= cuerpo_captchas COMA captcha_detectado
+                    | captcha_detectado
+                    |
+                    ;
+
+captcha_detectado ::=   LLAA parametros_captcha:l LLAC
+                        {:
+                            Captcha nuevoCaptcha = new Captcha();
+                            for(Parametro element: l) {
+                                switch(l.getNombre()) {
+                                    case "id":
+                                        nuevoCaptcha.setId(element.getValor());
+                                        break;
+                                    case "name":
+                                        nuevoCaptcha.setName(element.getValor());
+                                        break;
+                                    case "link":
+                                        nuevoCaptcha.setLink(element.getValor());
+                                        break;
+                                    case "path":
+                                        nuevoCaptcha.setPath(element.getValor());
+                                        break;
+                                    case "cantusos":
+                                        nuevoCaptcha.setCantidadUsos(Integer.parseInt(element.getValor));
+                                        break;
+                                    case "aciertos":
+                                        nuevoCaptcha.setAciertos(Integer.parseInt(element.getValor()));
+                                        break;
+                                    case "fallos":
+                                        nuevoCaptcha.setFallos(Integer.parseInt(element.getValor()));
+                                        break;
+                                }
+                            }
+                            listaCaptchas.add(nuevoCaptcha);
+                        :}
+                        ;
+
+parametros_captcha ::=  parametros_captcha:l COMA parametros_captcha_p:p    {:l.add(p); RESULT = l;:}
+                        | parametros_captcha_p:p                            {:ArrayList<Parametro> l = new ArrayList<>(); l.add(p); RESULT = l;:}
+                        ;
+
+parametros_captcha_p ::=    ID PUNTOS ALLCHAR:val           {:RESULT = new Parametro("id", val.toString().replace("\"", ""));:}
+                            | NOMBRE PUNTOS ALLCHAR:val     {:RESULT = new Parametro("name", val.toString().replace("\"", "")):}
+                            | LINK PUNTOS ALLCHAR:val       {:RESULT = new Parametro("link", val.toString().replace("\"", ""));:}
+                            | PATH PUNTOS ALLCHAR:val       {:RESULT = new Parametro("path", val.toString().replace("\"", ""));:}
+                            | CANTUSOS PUNTOS ALLCHAR:val   {:RESULT = new Parametro("cantusos", val.toString().replace("\"", ""));:}
+                            | ACIERTOS PUNTOS ALLCHAR:val   {:RESULT = new Parametro("aciertos", val.toString().replace("\"", ""));:}
+                            | FALLOS PUNTOS ALLCHAR:val     {:RESULT = new Parametro("fallos", val.toString().replace("\"", ""));:}
+                            ;
+

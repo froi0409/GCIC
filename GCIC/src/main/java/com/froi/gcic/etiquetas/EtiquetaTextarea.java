@@ -25,6 +25,20 @@ public class EtiquetaTextarea extends EtiquetaTextual {
         this.rows = "3";
     }
     
+    public String generarParametros() {
+        String parametros = "";
+        parametros += " id=\"" + getId() + "\"";
+        parametros += " cols=\"" + cols +"\"";
+        parametros += " rows=\"" + rows + "\"";
+        parametros += " style=\"";
+        parametros += " font-size: " + getFontSize() + ";";
+        parametros += " font-family: " + getFontFamily() + ";";
+        parametros += " text-align: " + getTextAlign() + ";";
+        parametros += " color: " + getColor() + ";";
+        parametros += " \"";
+        return parametros;
+    }
+    
     @Override
     public void setByString(Parametro parametro, ArrayList<Advertencia> listaErrores) {
         switch(parametro.getNombre()) {

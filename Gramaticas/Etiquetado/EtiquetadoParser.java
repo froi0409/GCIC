@@ -2391,6 +2391,10 @@ public class EtiquetadoParser extends java_cup.runtime.lr_parser {
         return captchaSolicitado;
     }
 
+    public EtiquetaGCIC getGcicPrincipal() {
+        return gcicPrincipal;
+    }
+
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -2442,7 +2446,7 @@ class CUP$EtiquetadoParser$actions {
                                                     }
                                                     System.out.println(" \n\n");
                                                     System.out.println(gcicPrincipal.generarHTML());
-                                                    captchaSolicitado.setContenidoCaptcha(gcicPrincipal);
+                                                    //captchaSolicitado.setContenidoCaptcha(gcicPrincipal);
                                                 
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("inicio",0, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
@@ -3719,7 +3723,17 @@ class CUP$EtiquetadoParser$actions {
 		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
 		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
 		Object ide = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
-		parametros.add("id"); agregarIdentificador(ide.toString(), ideleft, ideright); RESULT = new Parametro("id", ide.toString().replace("\"", "").trim());
+		
+                                                                            parametros.add("id"); 
+                                                                            captchaSolicitado.setId(ide.toString().replace("\"", "").trim());
+                                                                            for(Captcha element: listaCaptchas) {
+                                                                                if(element.getId().equals(gcicPrincipal.getId())) {
+                                                                                    agregarErrorSemantico("Ya existe otro captcha con el identificador " + ide.toString() + ". Utilice un identificador no asociado a otro captcha.\nConflicto en Linea: " + ideleft + " - Columna: " + ideright);
+                                                                                }
+                                                                            }
+                                                                            agregarIdentificador(ide.toString(), ideleft, ideright); 
+                                                                            RESULT = new Parametro("id", ide.toString().replace("\"", "").trim());
+                                                                        
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_gcic",39, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -3731,7 +3745,11 @@ class CUP$EtiquetadoParser$actions {
 		int ideleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
 		int ideright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
 		String ide = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
-		parametros.add("name"); RESULT = new Parametro("name", ide.toString().replace("\"", "").trim());
+		
+                                                                            parametros.add("name"); 
+                                                                            captchaSolicitado.setName(ide.toString());
+                                                                            RESULT = new Parametro("name", ide.toString().replace("\"", "").trim());
+                                                                        
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_gcic",39, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5835,7 +5853,10 @@ class CUP$EtiquetadoParser$actions {
           case 276: // apertura_if_complete ::= IF PARA condicion PARC THEN INIT LLAA PUNTOS 
             {
               Object RESULT =null;
-
+		int conleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-5)).left;
+		int conright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-5)).right;
+		Dato con = (Dato)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-5)).value;
+		System.out.println("\n\nCondicion: " + con.toString() + "\n");
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("apertura_if_complete",128, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-7)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;

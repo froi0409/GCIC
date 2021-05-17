@@ -9,7 +9,7 @@
         <C_SCRIPTING></C_SCRIPTING>
         <C_SCRIPTING></C_SCRIPTING>
     </C_HEAD>
-    <C_BODY [background="black"]>
+    <C_BODY [background="green"]>
         <C_SPAM [color="#00cd38"] [font-size="20px"]></C_SPAM>
         <c_br>
         <C_INPUT [font-family="Arial" ] [ text-align = " left " ]></C_INPUT>
@@ -62,7 +62,8 @@
     </C_BODY>
     <C_SCRIPTING> 
         PROCESS_calc() [
-            ALERT_INFO(getElementById("hola_mundo"));
+            string holadasf = getElementById("hola_mundo");
+            ALERT_INFO(holadasf);
         ]
     </C_SCRIPTING>
 </C_GCIC>
