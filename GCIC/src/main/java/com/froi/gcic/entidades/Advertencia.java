@@ -82,9 +82,9 @@ public class Advertencia {
     @Override
     public String toString() {
         if(tipo.equals("Sintactico")) {
-            return "linea: " + linea + " - Columna: " + columna + "\nToken: " + token + "\nTexto: " + texto + "\nSolucion: " + solucion;
+            return "Error Sintáctico\n" + "linea: " + linea + " - Columna: " + columna + "\nToken: " + token + "\nTexto: " + texto + "\nSolucion: " + solucion;
         } else if(tipo.equals("Semantico")) {
-            return "Advertencia: " + mensaje;
+            return "Advertencia Semántica: " + mensaje;
         } else {
             return "Error irrecuperable";
         }

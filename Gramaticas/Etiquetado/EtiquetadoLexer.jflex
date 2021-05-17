@@ -385,5 +385,5 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
 
 //Caracteres no reconocidos por la gramática
 [^] {
-
+    System.out.println("Simbolo no reconocido: " + yytext());
 }

@@ -1946,7 +1946,7 @@ public class EtiquetadoLexer implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { 
+            { System.out.println("Simbolo no reconocido: " + yytext());
             }
             // fall through
           case 138: break;

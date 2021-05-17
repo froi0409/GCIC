@@ -493,8 +493,19 @@ cuerpo_texto_sin_etiqueta ::=   cuerpo_texto_sin_etiqueta texto
                                 | texto
                                 ;
 
-texto ::=   ALFANUMERICO:ent        {:RESULT=ent.toString();:}
-            | IDENTIFICADOR:ent     {:RESULT=ent.toString();:}
+texto ::=   ALFANUMERICO:ent                {:RESULT=ent.toString();:}
+            | IDENTIFICADOR:ent             {:RESULT=ent.toString();:}
+            | SUMA:ent                      {:RESULT=ent.toString();:}
+            | RESTA:ent                     {:RESULT=ent.toString();:}
+            | MULTIPLICACION:ent            {:RESULT=ent.toString();:}
+            | DIVISION:ent                  {:RESULT=ent.toString();:}
+            | PARA:ent                      {:RESULT=ent.toString();:}
+            | PARC:ent                      {:RESULT=ent.toString();:}
+            | CORA:ent                      {:RESULT=ent.toString();:}
+            | CORC:ent                      {:RESULT=ent.toString();:}
+            | LLAA:ent                      {:RESULT=ent.toString();:}
+            | LLAC:ent                      {:RESULT=ent.toString();:}
+            | texto_comillas_complete:ent   {:RESULT=ent.toString();:}
             ;
 
 cuerpo_cuerpo ::=   cuerpo_cuerpo etiquetas_cuerpo
