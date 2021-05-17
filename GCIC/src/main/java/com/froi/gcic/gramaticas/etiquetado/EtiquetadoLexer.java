@@ -4,6 +4,7 @@
 
 //Sección de Importaciones
 package com.froi.gcic.gramaticas.etiquetado;
+import java.util.regex.Pattern;
 import java_cup.runtime.*;
 import static com.froi.gcic.gramaticas.etiquetado.EtiquetadoParserSym.*;
 
@@ -2436,7 +2437,12 @@ public class EtiquetadoLexer implements java_cup.runtime.Scanner {
             // fall through
           case 147: break;
           case 11:
-            { return new Symbol(D_INTEGER, yyline+1, yycolumn+1, yytext());
+            { try {
+                                        Integer entero = Integer.parseInt(yytext());
+                                        return new Symbol(D_INTEGER, yyline+1, yycolumn+1, yytext());
+                                    } catch(Exception e) {
+                                        return new Symbol(CARACTERES_COMPLETOS, yyline+1, yycolumn+1, yytext());
+                                    }
             }
             // fall through
           case 148: break;
@@ -2506,7 +2512,12 @@ public class EtiquetadoLexer implements java_cup.runtime.Scanner {
             // fall through
           case 161: break;
           case 25:
-            { return new Symbol(D_DECIMAL, yyline+1, yycolumn+1, yytext());
+            { String[] decimales = yytext().split(Pattern.quote("."));
+                                    if(decimales.length == 2  && decimales[1].length() <= 4) {
+                                        return new Symbol(D_DECIMAL, yyline+1, yycolumn+1, yytext());
+                                    } else {
+                                        return new Symbol(CARACTERES_COMPLETOS, yyline+1, yycolumn+1, yytext());
+                                    }
             }
             // fall through
           case 162: break;

@@ -1,5 +1,6 @@
 //Sección de Importaciones
 package com.froi.gcic.gramaticas.etiquetado;
+import java.util.regex.Pattern;
 import java_cup.runtime.*;
 import static com.froi.gcic.gramaticas.etiquetado.EtiquetadoParserSym.*;
 
@@ -325,8 +326,22 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {GLOBAL}                    {return new Symbol(GLOBAL, yyline+1, yycolumn+1, yytext());}
 
     /* DEFINICION DE TIPOS DE DATOS */
-    {D_INTEGER}                 {return new Symbol(D_INTEGER, yyline+1, yycolumn+1, yytext());}
-    {D_DECIMAL}                 {return new Symbol(D_DECIMAL, yyline+1, yycolumn+1, yytext());}
+    {D_INTEGER}                 {
+                                    try {
+                                        Integer entero = Integer.parseInt(yytext());
+                                        return new Symbol(D_INTEGER, yyline+1, yycolumn+1, yytext());
+                                    } catch(Exception e) {
+                                        return new Symbol(CARACTERES_COMPLETOS, yyline+1, yycolumn+1, yytext());
+                                    }
+                                }
+    {D_DECIMAL}                 {
+                                    String[] decimales = yytext().split(Pattern.quote("."));
+                                    if(decimales.length == 2  && decimales[1].length() <= 4) {
+                                        return new Symbol(D_DECIMAL, yyline+1, yycolumn+1, yytext());
+                                    } else {
+                                        return new Symbol(CARACTERES_COMPLETOS, yyline+1, yycolumn+1, yytext());
+                                    }
+                                }
     {TRUE}                      {return new Symbol(TRUE, yyline+1, yycolumn+1, yytext());}
     {FALSE}                     {return new Symbol(FALSE, yyline+1, yycolumn+1, yytext());}
     {D_CHAR}                    {return new Symbol(D_CHAR, yyline+1, yycolumn+1, yytext());}

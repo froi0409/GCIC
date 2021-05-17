@@ -507,6 +507,13 @@ texto ::=   ALFANUMERICO:ent                {:RESULT=ent.toString();:}
             | LLAC:ent                      {:RESULT=ent.toString();:}
             | CARACTERES_COMPLETOS:ent      {:RESULT=ent.toString();:}
             | COMA:ent                      {:RESULT=ent.toString();:}
+            | D_INTEGER:ent                 {:RESULT=ent.toString();:}
+            | D_DECIMAL:ent                 {:RESULT=ent.toString();:}
+            | TRUE:ent                      {:RESULT=ent.toString();:}
+            | FALSE:ent                     {:RESULT=ent.toString();:}
+            | D_CHAR:ent                    {:RESULT=ent.toString();:}
+            | D_STRING:ent                  {:RESULT=ent.toString();:}
+            | ALLCHAR_COMSIMP:ent           {:RESULT=ent.toString();:}
             | texto_comillas_complete:ent   {:RESULT=ent.toString();:}
             ;
 
@@ -716,7 +723,7 @@ parametros_etiquetas_texuales_p ::= texto:ide                                   
 /* Parametros de etiquetas */
 cuerpo_parametros_gcic ::=  cuerpo_parametros_gcic:l parametros_gcic:p  {:l.add(p); RESULT = l;:}  
                             |                                           {:parametros.clear(); ArrayList<Parametro> parametrosGCIC = new ArrayList<>(); RESULT = parametrosGCIC;:}
-                            | cuerpo_parametros_gcic error
+                            | cuerpo_parametros_gcic:l error            {:RESULT = l;:}
                             ;
 
 parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA:ide CORC                  {:
@@ -739,7 +746,7 @@ parametros_gcic ::= CORA ID IGUAL ID_ETIQUETA:ide CORC                  {:
 
 cuerpo_parametros_link ::=  cuerpo_parametros_link parametros_link
                             |                                       {:parametros.clear();:}
-                            | cuerpo_parametros_link error
+                            | cuerpo_parametros_link error        
                             ;
 
 parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE CORC     {:parametros.add("href");:}
@@ -752,7 +759,7 @@ texto_comillas_complete ::= ALLCHAR:par             {:RESULT = par.toString().re
 
 cuerpo_parametros_body ::=  cuerpo_parametros_body:l parametros_body:p  {:l.add(p); RESULT = l;:}
                             |                                           {:parametros.clear(); ArrayList<Parametro> lista = new ArrayList<>(); RESULT = lista;:}
-                            | cuerpo_parametros_body error
+                            | cuerpo_parametros_body:l error            {:RESULT = l;:}
                             ;
 
 parametros_body ::= CORA BACKGROUND IGUAL colores:ide CORC  {:parametros.add("background"); RESULT = new Parametro("background", ide.toString().replace("\"", "").trim());:}
@@ -760,7 +767,7 @@ parametros_body ::= CORA BACKGROUND IGUAL colores:ide CORC  {:parametros.add("ba
 
 cuerpo_parametros_spam ::=  cuerpo_parametros_spam:l parametros_spam:p  {:l.add(p); RESULT = l;:}
                             |                                           {:parametros.clear(); ArrayList<Parametro> parametrosSpam = new ArrayList<>(); RESULT = parametrosSpam;:}
-                            | cuerpo_parametros_spam error
+                            | cuerpo_parametros_spam:l error            {:RESULT = l;:}
                             ;
 
 parametros_spam ::= parametros_textuales:val    {:RESULT = val;:}
@@ -768,7 +775,7 @@ parametros_spam ::= parametros_textuales:val    {:RESULT = val;:}
 
 cuerpo_parametros_input ::= cuerpo_parametros_input:l parametros_input:p    {:l.add(p); RESULT = l;:}
                             |                                               {:parametros.clear(); ArrayList<Parametro> parametrosInput = new ArrayList<>(); RESULT = parametrosInput;:}
-                            | cuerpo_parametros_input error
+                            | cuerpo_parametros_input:l error               {:RESULT = l;:}
                             ;
 
 parametros_input ::=    CORA TYPE IGUAL tipos_input:ide CORC    {:parametros.add("type"); RESULT = new Parametro("type", ide.toString().replace("\"", "").trim());:}
@@ -777,7 +784,7 @@ parametros_input ::=    CORA TYPE IGUAL tipos_input:ide CORC    {:parametros.add
 
 cuerpo_parametros_textarea ::=  cuerpo_parametros_textarea:l parametros_textarea:p  {:l.add(p); RESULT = l;:}
                                 |                                                   {:parametros.clear(); ArrayList<Parametro> parametrosTextarea = new ArrayList<>(); RESULT = parametrosTextarea;:}
-                                | cuerpo_parametros_textarea error
+                                | cuerpo_parametros_textarea:l error                {:RESULT = l;:}
                                 ;
 
 parametros_textarea ::= CORA FONTSIZE IGUAL PIXELES:ide CORC            {:parametros.add("font-size"); RESULT = new Parametro("font-size", ide.toString().replace("\"", "").trim());:}
@@ -790,7 +797,7 @@ parametros_textarea ::= CORA FONTSIZE IGUAL PIXELES:ide CORC            {:parame
 
 cuerpo_parametros_select ::=    cuerpo_parametros_select:l parametros_select:p  {:l.add(p); RESULT = l;:}
                                 |                                               {:parametros.clear(); ArrayList<Parametro> listaParametros = new ArrayList<>(); RESULT = listaParametros;:}
-                                | cuerpo_parametros_select error
+                                | cuerpo_parametros_select:l error              {:RESULT = l;:}
                                 ;
 
 parametros_select ::=   parametros_textuales:ide    {:RESULT = ide;:}
@@ -798,7 +805,7 @@ parametros_select ::=   parametros_textuales:ide    {:RESULT = ide;:}
 
 cuerpo_parametros_div ::=   cuerpo_parametros_div:l parametros_div:p    {:l.add(p); RESULT = l;:}    
                             |                                           {:parametros.clear(); ArrayList<Parametro> listaParametros = new ArrayList<>(); RESULT = listaParametros;:}
-                            | cuerpo_parametros_div error
+                            | cuerpo_parametros_div:l error             {:RESULT = l;:}
                             ;
 
 parametros_div ::=  parametros_textuales:ide                    {:RESULT = ide;:}
@@ -808,7 +815,7 @@ parametros_div ::=  parametros_textuales:ide                    {:RESULT = ide;:
 
 cuerpo_parametros_img ::=   cuerpo_parametros_img:l parametros_img:p    {:l.add(p); RESULT = l;:}
                             |                                           {:parametros.clear(); ArrayList<Parametro> parametrosInput = new ArrayList<>(); RESULT = parametrosInput;:}
-                            | cuerpo_parametros_img error
+                            | cuerpo_parametros_img:l error             {:RESULT = l;:}
                             ;
 
 parametros_img ::=  CORA SRC IGUAL ALLCHARNOSPACE:ide CORC              {:parametros.add("src"); RESULT = new Parametro("src", ide.toString().replace("\"", "").trim());:}
@@ -820,7 +827,7 @@ parametros_img ::=  CORA SRC IGUAL ALLCHARNOSPACE:ide CORC              {:parame
 
 cuerpo_parametros_button ::=    cuerpo_parametros_button:l parametros_button:p  {:l.add(p); RESULT = l;:}
                                 |                                               {:parametros.clear(); ArrayList<Parametro> parametrosButton = new ArrayList<>(); RESULT = parametrosButton;:}
-                                | cuerpo_parametros_button error
+                                | cuerpo_parametros_button:l error              {:RESULT = l;:}
                                 ;
 
 parametros_button ::=   parametros_textuales:param                              {:RESULT = param;:}
@@ -830,7 +837,7 @@ parametros_button ::=   parametros_textuales:param                              
 
 cuerpo_parametros_h1 ::=    cuerpo_parametros_h1:l parametros_h1:p  {:l.add(p); RESULT = l;:}
                             |                                       {:parametros.clear(); ArrayList<Parametro> listaParametros = new ArrayList<>(); RESULT = listaParametros;:}
-                            | cuerpo_parametros_h1 error
+                            | cuerpo_parametros_h1:l error          {:RESULT = l;:}
                             ;
 
 parametros_h1 ::=   parametros_textuales:val   {:RESULT = val;:}
@@ -838,7 +845,7 @@ parametros_h1 ::=   parametros_textuales:val   {:RESULT = val;:}
 
 cuerpo_parametros_p ::= cuerpo_parametros_p:l parametros_p:p    {:l.add(p); RESULT = l;:}
                         |                                       {:parametros.clear(); ArrayList<Parametro> listaParametros = new ArrayList<>(); RESULT = listaParametros;:}
-                        | cuerpo_parametros_p error
+                        | cuerpo_parametros_p:l error           {:RESULT = l;:}
                         ;
 
 parametros_p ::=    parametros_textuales:ide    {:RESULT = ide;:}
@@ -965,7 +972,7 @@ cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso:l parametros_proceso:p
                                                                                         RESULT = l + p + "\n";
                                                                                     :}
                 |                                                                   {:RESULT = "";:}
-                                | cuerpo_parametros_proceso error   {:System.out.println("Se ha encontrado un error de prueba");:}
+                                | cuerpo_parametros_proceso:l error                 {:RESULT = l;:}
                                 ;
 
 parametros_proceso ::=  parametros_proceso_simples:par      {:
@@ -1139,8 +1146,8 @@ igual_variable ::=  IGUAL condicion:val     {:RESULT = val;:}
 
 cuerpo_identificadores ::=  cuerpo_identificadores:ids COMA identificadores:id  {:ids.add(id); RESULT = ids;:}
                             | identificadores:id                                {:ArrayList<String> identificadoresNuevos = new ArrayList<>(); identificadoresNuevos.add(id); RESULT = identificadoresNuevos;:}
-                            | cuerpo_identificadores error
-                            | cuerpo_identificadores COMA error
+                            | cuerpo_identificadores:ids error                  {:RESULT = ids;:}
+                            | cuerpo_identificadores:ids COMA error             {:RESULT = ids;:}
                             ;
 
 identificadores ::= IDENTIFICADOR:id    {:RESULT = id.toString();:}

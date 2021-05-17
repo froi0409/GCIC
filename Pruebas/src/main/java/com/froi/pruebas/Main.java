@@ -14,6 +14,7 @@ import java.net.URLDecoder;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -25,6 +26,12 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws MalformedURLException {
+        String hola = "123.45";
+        String[] decimales;
+        decimales = hola.split(Pattern.quote("."));
+        for(String elem: decimales) {
+            System.out.println(elem);
+        }
         frame ventana = new frame();
         ventana.setVisible(true);
     }

@@ -22,6 +22,7 @@ public class Captcha {
     private String name;
     private String link;
     private String path;
+    private String linkRedirect;
     private int cantidadUsos;
     private int aciertos;
     private int fallos;
@@ -30,6 +31,7 @@ public class Captcha {
         this.listaProcesos = new ArrayList<>();
         this.tablaSimbolos = new TablaDeSimbolos();
         this.estado = "solicitado";
+        this.linkRedirect = "http://ingenieria.cunoc.usac.edu.gt/portal/";
         this.cantidadUsos = 0;
         this.aciertos = 0;
         this.fallos = 0;
