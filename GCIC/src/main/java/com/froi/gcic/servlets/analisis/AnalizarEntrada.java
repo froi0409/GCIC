@@ -71,6 +71,13 @@ public class AnalizarEntrada extends HttpServlet {
         EtiquetadoLexer etiquetadoLexer = new EtiquetadoLexer(reader);
         EtiquetadoParser etiquetadoParser = new EtiquetadoParser(etiquetadoLexer, listaErrores, listaCaptchas);
         
+        //Recuperamos los captchas existentes
+        db.recuperarCaptchas(listaCaptchas);
+        
+        for(Captcha captcha : listaCaptchas) {
+            System.out.println("El captcha " + captcha.getId());
+        }
+        
         try {
             etiquetadoParser.parse();
             

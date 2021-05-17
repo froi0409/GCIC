@@ -6,9 +6,14 @@
 package com.froi.gcic.herramientas;
 
 import com.froi.gcic.entidades.Captcha;
+import com.froi.gcic.gramaticas.almacenamiento.GuardadoLexer;
+import com.froi.gcic.gramaticas.almacenamiento.GuardadoParser;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 /**
@@ -17,6 +22,10 @@ import java.util.ArrayList;
  */
 public class ManejadorBD {
     
+    /**
+     * Permite sobreescribir el archivo que contiene la información de loss captchas
+     * @param listaCaptchas 
+     */
     public void guardarCaptchas(ArrayList<Captcha> listaCaptchas) {
         String pathGuardado = "Captchas/informacion.gcici";
         String codigoGuardado = "";
@@ -33,7 +42,7 @@ public class ManejadorBD {
             codigoGuardado += "\"PATH\" : " + "\"" + element.getPath() + "\",\n";
             codigoGuardado += "\"CANTUSOS\" : " + "\"" + element.getCantidadUsos() + "\",\n";
             codigoGuardado += "\"ACIERTOS\" : " + "\"" + element.getAciertos() + "\",\n";
-            codigoGuardado += "\"FALLOS\" : " + "\"" + element.getFallos() + "\",\n";
+            codigoGuardado += "\"FALLOS\" : " + "\"" + element.getFallos() + "\"\n";
             codigoGuardado += "}";
             cont++;
         }
@@ -45,8 +54,30 @@ public class ManejadorBD {
         }
     }
     
-    public void recuperarCaptchas(ArrayList<Captcha> listaCaptchass) {
-        
+    /**
+     * Permite recuperar la información de los captchas que están en el archivo de almacenamiento
+     * @param listaCaptchas 
+     */
+    public void recuperarCaptchas(ArrayList<Captcha> listaCaptchas) {
+        String codigoProvisional;
+        String codigo = "";
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File("Captchas/informacion.gcici")))) {
+            while((codigoProvisional = reader.readLine()) != null) {
+                codigo += codigoProvisional + "\n";
+            }
+        } catch (Exception e) {
+            System.err.println("Error al leer archivo de almacenamiento: " + e.getMessage());
+        }
+        System.out.println(codigo);
+        StringReader reader = new StringReader(codigo);
+        GuardadoLexer guardadoLexer = new GuardadoLexer(reader);
+        GuardadoParser guardadoParser = new GuardadoParser(guardadoLexer, listaCaptchas);
+        try {
+            guardadoParser.parse();
+        } catch (Exception e) {
+            System.err.println("Error al parsear el archivo de almacenamiento: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
 }

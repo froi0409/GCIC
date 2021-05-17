@@ -3727,7 +3727,7 @@ class CUP$EtiquetadoParser$actions {
                                                                             parametros.add("id"); 
                                                                             captchaSolicitado.setId(ide.toString().replace("\"", "").trim());
                                                                             for(Captcha element: listaCaptchas) {
-                                                                                if(element.getId().equals(gcicPrincipal.getId())) {
+                                                                                if(element.getId().equals(captchaSolicitado.getId())) {
                                                                                     agregarErrorSemantico("Ya existe otro captcha con el identificador " + ide.toString() + ". Utilice un identificador no asociado a otro captcha.\nConflicto en Linea: " + ideleft + " - Columna: " + ideright);
                                                                                 }
                                                                             }
