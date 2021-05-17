@@ -23,7 +23,7 @@ public class EtiquetaTextual extends Etiqueta {
     private String color;
     
     public EtiquetaTextual() {
-        this.fontSize = "12";
+        this.fontSize = "12px";
         this.fontFamily = "";
         this.textAlign = "left";
         this.id = generarId();
