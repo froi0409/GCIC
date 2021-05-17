@@ -36,6 +36,7 @@ ID_ETIQUETA = "\"" ({ALFANUMERICO} | [_] | [-] | [$])+ "\""
 ALLCHAR = "\"" [^\"]+ "\""
 ALLCHARNOSPACE = "\"" [^\" " " "\n"]+ "\""
 ALLCHAR_COMSIMP = {COM_SIMP} ([^\' \‘ \’] | " ")+ {COM_SIMP}
+CARACTERES_COMPLETOS = [^ \t\f \r \n \r\n "<" ">" "+" "-" "*" "/" "[" "]" "(" ")" "=" ":" "," ";" "{" "}"]+
 
 /* ETIQUETAS GCIC */
 GCIC = [cC][_][gG][cC][iI][cC]
@@ -375,7 +376,7 @@ COMENTARIO = {COMENTARIO_BLOQUE} | {COMENTARIO_LINEA}
     {IDENTIFICADOR}             {return new Symbol(IDENTIFICADOR, yyline+1, yycolumn+1, yytext());}
     {COMA}                      {return new Symbol(COMA, yyline+1, yycolumn+1, yytext());}
 
-    
+    {CARACTERES_COMPLETOS}      {System.out.println("C_C: " + yytext()); return new Symbol(CARACTERES_COMPLETOS, yyline+1, yycolumn+1, yytext());}
 
     /* TEXTO */
     //{TEXTO}                     {return new Symbol(TEXTO, yyline+1, yycolumn+1, yytext());}

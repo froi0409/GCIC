@@ -18,6 +18,7 @@ public class EtiquetaH1 extends EtiquetaTextual {
     
     public EtiquetaH1() {
         super();
+        setFontSize("24px");
     }
     
     @Override

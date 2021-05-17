@@ -63,7 +63,7 @@ public class EtiquetaButton extends EtiquetaTextual {
         parametros += " font-size: " + getFontSize() + ";";
         parametros += " font-family: " + getFontFamily() + ";";
         parametros += " text-align: " + getTextAlign() + ";";
-        parametros += " backgroung-color: " + background + ";";
+        parametros += " background-color: " + background + ";";
         parametros += " color: " + getColor() + ";";
         parametros += " \"";
         return parametros;

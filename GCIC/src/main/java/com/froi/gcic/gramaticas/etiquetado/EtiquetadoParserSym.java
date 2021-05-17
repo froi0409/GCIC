@@ -87,6 +87,7 @@ public class EtiquetadoParserSym {
   public static final int ALLCHAR_COMSIMP = 137;
   public static final int GCIC = 2;
   public static final int DIV = 12;
+  public static final int CARACTERES_COMPLETOS = 141;
   public static final int PUNTOS = 130;
   public static final int NAVY = 42;
   public static final int MENOR_CIERRE = 114;
@@ -290,6 +291,7 @@ public class EtiquetadoParserSym {
   "ALLCHAR_COMSIMP",
   "ALLCHAR",
   "ALLCHARNOSPACE",
-  "DIGITO_COM"
+  "DIGITO_COM",
+  "CARACTERES_COMPLETOS"
   };
 }

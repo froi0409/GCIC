@@ -25,7 +25,7 @@ public class EtiquetaTextual extends Etiqueta {
     public EtiquetaTextual() {
         this.fontSize = "12px";
         this.fontFamily = "";
-        this.textAlign = "left";
+        this.textAlign = "center";
         this.id = generarId();
         this.color = "black";
     }

@@ -213,7 +213,7 @@ terminal SUMA, RESTA, MULTIPLICACION, DIVISION, UNARY;
 /* SIMBOLOS ESPECIALES */
 terminal IGUAL, BARRA, DIAGONAL, PARA, PARC, CORA, CORC, LLAA, LLAC, PUNTO_COMA, PUNTOS, COM_SIMP, IDENTIFICADOR, COMA;
 /* COMODINES */
-terminal ID_ETIQUETA, ALFANUMERICO, TEXTO, ALLCHAR_COMSIMP, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM;
+terminal ID_ETIQUETA, ALFANUMERICO, TEXTO, ALLCHAR_COMSIMP, ALLCHAR, ALLCHARNOSPACE, DIGITO_COM, CARACTERES_COMPLETOS;
 
 //Declaración de símbolos no terminales
 non terminal inicio, cabecera, cuerpo, scripting, inicio_scripting, modo, strings, strings_concatenados, booleanos;
@@ -482,7 +482,7 @@ cierre_scripting ::=    MENOR_CIERRE SCRIPTING MAYOR_QUE        {:
                                                                         System.out.println(insertCompletoPorProceso + "\n");
                                                                     }
                                                                 :}
-                        | error
+                        //| error
                         ;
 
 cuerpo_title ::=    cuerpo_title:ct texto:ent   {:RESULT= ct.toString() + " " + ent.toString();:}
@@ -505,6 +505,8 @@ texto ::=   ALFANUMERICO:ent                {:RESULT=ent.toString();:}
             | CORC:ent                      {:RESULT=ent.toString();:}
             | LLAA:ent                      {:RESULT=ent.toString();:}
             | LLAC:ent                      {:RESULT=ent.toString();:}
+            | CARACTERES_COMPLETOS:ent      {:RESULT=ent.toString();:}
+            | COMA:ent                      {:RESULT=ent.toString();:}
             | texto_comillas_complete:ent   {:RESULT=ent.toString();:}
             ;
 
