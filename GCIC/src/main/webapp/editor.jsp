@@ -31,9 +31,6 @@
                     <h2>&nbsp;&nbsp;Generador de Captchas - GCIC</h2>
                 </div>
                 <div class="col-6" align="right">
-                    <form action="inicio.jsp" method="POST" class="form">
-                        <button type="submit" class="btn btn-outline-light form">Cerrar Sesión</button>
-                    </form>
                 </div>
 
             </div>
@@ -51,7 +48,7 @@
                     <div class="col-8" align="left">
                         <button type="submt" class="btn btn-success">Analizar</button>&nbsp;&nbsp;
                         <button type="button" onclick="saveTextAsFile(entrada.value, 'descarga.gcic')" class="btn btn-secondary">Exportar</button>&nbsp;&nbsp;
-                        <input type="file" id="archivo"/>
+                        <input type="file" id="archivo" accept=".gcic"/>
                     </div>
                     <div class="col-4" align="right">
                         <label id="lblPosicion">Linea: 0 - Columna: 0</label>

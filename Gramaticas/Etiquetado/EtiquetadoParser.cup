@@ -695,7 +695,7 @@ etiquetas_cuerpo_div ::=    apertura_spam:eti parametros_etiquetas_texuales:txt 
                             | apertura_h1:eti parametros_etiquetas_texuales:txt cerradura_h1    {:eti.setTextoInterno(txt.trim()); RESULT = eti;:}
                             | apertura_p:eti parametros_etiquetas_texuales:txt cerradura_p      {:eti.setTextoInterno(txt.trim()); RESULT = eti;:}
                             | apertura_scripting:eti cuerpo_scripting:crp cierre_scripting      {:eti.setTextoInterno(crp); RESULT = eti;:}
-                            | texto
+                            | texto:txt
                             ;
 /*
 cuerpo_h1 ::=       ;
@@ -1125,12 +1125,7 @@ variables ::=   tipos_variables:tipoVar modo:mode cuerpo_identificadores:ids igu
                                                                                                         variablesImpresas += ";";
                                                                                                         RESULT = variablesImpresas;
                                                                                                     :}
-                /*INTEGER modo cuerpo_identificadores igual_integer
-                | DECIMAL modo cuerpo_identificadores igual_decimal
-                | STRING modo cuerpo_identificadores igual_string
-                | BOOLEAN modo cuerpo_identificadores igual_boolean
-                | CHAR modo cuerpo_identificadores igual_char
-                |*/ 
+                | tipos_variables:tip modo cuerpo_identificadores error                             {:listaErrores.get(listaErrores.size()-1).setSolucion("Se esperaba una variable válida de tipo " + tip);:}
                 ;
 
 tipos_variables ::= INTEGER     {:RESULT = integer;:}
@@ -1146,7 +1141,7 @@ igual_variable ::=  IGUAL condicion:val     {:RESULT = val;:}
 
 cuerpo_identificadores ::=  cuerpo_identificadores:ids COMA identificadores:id  {:ids.add(id); RESULT = ids;:}
                             | identificadores:id                                {:ArrayList<String> identificadoresNuevos = new ArrayList<>(); identificadoresNuevos.add(id); RESULT = identificadoresNuevos;:}
-                            | cuerpo_identificadores:ids error                  {:RESULT = ids;:}
+                            //| cuerpo_identificadores:ids error                  {:RESULT = ids;:}
                             | cuerpo_identificadores:ids COMA error             {:RESULT = ids;:}
                             ;
 
