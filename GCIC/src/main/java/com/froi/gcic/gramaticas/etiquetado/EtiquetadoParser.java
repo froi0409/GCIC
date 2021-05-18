@@ -6419,7 +6419,7 @@ class CUP$EtiquetadoParser$actions {
 		int bodleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
 		int bodright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
 		String bod = (String)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
-		insertCompletoPorProceso += bod + "\n";
+		insertCompletoPorProceso += bod + "\n";RESULT = "";
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("funciones_especiales",75, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-3)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;

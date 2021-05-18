@@ -1167,7 +1167,7 @@ funciones_especiales ::=    funciones_strings                           {:RESULT
                                                                         :}
                             | EXIT PARA PARC                            {:RESULT = "location.href = \"http://localhost:8080/GCIC/Redireccionamiento?id=" + captchaSolicitado.getId() + "\"";:}
                             | REDIRECT PARA PARC                        {:RESULT = "location.href = \"http://localhost:8080/GCIC/Redireccionamiento?id=" + captchaSolicitado.getId() + "\"";:}
-                            | INSERT PARA cuerpo_insert:bod PARC         {:insertCompletoPorProceso += bod + "\n";:}
+                            | INSERT PARA cuerpo_insert:bod PARC         {:insertCompletoPorProceso += bod + "\n";RESULT = "";:}
                             ;
 
 cuerpo_insert ::=   cuerpo_insert:bod COMA parametros_insert:param      {:RESULT = bod + "\n" + param;:}
