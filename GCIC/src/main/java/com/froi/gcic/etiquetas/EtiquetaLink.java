@@ -19,6 +19,7 @@ public class EtiquetaLink extends Etiqueta {
     private String href;
     
     public EtiquetaLink() {
+        super();
         this.href = "http://ingenieria.cunoc.usac.edu.gt/portal/";
     }
 
@@ -35,5 +36,10 @@ public class EtiquetaLink extends Etiqueta {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        return codigo;
+    }
     
 }

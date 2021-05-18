@@ -17,11 +17,17 @@ import java.util.ArrayList;
 public class EtiquetaBr extends Etiqueta {
 
     public EtiquetaBr() {
+        super();
     }
 
     @Override
     public void setByString(Parametro arg0, ArrayList<Advertencia> arg1) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public String generarHTML() {
+        return "<br>";
     }
     
 }

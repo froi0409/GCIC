@@ -7,6 +7,7 @@ package com.froi.gcic.etiquetas;
 
 import com.froi.gcic.entidades.Advertencia;
 import com.froi.gcic.entidades.Captcha;
+import com.froi.gcic.entidades.Parametro;
 import java.util.ArrayList;
 
 /**
@@ -15,25 +16,65 @@ import java.util.ArrayList;
  */
 public class EtiquetaTextual extends Etiqueta {
     
-    private int fontSize;
+    private String fontSize;
     private String fontFamily;
     private String textAlign;
     private String id;
     private String color;
     
     public EtiquetaTextual() {
-        this.fontSize = 12;
+        this.fontSize = "12px";
         this.fontFamily = "";
-        this.textAlign = "left";
+        this.textAlign = "center";
         this.id = generarId();
         this.color = "black";
     }
 
-    public int getFontSize() {
+    
+    @Override
+    public void setByString(Parametro parametro, ArrayList<Advertencia> listaErrores) {
+        switch(parametro.getNombre()) {
+            case "font-size":
+                setFontSize(parametro.getValor());
+                break;
+            case "font-family":
+                setFontFamily(parametro.getValor());
+                break;
+            case "text-align":
+                setTextAlign(parametro.getValor());
+                break;
+            case "id":
+                setId(parametro.getValor());
+                break;
+            case "color":
+                setColor(parametro.getValor());
+                break;
+        }
+    }
+    
+    public String generarParametros() {
+        String parametros = "";
+        parametros += " id=\"" + id + "\"";
+        parametros += " style=\"";
+        parametros += " font-size: " + fontSize + ";";
+        parametros += " font-family: " + fontFamily + ";";
+        parametros += " text-align: " + textAlign + ";";
+        parametros += " color: " + color + ";";
+        parametros += " \"";
+        return parametros;
+    }
+    
+    @Override
+    public String generarHTML() {
+        String codigo = ""; 
+        return codigo;
+    }
+    
+    public String getFontSize() {
         return fontSize;
     }
 
-    public void setFontSize(int fontSize) {
+    public void setFontSize(String fontSize) {
         this.fontSize = fontSize;
     }
 

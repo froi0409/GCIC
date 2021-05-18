@@ -4,26 +4,35 @@
 <C_GCIC [id= "captcha_matematico_1"] [name= "Captcha Matemático 1"]>
     !! El encabezado de la página que tendrá mi captcha
     <C_HEAD>
-        <C_LINK [href="www.facebook.com"]> </C_LINK>
+        <C_LINK [href="https://www.twitch.tv/"]> </C_LINK>
         <C_TITLE>Hola Mundo</C_TITLE>
         <C_SCRIPTING></C_SCRIPTING>
         <C_SCRIPTING></C_SCRIPTING>
     </C_HEAD>
-    <C_BODY [background="black"]>
+    <C_BODY [background="green"]>
         <C_SPAM [color="#00cd38"] [font-size="20px"]></C_SPAM>
+        <c_br>
         <C_INPUT [font-family="Arial" ] [ text-align = " left " ]></C_INPUT>
+        <c_br>
+        <c_div>
         <C_TEXTAREA [id="hola_mundo"] [ cols = "20" ] [rows="5"]></C_TEXTAREA>
+        <c_br>
         <C_SELECT [id="hola"] [ color   = "green" ] >
             <C_OPTION>hola</C_OPTION>
             <C_OPTION>adios</C_OPTION>
         </C_SELECT>
+        <c_br>
         <C_DIV [class="row"] [background="red"] >
             <C_INPUT></C_INPUT>
+            <c_br>
             <C_SPAM></C_SPAM>
         </C_DIV>
-        <C_IMG [src="www.google.com"] [id="holis"] [width="30%"] [ heigth="20%" ] [alt="Mensaje aleatorio"]></C_IMG>
+        <c_br>
+        <C_IMG [src="https://i1.wp.com/www.universidadescr.com/blog/wp-content/uploads/2014/11/ing-industrial1-blog.jpg?fit=600%2C400&ssl=1"] [id="holis"] [width="30%"] [ heigth="20%" ] [alt="Mensaje aleatorio"]></C_IMG>
         <C_BR>
         <C_H1 [text-align="center"] >HOLA <C_SPAM> ADIOS </C_SPAM> <C_BR> MUNDO</C_H1>
+        </c_div>
+        <c_br>
         <C_P [font-size="20px"] >  </C_P>
         <C_SCRIPTING>
             PROCESS_ADIOS() [
@@ -32,10 +41,12 @@
         </C_SCRIPTING>
         <C_SCRIPTING>
             ON_LOAD()[
-                string hola = "hola";
+                string hola, adios, jaja = "hola";
+                hola, adios, jaja = "HOLA";
                 IF(((5+6+9*9) > 12) && (3 == 3)) THEN
                     INIT{:
                         hola = "adios";
+                        ALERT_INFO("HOLA MUNDO");
                     :} END
             ]
             PROCESS_HOLA()[
@@ -45,7 +56,27 @@
                     :} END
             ]
         </C_SCRIPTING>
+        <c_br>
         <c_p>HOLA_MUNDO HOLA MUNDO</c_p>
+        <c_br>
+        <C_BUTTON [id= "boton_1"] [onclick= "PROCESS_calc()"] [background="green"]>HOLA MUNDO</C_BUTTON>
+
     </C_BODY>
-    <C_SCRIPTING> </C_SCRIPTING>
+    <C_SCRIPTING> 
+        PROCESS_calc() [
+            string holadasf = getElemenById("hola_mundo");
+            IF(holadasf == "1") THEN
+                ALERT_INFO("frio");
+            ELSE IF (holadasf == "2") THEN
+                ALERT_INFO("TIBIO");
+            ELSE IF(holadasf == "3") THEN 
+                ALERT_INFO("caliente");
+            ELSE INIT {:
+                ALERT_INFO("siuuuuu");
+                EXIT();
+            :} END
+                
+            
+        ]
+    </C_SCRIPTING>
 </C_GCIC>

@@ -22,6 +22,7 @@ public class EtiquetaGCIC extends Etiqueta {
     private ArrayList<Etiqueta> listaEtiquetas;
     
     public EtiquetaGCIC() {
+        super();
         this.id = generarId();
         this.listaEtiquetas = new ArrayList<>();
     }
@@ -65,6 +66,17 @@ public class EtiquetaGCIC extends Etiqueta {
 
     public void setListaEtiquetas(ArrayList<Etiqueta> listaEtiquetas) {
         this.listaEtiquetas = listaEtiquetas;
+    }
+    
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<html>\n";
+        for(Etiqueta element : listaEtiquetas) {
+            codigo += element.generarHTML() + "\n";
+        }
+        codigo += "</html>";
+        return codigo;
     }
     
 }

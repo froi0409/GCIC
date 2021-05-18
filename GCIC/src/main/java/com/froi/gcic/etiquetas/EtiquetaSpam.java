@@ -16,6 +16,16 @@ import java.util.ArrayList;
 public class EtiquetaSpam extends EtiquetaTextual {
 
     public EtiquetaSpam() {
+        super();
+    }
+    
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<span" + generarParametros() + ">";
+        codigo += getTextoInterno() + "\n";
+        codigo += "</span>";
+        return codigo;
     }
     
 }

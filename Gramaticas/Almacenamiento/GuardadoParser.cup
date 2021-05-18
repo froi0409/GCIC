@@ -1,0 +1,119 @@
+package com.froi.gcic.gramaticas.almacenamiento;
+
+import com.froi.gcic.entidades.Captcha;
+import com.froi.gcic.entidades.Parametro;
+import java.util.ArrayList;
+import java_cup.runtime.*;
+
+class GuardadoParser;
+
+parser code {:
+
+    private ArrayList<Captcha> listaCaptchas;
+
+    public GuardadoParser(GuardadoLexer lexer, ArrayList<Captcha> listaCaptchas) {
+        super(lexer);
+        this.listaCaptchas = listaCaptchas;
+    }
+    public void report_error(String message, Object info) {
+        System.out.println("reporterror");
+    }
+    public void report_fatal_error(String message, Object info) {
+        System.out.println("reportfatal");
+    }
+    public void syntax_error(Symbol cur_token) {
+        System.out.println("syntaxerr " + symbl_name_from_id(cur_token.sym) + " " + cur_token.left + " - " + cur_token.right);
+    }
+    protected int error_sync_size() {
+        return 1;
+    }
+
+:}
+
+
+//Declaración de simbolos terminales
+terminal DBCAPTCHAS, ID, NOMBRE, LINK, PATH, CANTUSOS, ACIERTOS, FALLOS, DATELASTUSO, LINKREDIRECT;
+terminal PARA, PARC, LLAA, LLAC, COMA, PUNTOS, ALLCHAR;
+
+//Declaración de simbolos no terminales
+non terminal inicio, cuerpo_captchas, captcha_detectado;
+non terminal ArrayList<Parametro> parametros_captcha;
+non terminal Parametro parametros_captcha_p;
+non terminal String all_strings;
+
+start with inicio;
+
+inicio ::=  DBCAPTCHAS PARA cuerpo_captchas PARC
+            ;
+
+cuerpo_captchas ::= cuerpo_captchas COMA captcha_detectado
+                    | captcha_detectado
+                    |
+                    ;
+
+captcha_detectado ::=   LLAA parametros_captcha:l LLAC
+                        {:
+                            Captcha nuevoCaptcha = new Captcha();
+                            for(Parametro element: l) {
+                                switch(element.getNombre()) {
+                                    case "id":
+                                        nuevoCaptcha.setId(element.getValor());
+                                        break;
+                                    case "name":
+                                        nuevoCaptcha.setName(element.getValor());
+                                        break;
+                                    case "link":
+                                        nuevoCaptcha.setLink(element.getValor());
+                                        break;
+                                    case "path":
+                                        nuevoCaptcha.setPath(element.getValor());
+                                        break;
+                                    case "cantusos":
+                                        nuevoCaptcha.setCantidadUsos(Integer.parseInt(element.getValor()));
+                                        break;
+                                    case "aciertos":
+                                        nuevoCaptcha.setAciertos(Integer.parseInt(element.getValor()));
+                                        break;
+                                    case "fallos":
+                                        nuevoCaptcha.setFallos(Integer.parseInt(element.getValor()));
+                                        break;
+                                    case "datelastuso":
+                                        nuevoCaptcha.setFecha(element.getValor());
+                                        break;
+                                    case "linkredirect":
+                                        nuevoCaptcha.setLinkRedirect(element.getValor());
+                                        break;
+                                }
+                            }
+                            listaCaptchas.add(nuevoCaptcha);
+                        :}
+                        ;
+
+parametros_captcha ::=  parametros_captcha:l COMA parametros_captcha_p:p    {:l.add(p); RESULT = l;:}
+                        | parametros_captcha_p:p                            {:ArrayList<Parametro> l = new ArrayList<>(); l.add(p); RESULT = l;:}
+                        | parametros_captcha:l COMA error                   {:RESULT = l;:}
+                        ;
+
+parametros_captcha_p ::=    ID PUNTOS all_strings:val               {:RESULT = new Parametro("id", val.toString().replace("\"", ""));:}
+                            | NOMBRE PUNTOS all_strings:val         {:RESULT = new Parametro("name", val.toString().replace("\"", ""));:}
+                            | LINK PUNTOS all_strings:val           {:RESULT = new Parametro("link", val.toString().replace("\"", ""));:}
+                            | PATH PUNTOS all_strings:val           {:RESULT = new Parametro("path", val.toString().replace("\"", ""));:}
+                            | CANTUSOS PUNTOS all_strings:val       {:RESULT = new Parametro("cantusos", val.toString().replace("\"", ""));:}
+                            | ACIERTOS PUNTOS all_strings:val       {:RESULT = new Parametro("aciertos", val.toString().replace("\"", ""));:}
+                            | FALLOS PUNTOS all_strings:val         {:RESULT = new Parametro("fallos", val.toString().replace("\"", ""));:}
+                            | DATELASTUSO PUNTOS all_strings:val    {:RESULT = new Parametro("datelastuso", val.toString().replace("\"", ""));:}
+                            | LINKREDIRECT PUNTOS all_strings:val   {:RESULT = new Parametro("linkredirect", val.toString().replace("\"", ""));:}
+                            ;
+
+all_strings ::= ALLCHAR:val         {:RESULT=val.toString();:}
+                | ID:val            {:RESULT=val.toString();:}
+                | NOMBRE:val        {:RESULT=val.toString();:}
+                | LINK:val          {:RESULT=val.toString();:}
+                | PATH:val          {:RESULT=val.toString();:}
+                | CANTUSOS:val      {:RESULT=val.toString();:}
+                | ACIERTOS:val      {:RESULT=val.toString();:}
+                | FALLOS:val        {:RESULT=val.toString();:}
+                | DATELASTUSO:val   {:RESULT=val.toString();:}
+                | LINKREDIRECT:val  {:RESULT=val.toString();:}
+                ;
+

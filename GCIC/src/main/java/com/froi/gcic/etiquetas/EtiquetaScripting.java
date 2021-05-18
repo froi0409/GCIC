@@ -9,26 +9,18 @@ package com.froi.gcic.etiquetas;
  *
  * @author froi-pc
  */
-public class EtiquetaTitle extends Etiqueta {
-    
-    private String titulo;
+public class EtiquetaScripting extends Etiqueta {
 
-    public EtiquetaTitle() {
-        this.titulo = "";
-    }
-    
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public EtiquetaScripting() {
+        super();
     }
     
     @Override
     public String generarHTML() {
         String codigo = "";
-        codigo = "<title>" + titulo + "</title>";
+        codigo += "<script>\n";
+        codigo += getTextoInterno();
+        codigo += "</script>";
         return codigo;
     }
     

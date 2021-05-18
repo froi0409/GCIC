@@ -15,7 +15,19 @@ import java.util.ArrayList;
  */
 public class EtiquetaH1 extends EtiquetaTextual {
 
+    
     public EtiquetaH1() {
+        super();
+        setFontSize("24px");
     }
     
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<h1" + generarParametros() + ">\n";
+        codigo += getTextoInterno() + "\n";
+        codigo += "</h1>";
+        return codigo;
+    }
+
 }

@@ -16,12 +16,15 @@ import java.util.ArrayList;
  */
 public class EtiquetaOption extends Etiqueta {
 
-    public EtiquetaOption(ArrayList<Captcha> listaCaptchas, ArrayList<Advertencia> listaErrores) {
+    public EtiquetaOption() {
+        super();
     }
-
+    
     @Override
-    public void setByString(Parametro arg0, ArrayList<Advertencia> arg1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<option>" + getTextoInterno() + "</option>";
+        return codigo;
     }
     
 }

@@ -213,6 +213,7 @@ public class TablasDeOperaciones {
                     Integer dato = valorDato1 / valorDato2;
                     valorRetorno = dato.toString();
                 } else {
+                    tipoDato = error;
                     valorRetorno = "División entre 0";
                 }
             } else if(tipoDato.equals(decimal)) {
@@ -222,6 +223,7 @@ public class TablasDeOperaciones {
                     Double dato = valorDato1 / valorDato2;
                     valorRetorno = dato.toString();
                 } else {
+                    tipoDato = error;
                     valorRetorno = "División entre 0";
                 }
             } else {

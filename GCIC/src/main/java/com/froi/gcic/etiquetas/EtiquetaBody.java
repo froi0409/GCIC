@@ -17,9 +17,12 @@ import java.util.ArrayList;
 public class EtiquetaBody extends Etiqueta {
 
     private String background;
+    private ArrayList<Etiqueta> etiquetasBody;
     
     public EtiquetaBody() {
+        super();
         this.background = "white";
+        etiquetasBody = new ArrayList<>();
     }
 
     public String getBackground() {
@@ -30,11 +33,37 @@ public class EtiquetaBody extends Etiqueta {
         this.background = background;
     }
 
+    public ArrayList<Etiqueta> getEtiquetasBody() {
+        return etiquetasBody;
+    }
+
+    public void setEtiquetasBody(ArrayList<Etiqueta> etiquetasBody) {
+        this.etiquetasBody = etiquetasBody;
+    }
+
     @Override
-    public void setByString(Parametro arg0, ArrayList<Advertencia> arg1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setByString(Parametro parametro, ArrayList<Advertencia> listaErrores) {
+        switch(parametro.getNombre()) {
+            case "background":
+                setBackground(parametro.getValor());
+                break;
+        }
     }
     
+    public String generarParametros() {
+        String codigo = " style=\"background-color: " + background + ";\" ";
+        return codigo;
+    }
     
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<body " + generarParametros() + ">\n";
+        for(Etiqueta element: etiquetasBody) {
+            codigo += element.generarHTML() + "\n";
+        }
+        codigo += "</body>";
+        return codigo;
+    }
     
 }

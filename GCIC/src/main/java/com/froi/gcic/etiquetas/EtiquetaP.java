@@ -16,6 +16,16 @@ import java.util.ArrayList;
 public class EtiquetaP extends EtiquetaTextual {
 
     public EtiquetaP() {
+        super();
+    }
+    
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<p" + generarParametros() + ">" + "\n";
+        codigo += getTextoInterno() + "\n";
+        codigo += "</p>";
+        return codigo;
     }
     
 }

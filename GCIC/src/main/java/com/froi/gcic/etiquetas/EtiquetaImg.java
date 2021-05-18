@@ -23,6 +23,7 @@ public class EtiquetaImg extends Etiqueta {
     private String id;
     
     public EtiquetaImg() {
+        super();
         this.src = "https://www.universidadesonline.com.gt/logos/original/logo-centro-universitario-de-occidente.png";
         this.width = "30px";
         this.height = "30px";
@@ -30,6 +31,44 @@ public class EtiquetaImg extends Etiqueta {
         this.id = generarId();
     }
 
+    @Override
+    public void setByString(Parametro parametro, ArrayList<Advertencia> listaErrores) {
+        switch(parametro.getNombre()) {
+            case "src":
+                setSrc(parametro.getValor());
+                break;
+            case "width":
+                setWidth(parametro.getValor());
+                break;
+            case "height":
+                setHeight(parametro.getValor());
+                break;
+            case "alt":
+                setAlt(parametro.getValor());
+                break;
+            case "id":
+                setId(parametro.getValor());
+                break;
+        }
+    }
+    
+    public String generarParametros() {
+        String parametros = "";
+        parametros += " id=\"" + id + "\"";
+        parametros += " src=\"" + src + "\"";
+        parametros += " alt=\"" + alt + "\"";
+        parametros += " width=\"" + width + "\"";
+        parametros += " heigh=\"" + height + "\" ";
+        return parametros;
+    }
+    
+    @Override
+    public String generarHTML() {
+        String codigo = "";
+        codigo += "<img" + generarParametros() + ">" + "</img>";
+        return codigo;
+    }
+    
     public String getSrc() {
         return src;
     }
@@ -68,11 +107,6 @@ public class EtiquetaImg extends Etiqueta {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    @Override
-    public void setByString(Parametro arg0, ArrayList<Advertencia> arg1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

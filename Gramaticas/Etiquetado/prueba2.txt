@@ -98,3 +98,9 @@
     </C_BODY>
     <C_SCRIPTING> </C_SCRIPTING>
 </C_GCIC>
+
+
+REPEAT (integer repeticion = 0) HUNTIL(45)
+    INIT {:
+        hola_mundo = CARACTER_ALEATORIO();
+    :} END
