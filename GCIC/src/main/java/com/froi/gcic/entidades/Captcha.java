@@ -17,12 +17,12 @@ public class Captcha {
     
     private ArrayList<String> listaProcesos;
     private TablaDeSimbolos tablaSimbolos;
-    private String estado;
     private String id;
     private String name;
     private String link;
     private String path;
     private String linkRedirect;
+    private String fecha;
     private int cantidadUsos;
     private int aciertos;
     private int fallos;
@@ -30,8 +30,8 @@ public class Captcha {
     public Captcha() {
         this.listaProcesos = new ArrayList<>();
         this.tablaSimbolos = new TablaDeSimbolos();
-        this.estado = "solicitado";
         this.linkRedirect = "http://ingenieria.cunoc.usac.edu.gt/portal/";
+        this.fecha = "-";
         this.cantidadUsos = 0;
         this.aciertos = 0;
         this.fallos = 0;
@@ -52,15 +52,7 @@ public class Captcha {
     public void setTablaSimbolos(TablaDeSimbolos tablaSimbolos) {
         this.tablaSimbolos = tablaSimbolos;
     }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
+    
     public String getId() {
         return id;
     }
@@ -119,6 +111,22 @@ public class Captcha {
 
     public void setFallos(int fallos) {
         this.fallos = fallos;
+    }
+
+    public String getLinkRedirect() {
+        return linkRedirect;
+    }
+
+    public void setLinkRedirect(String linkRedirect) {
+        this.linkRedirect = linkRedirect;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
     
 }

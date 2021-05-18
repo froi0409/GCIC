@@ -32,13 +32,14 @@ parser code {:
 
 
 //Declaración de simbolos terminales
-terminal DBCAPTCHAS, ID, NOMBRE, LINK, PATH, CANTUSOS, ACIERTOS, FALLOS;
+terminal DBCAPTCHAS, ID, NOMBRE, LINK, PATH, CANTUSOS, ACIERTOS, FALLOS, DATELASTUSO, LINKREDIRECT;
 terminal PARA, PARC, LLAA, LLAC, COMA, PUNTOS, ALLCHAR;
 
 //Declaración de simbolos no terminales
 non terminal inicio, cuerpo_captchas, captcha_detectado;
 non terminal ArrayList<Parametro> parametros_captcha;
 non terminal Parametro parametros_captcha_p;
+non terminal String all_strings;
 
 start with inicio;
 
@@ -76,6 +77,12 @@ captcha_detectado ::=   LLAA parametros_captcha:l LLAC
                                     case "fallos":
                                         nuevoCaptcha.setFallos(Integer.parseInt(element.getValor()));
                                         break;
+                                    case "datelastuso":
+                                        nuevoCaptcha.setFecha(element.getValor());
+                                        break;
+                                    case "linkredirect":
+                                        nuevoCaptcha.setLinkRedirect(element.getValor());
+                                        break;
                                 }
                             }
                             listaCaptchas.add(nuevoCaptcha);
@@ -84,14 +91,29 @@ captcha_detectado ::=   LLAA parametros_captcha:l LLAC
 
 parametros_captcha ::=  parametros_captcha:l COMA parametros_captcha_p:p    {:l.add(p); RESULT = l;:}
                         | parametros_captcha_p:p                            {:ArrayList<Parametro> l = new ArrayList<>(); l.add(p); RESULT = l;:}
+                        | parametros_captcha:l COMA error                   {:RESULT = l;:}
                         ;
 
-parametros_captcha_p ::=    ID PUNTOS ALLCHAR:val           {:System.out.println("id"); RESULT = new Parametro("id", val.toString().replace("\"", ""));:}
-                            | NOMBRE PUNTOS ALLCHAR:val     {:System.out.println("name"); RESULT = new Parametro("name", val.toString().replace("\"", ""));:}
-                            | LINK PUNTOS ALLCHAR:val       {:System.out.println("link"); RESULT = new Parametro("link", val.toString().replace("\"", ""));:}
-                            | PATH PUNTOS ALLCHAR:val       {:System.out.println("path"); RESULT = new Parametro("path", val.toString().replace("\"", ""));:}
-                            | CANTUSOS PUNTOS ALLCHAR:val   {:System.out.println("cantusos"); RESULT = new Parametro("cantusos", val.toString().replace("\"", ""));:}
-                            | ACIERTOS PUNTOS ALLCHAR:val   {:System.out.println("aciertos"); RESULT = new Parametro("aciertos", val.toString().replace("\"", ""));:}
-                            | FALLOS PUNTOS ALLCHAR:val     {:System.out.println("fallos"); RESULT = new Parametro("fallos", val.toString().replace("\"", ""));:}
+parametros_captcha_p ::=    ID PUNTOS all_strings:val               {:RESULT = new Parametro("id", val.toString().replace("\"", ""));:}
+                            | NOMBRE PUNTOS all_strings:val         {:RESULT = new Parametro("name", val.toString().replace("\"", ""));:}
+                            | LINK PUNTOS all_strings:val           {:RESULT = new Parametro("link", val.toString().replace("\"", ""));:}
+                            | PATH PUNTOS all_strings:val           {:RESULT = new Parametro("path", val.toString().replace("\"", ""));:}
+                            | CANTUSOS PUNTOS all_strings:val       {:RESULT = new Parametro("cantusos", val.toString().replace("\"", ""));:}
+                            | ACIERTOS PUNTOS all_strings:val       {:RESULT = new Parametro("aciertos", val.toString().replace("\"", ""));:}
+                            | FALLOS PUNTOS all_strings:val         {:RESULT = new Parametro("fallos", val.toString().replace("\"", ""));:}
+                            | DATELASTUSO PUNTOS all_strings:val    {:RESULT = new Parametro("datelastuso", val.toString().replace("\"", ""));:}
+                            | LINKREDIRECT PUNTOS all_strings:val   {:RESULT = new Parametro("linkredirect", val.toString().replace("\"", ""));:}
                             ;
+
+all_strings ::= ALLCHAR:val         {:RESULT=val.toString();:}
+                | ID:val            {:RESULT=val.toString();:}
+                | NOMBRE:val        {:RESULT=val.toString();:}
+                | LINK:val          {:RESULT=val.toString();:}
+                | PATH:val          {:RESULT=val.toString();:}
+                | CANTUSOS:val      {:RESULT=val.toString();:}
+                | ACIERTOS:val      {:RESULT=val.toString();:}
+                | FALLOS:val        {:RESULT=val.toString();:}
+                | DATELASTUSO:val   {:RESULT=val.toString();:}
+                | LINKREDIRECT:val  {:RESULT=val.toString();:}
+                ;
 

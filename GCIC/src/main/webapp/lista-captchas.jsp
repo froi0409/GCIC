@@ -36,8 +36,9 @@
         <%@include file ="barra-herramientas.html" %>
         <br><br>
         <div align="center">
-            <h1>Listado de Captchas Generados</h1>>
+            <h1>Listado de Captchas Generados</h1>
         </div>
+        <br><br>
         <!-- Se crea el div que contendrá el listado -->
         <div style=" margin-left: 5%; margin-right: 5%">
             <table class="table table-bordered">

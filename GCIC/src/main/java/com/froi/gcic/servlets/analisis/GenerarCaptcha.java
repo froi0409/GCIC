@@ -15,6 +15,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -53,6 +55,9 @@ public class GenerarCaptcha extends HttpServlet {
             if(element.getId().equals(id)) {
                 comprobante = true;
                 captchaUsado = element;
+                captchaUsado.setFecha(getFecha());
+                captchaUsado.aumentarUsos();
+                captchaUsado.setFallos(captchaUsado.getCantidadUsos() - captchaUsado.getAciertos());
                 break;
             }
         }
@@ -72,6 +77,8 @@ public class GenerarCaptcha extends HttpServlet {
         } else {
             codigo = generarError();
         }
+        
+        db.guardarCaptchas(listaCaptchas);
         
         request.setAttribute("codigo", codigo);
         request.getRequestDispatcher("generar-captcha.jsp").forward(request, response);
@@ -112,4 +119,13 @@ public class GenerarCaptcha extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    public String getFecha() {
+        Calendar c2 = new GregorianCalendar();
+        
+        String dia = Integer.toString(c2.get(Calendar.DATE));
+        String mes = Integer.toString(c2.get(Calendar.MONTH) + 1);
+        String año = Integer.toString(c2.get(Calendar.YEAR));
+        return año + "-" + mes + "-" + dia; 
+    }
+    
 }

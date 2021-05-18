@@ -34,11 +34,15 @@ public class GuardadoParser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\017\000\002\002\004\000\002\002\006\000\002\003" +
+    "\000\034\000\002\002\004\000\002\002\006\000\002\003" +
     "\005\000\002\003\003\000\002\003\002\000\002\004\005" +
-    "\000\002\005\005\000\002\005\003\000\002\006\005\000" +
+    "\000\002\005\005\000\002\005\003\000\002\005\005\000" +
     "\002\006\005\000\002\006\005\000\002\006\005\000\002" +
-    "\006\005\000\002\006\005\000\002\006\005" });
+    "\006\005\000\002\006\005\000\002\006\005\000\002\006" +
+    "\005\000\002\006\005\000\002\006\005\000\002\007\003" +
+    "\000\002\007\003\000\002\007\003\000\002\007\003\000" +
+    "\002\007\003\000\002\007\003\000\002\007\003\000\002" +
+    "\007\003\000\002\007\003\000\002\007\003" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -46,28 +50,51 @@ public class GuardadoParser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\045\000\004\004\004\001\002\000\004\014\007\001" +
+    "\000\066\000\004\004\004\001\002\000\004\016\007\001" +
     "\002\000\004\002\006\001\002\000\004\002\001\001\002" +
-    "\000\010\015\ufffd\016\011\020\ufffd\001\002\000\006\015" +
-    "\046\020\045\001\002\000\020\005\016\006\021\007\017" +
-    "\010\022\011\015\012\020\013\014\001\002\000\006\015" +
-    "\ufffe\020\ufffe\001\002\000\006\017\ufffa\020\ufffa\001\002" +
-    "\000\004\021\043\001\002\000\004\021\041\001\002\000" +
-    "\004\021\037\001\002\000\004\021\035\001\002\000\004" +
-    "\021\033\001\002\000\004\021\031\001\002\000\004\021" +
-    "\027\001\002\000\006\017\025\020\024\001\002\000\020" +
-    "\005\016\006\021\007\017\010\022\011\015\012\020\013" +
-    "\014\001\002\000\006\015\ufffc\020\ufffc\001\002\000\006" +
-    "\017\ufffb\020\ufffb\001\002\000\004\022\030\001\002\000" +
-    "\006\017\ufff6\020\ufff6\001\002\000\004\022\032\001\002" +
-    "\000\006\017\ufff8\020\ufff8\001\002\000\004\022\034\001" +
-    "\002\000\006\017\ufff4\020\ufff4\001\002\000\004\022\036" +
-    "\001\002\000\006\017\ufff7\020\ufff7\001\002\000\004\022" +
-    "\040\001\002\000\006\017\ufff9\020\ufff9\001\002\000\004" +
-    "\022\042\001\002\000\006\017\ufff5\020\ufff5\001\002\000" +
-    "\004\022\044\001\002\000\006\017\ufff3\020\ufff3\001\002" +
-    "\000\004\016\011\001\002\000\004\002\000\001\002\000" +
-    "\006\015\uffff\020\uffff\001\002" });
+    "\000\010\017\ufffd\020\011\022\ufffd\001\002\000\006\017" +
+    "\067\022\066\001\002\000\024\005\016\006\022\007\020" +
+    "\010\023\011\017\012\021\013\014\014\024\015\015\001" +
+    "\002\000\006\017\ufffe\022\ufffe\001\002\000\006\021\ufffa" +
+    "\022\ufffa\001\002\000\004\023\064\001\002\000\004\023" +
+    "\062\001\002\000\004\023\060\001\002\000\004\023\056" +
+    "\001\002\000\004\023\054\001\002\000\004\023\052\001" +
+    "\002\000\004\023\050\001\002\000\004\023\046\001\002" +
+    "\000\004\023\032\001\002\000\006\021\027\022\026\001" +
+    "\002\000\026\003\031\005\016\006\022\007\020\010\023" +
+    "\011\017\012\021\013\014\014\024\015\015\001\002\000" +
+    "\006\017\ufffc\022\ufffc\001\002\000\006\021\ufffb\022\ufffb" +
+    "\001\002\000\006\021\ufff9\022\ufff9\001\002\000\026\005" +
+    "\037\006\043\007\040\010\044\011\036\012\042\013\033" +
+    "\014\045\015\035\024\041\001\002\000\006\021\uffe8\022" +
+    "\uffe8\001\002\000\006\021\ufff1\022\ufff1\001\002\000\006" +
+    "\021\uffe6\022\uffe6\001\002\000\006\021\uffea\022\uffea\001" +
+    "\002\000\006\021\uffee\022\uffee\001\002\000\006\021\uffec" +
+    "\022\uffec\001\002\000\006\021\uffef\022\uffef\001\002\000" +
+    "\006\021\uffe9\022\uffe9\001\002\000\006\021\uffed\022\uffed" +
+    "\001\002\000\006\021\uffeb\022\uffeb\001\002\000\006\021" +
+    "\uffe7\022\uffe7\001\002\000\026\005\037\006\043\007\040" +
+    "\010\044\011\036\012\042\013\033\014\045\015\035\024" +
+    "\041\001\002\000\006\021\ufff5\022\ufff5\001\002\000\026" +
+    "\005\037\006\043\007\040\010\044\011\036\012\042\013" +
+    "\033\014\045\015\035\024\041\001\002\000\006\021\ufff7" +
+    "\022\ufff7\001\002\000\026\005\037\006\043\007\040\010" +
+    "\044\011\036\012\042\013\033\014\045\015\035\024\041" +
+    "\001\002\000\006\021\ufff3\022\ufff3\001\002\000\026\005" +
+    "\037\006\043\007\040\010\044\011\036\012\042\013\033" +
+    "\014\045\015\035\024\041\001\002\000\006\021\ufff6\022" +
+    "\ufff6\001\002\000\026\005\037\006\043\007\040\010\044" +
+    "\011\036\012\042\013\033\014\045\015\035\024\041\001" +
+    "\002\000\006\021\ufff4\022\ufff4\001\002\000\026\005\037" +
+    "\006\043\007\040\010\044\011\036\012\042\013\033\014" +
+    "\045\015\035\024\041\001\002\000\006\021\ufff8\022\ufff8" +
+    "\001\002\000\026\005\037\006\043\007\040\010\044\011" +
+    "\036\012\042\013\033\014\045\015\035\024\041\001\002" +
+    "\000\006\021\ufff0\022\ufff0\001\002\000\026\005\037\006" +
+    "\043\007\040\010\044\011\036\012\042\013\033\014\045" +
+    "\015\035\024\041\001\002\000\006\021\ufff2\022\ufff2\001" +
+    "\002\000\004\020\011\001\002\000\004\002\000\001\002" +
+    "\000\006\017\uffff\022\uffff\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -75,19 +102,26 @@ public class GuardadoParser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\045\000\004\002\004\001\001\000\002\001\001\000" +
+    "\000\066\000\004\002\004\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\006\003\007\004\011" +
-    "\001\001\000\002\001\001\000\006\005\022\006\012\001" +
+    "\001\001\000\002\001\001\000\006\005\024\006\012\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\004\006\025\001\001\000\002\001\001\000" +
+    "\001\001\000\002\001\001\000\002\001\001\000\004\006" +
+    "\027\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\004\007\033\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\004\004\046\001\001" +
-    "\000\002\001\001\000\002\001\001" });
+    "\000\004\007\046\001\001\000\002\001\001\000\004\007" +
+    "\050\001\001\000\002\001\001\000\004\007\052\001\001" +
+    "\000\002\001\001\000\004\007\054\001\001\000\002\001" +
+    "\001\000\004\007\056\001\001\000\002\001\001\000\004" +
+    "\007\060\001\001\000\002\001\001\000\004\007\062\001" +
+    "\001\000\002\001\001\000\004\007\064\001\001\000\002" +
+    "\001\001\000\004\004\067\001\001\000\002\001\001\000" +
+    "\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -254,6 +288,12 @@ class CUP$GuardadoParser$actions {
                                     case "fallos":
                                         nuevoCaptcha.setFallos(Integer.parseInt(element.getValor()));
                                         break;
+                                    case "datelastuso":
+                                        nuevoCaptcha.setFecha(element.getValor());
+                                        break;
+                                    case "linkredirect":
+                                        nuevoCaptcha.setLinkRedirect(element.getValor());
+                                        break;
                                 }
                             }
                             listaCaptchas.add(nuevoCaptcha);
@@ -290,86 +330,242 @@ class CUP$GuardadoParser$actions {
           return CUP$GuardadoParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // parametros_captcha_p ::= ID PUNTOS ALLCHAR 
+          case 8: // parametros_captcha ::= parametros_captcha COMA error 
+            {
+              ArrayList<Parametro> RESULT =null;
+		int lleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)).left;
+		int lright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)).right;
+		ArrayList<Parametro> l = (ArrayList<Parametro>)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)).value;
+		RESULT = l;
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("parametros_captcha",3, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 9: // parametros_captcha_p ::= ID PUNTOS all_strings 
             {
               Parametro RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
-		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
-		System.out.println("id"); RESULT = new Parametro("id", val.toString().replace("\"", ""));
+		String val = (String)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT = new Parametro("id", val.toString().replace("\"", ""));
               CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("parametros_captcha_p",4, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
             }
           return CUP$GuardadoParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // parametros_captcha_p ::= NOMBRE PUNTOS ALLCHAR 
+          case 10: // parametros_captcha_p ::= NOMBRE PUNTOS all_strings 
             {
               Parametro RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
-		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
-		System.out.println("name"); RESULT = new Parametro("name", val.toString().replace("\"", ""));
+		String val = (String)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT = new Parametro("name", val.toString().replace("\"", ""));
               CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("parametros_captcha_p",4, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
             }
           return CUP$GuardadoParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // parametros_captcha_p ::= LINK PUNTOS ALLCHAR 
+          case 11: // parametros_captcha_p ::= LINK PUNTOS all_strings 
             {
               Parametro RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
-		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
-		System.out.println("link"); RESULT = new Parametro("link", val.toString().replace("\"", ""));
+		String val = (String)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT = new Parametro("link", val.toString().replace("\"", ""));
               CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("parametros_captcha_p",4, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
             }
           return CUP$GuardadoParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // parametros_captcha_p ::= PATH PUNTOS ALLCHAR 
+          case 12: // parametros_captcha_p ::= PATH PUNTOS all_strings 
             {
               Parametro RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
-		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
-		System.out.println("path"); RESULT = new Parametro("path", val.toString().replace("\"", ""));
+		String val = (String)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT = new Parametro("path", val.toString().replace("\"", ""));
               CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("parametros_captcha_p",4, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
             }
           return CUP$GuardadoParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 12: // parametros_captcha_p ::= CANTUSOS PUNTOS ALLCHAR 
+          case 13: // parametros_captcha_p ::= CANTUSOS PUNTOS all_strings 
             {
               Parametro RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
-		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
-		System.out.println("cantusos"); RESULT = new Parametro("cantusos", val.toString().replace("\"", ""));
+		String val = (String)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT = new Parametro("cantusos", val.toString().replace("\"", ""));
               CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("parametros_captcha_p",4, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
             }
           return CUP$GuardadoParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 13: // parametros_captcha_p ::= ACIERTOS PUNTOS ALLCHAR 
+          case 14: // parametros_captcha_p ::= ACIERTOS PUNTOS all_strings 
             {
               Parametro RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
-		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
-		System.out.println("aciertos"); RESULT = new Parametro("aciertos", val.toString().replace("\"", ""));
+		String val = (String)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT = new Parametro("aciertos", val.toString().replace("\"", ""));
               CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("parametros_captcha_p",4, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
             }
           return CUP$GuardadoParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 14: // parametros_captcha_p ::= FALLOS PUNTOS ALLCHAR 
+          case 15: // parametros_captcha_p ::= FALLOS PUNTOS all_strings 
             {
               Parametro RESULT =null;
 		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
-		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
-		System.out.println("fallos"); RESULT = new Parametro("fallos", val.toString().replace("\"", ""));
+		String val = (String)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT = new Parametro("fallos", val.toString().replace("\"", ""));
               CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("parametros_captcha_p",4, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 16: // parametros_captcha_p ::= DATELASTUSO PUNTOS all_strings 
+            {
+              Parametro RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		String val = (String)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT = new Parametro("datelastuso", val.toString().replace("\"", ""));
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("parametros_captcha_p",4, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 17: // parametros_captcha_p ::= LINKREDIRECT PUNTOS all_strings 
+            {
+              Parametro RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		String val = (String)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT = new Parametro("linkredirect", val.toString().replace("\"", ""));
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("parametros_captcha_p",4, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.elementAt(CUP$GuardadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 18: // all_strings ::= ALLCHAR 
+            {
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT=val.toString();
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("all_strings",5, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 19: // all_strings ::= ID 
+            {
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT=val.toString();
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("all_strings",5, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 20: // all_strings ::= NOMBRE 
+            {
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT=val.toString();
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("all_strings",5, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 21: // all_strings ::= LINK 
+            {
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT=val.toString();
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("all_strings",5, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 22: // all_strings ::= PATH 
+            {
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT=val.toString();
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("all_strings",5, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 23: // all_strings ::= CANTUSOS 
+            {
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT=val.toString();
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("all_strings",5, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 24: // all_strings ::= ACIERTOS 
+            {
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT=val.toString();
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("all_strings",5, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 25: // all_strings ::= FALLOS 
+            {
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT=val.toString();
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("all_strings",5, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 26: // all_strings ::= DATELASTUSO 
+            {
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT=val.toString();
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("all_strings",5, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
+            }
+          return CUP$GuardadoParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 27: // all_strings ::= LINKREDIRECT 
+            {
+              String RESULT =null;
+		int valleft = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()).right;
+		Object val = (Object)((java_cup.runtime.Symbol) CUP$GuardadoParser$stack.peek()).value;
+		RESULT=val.toString();
+              CUP$GuardadoParser$result = parser.getSymbolFactory().newSymbol("all_strings",5, ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$GuardadoParser$stack.peek()), RESULT);
             }
           return CUP$GuardadoParser$result;
 

@@ -749,7 +749,7 @@ cuerpo_parametros_link ::=  cuerpo_parametros_link parametros_link
                             | cuerpo_parametros_link error        
                             ;
 
-parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE CORC     {:parametros.add("href");:}
+parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE:link CORC    {:parametros.add("href"); captchaSolicitado.setLinkRedirect(link.toString().replace("\"", "").trim(););:}
                         ;
 
 texto_comillas_complete ::= ALLCHAR:par             {:RESULT = par.toString().replace("\"", "").trim();:}

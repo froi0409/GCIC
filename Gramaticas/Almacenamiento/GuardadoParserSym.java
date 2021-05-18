@@ -8,22 +8,24 @@ package com.froi.gcic.gramaticas.almacenamiento;
 /** CUP generated class containing symbol constants. */
 public class GuardadoParserSym {
   /* terminals */
-  public static final int PUNTOS = 15;
-  public static final int COMA = 14;
-  public static final int LLAC = 13;
-  public static final int LLAA = 12;
-  public static final int FALLOS = 9;
-  public static final int EOF = 0;
+  public static final int LLAC = 15;
+  public static final int ALLCHAR = 18;
+  public static final int DATELASTUSO = 10;
+  public static final int LINKREDIRECT = 11;
+  public static final int LLAA = 14;
   public static final int CANTUSOS = 7;
+  public static final int PUNTOS = 17;
+  public static final int PARC = 13;
+  public static final int PARA = 12;
   public static final int ID = 3;
+  public static final int DBCAPTCHAS = 2;
+  public static final int COMA = 16;
+  public static final int FALLOS = 9;
+  public static final int NOMBRE = 4;
+  public static final int EOF = 0;
   public static final int LINK = 5;
   public static final int error = 1;
-  public static final int ALLCHAR = 16;
-  public static final int PARC = 11;
   public static final int ACIERTOS = 8;
-  public static final int DBCAPTCHAS = 2;
-  public static final int NOMBRE = 4;
-  public static final int PARA = 10;
   public static final int PATH = 6;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -36,6 +38,8 @@ public class GuardadoParserSym {
   "CANTUSOS",
   "ACIERTOS",
   "FALLOS",
+  "DATELASTUSO",
+  "LINKREDIRECT",
   "PARA",
   "PARC",
   "LLAA",

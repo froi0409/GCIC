@@ -42,7 +42,9 @@ public class ManejadorBD {
             codigoGuardado += "\"PATH\" : " + "\"" + element.getPath() + "\",\n";
             codigoGuardado += "\"CANTUSOS\" : " + "\"" + element.getCantidadUsos() + "\",\n";
             codigoGuardado += "\"ACIERTOS\" : " + "\"" + element.getAciertos() + "\",\n";
-            codigoGuardado += "\"FALLOS\" : " + "\"" + element.getFallos() + "\"\n";
+            codigoGuardado += "\"FALLOS\" : " + "\"" + element.getFallos() + "\",\n";
+            codigoGuardado += "\"DATELASTUSO\" : " + "\"" + element.getFecha() + "\",\n";
+            codigoGuardado += "\"LINKREDIRECT\" : " + "\"" + element.getLinkRedirect()+ "\"\n";
             codigoGuardado += "}";
             cont++;
         }
