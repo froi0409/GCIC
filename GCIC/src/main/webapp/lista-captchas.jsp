@@ -8,11 +8,12 @@
 <%@page import="com.froi.gcic.entidades.Captcha"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <%@include file = "links.html"%>
-        <title>Generador de Captchas - GCIC</title>
+        <title>Lista Captchas</title>
     </head>
     <body>
         
