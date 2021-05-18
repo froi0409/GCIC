@@ -4,6 +4,7 @@ import com.froi.gcic.entidades.Advertencia;
 import com.froi.gcic.entidades.Captcha;
 import com.froi.gcic.entidades.Identificador;
 import com.froi.gcic.entidades.Parametro;
+import com.froi.gcic.entidades.ParametroReconocido;
 import com.froi.gcic.manejodesimbolos.Dato;
 import com.froi.gcic.manejodesimbolos.OperacionesBooleanas;
 import com.froi.gcic.manejodesimbolos.Simbolo;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 import java_cup.runtime.*;
 import java_cup.runtime.XMLElement;
 
@@ -29,6 +31,7 @@ parser code {:
     private ArrayList<String> parametros;
     private ArrayList<Identificador> procesos;
     private ArrayList<Identificador> identificadores;
+    private ArrayList<ParametroReconocido> parametrosReconocidos;
     private Captcha captchaSolicitado;
     private TablaDeSimbolos tablaSimbolos;
     private TablasDeOperaciones tablaOperaciones;
@@ -65,6 +68,7 @@ parser code {:
         this.parametros = new ArrayList<>();
         this.procesos = new ArrayList<>();
         this.identificadores = new ArrayList<>();
+        this.parametrosReconocidos = new ArrayList<>();
         this.procesoActual = "";
         this.insertCompletoPorProceso = "";
         this.codigoScripting = "";
@@ -72,6 +76,7 @@ parser code {:
         this.cantOnLoad = 0;
         this.procesoRepetido = 0;
         this.tablaSimbolos = captchaSolicitado.getTablaSimbolos();
+        inicializarParametrosReconocidos();
     }
     public void report_error(String message, Object info) {
         System.out.println("reporterror");;
@@ -89,17 +94,171 @@ parser code {:
         errorNuevo.setTexto(s.value.toString());
         //Agregamos los simbolos que se esperan
         String solucion = "";
-        for(int i = 0; i < expected_token_ids().size(); i++) {
+        ArrayList<String> valoresEsperados = getValoresEsperados(expected_token_ids());
+        for(int i = 0; i < valoresEsperados.size(); i++) {
             if(i != 0) {
                 solucion += ",";
             }
-            solucion += " " + symbl_name_from_id(expected_token_ids().get(i));
+            solucion += " " + valoresEsperados.get(i);
         }
         errorNuevo.setSolucion(solucion);
         listaErrores.add(errorNuevo);
     }
     protected int error_sync_size() {
         return 1;
+    }
+
+    public ArrayList<String> getValoresEsperados(List<Integer> tokensEsperados) {
+        ArrayList<String> auxiliar = new ArrayList<>();
+        for(Integer element: tokensEsperados) {
+            for(ParametroReconocido param: parametrosReconocidos) {
+                if(element == param.getNumero()) {
+                    auxiliar.add(param.getValor());
+                    break;
+                }
+            }
+        }
+        return auxiliar;
+    }
+
+    public void inicializarParametrosReconocidos() {
+        parametrosReconocidos.add(new ParametroReconocido(132, "IDENTIFICADOR"));
+        parametrosReconocidos.add(new ParametroReconocido(51, "aqua"));
+        parametrosReconocidos.add(new ParametroReconocido(60, "left"));
+        parametrosReconocidos.add(new ParametroReconocido(23, "font-family"));
+        parametrosReconocidos.add(new ParametroReconocido(52, "VALOR HEXADECIMAL"));
+        parametrosReconocidos.add(new ParametroReconocido(118, "/"));
+        parametrosReconocidos.add(new ParametroReconocido(108, "<="));
+        parametrosReconocidos.add(new ParametroReconocido(107, "<"));
+        parametrosReconocidos.add(new ParametroReconocido(69, "column"));
+        parametrosReconocidos.add(new ParametroReconocido(16, "C_H1"));
+        parametrosReconocidos.add(new ParametroReconocido(25, "type"));
+        parametrosReconocidos.add(new ParametroReconocido(61, "right"));
+        parametrosReconocidos.add(new ParametroReconocido(29, "rows"));
+        parametrosReconocidos.add(new ParametroReconocido(70, "ASC"));
+        parametrosReconocidos.add(new ParametroReconocido(67, "checkbox"));
+        parametrosReconocidos.add(new ParametroReconocido(27, "name"));
+        parametrosReconocidos.add(new ParametroReconocido(68, "row"));
+        parametrosReconocidos.add(new ParametroReconocido(136, "TEXTO PLANO"));
+        parametrosReconocidos.add(new ParametroReconocido(41, "maroon"));
+        parametrosReconocidos.add(new ParametroReconocido(59, "sans-serif"));
+        parametrosReconocidos.add(new ParametroReconocido(81, "INIT"));
+        parametrosReconocidos.add(new ParametroReconocido(40, "blue"));
+        parametrosReconocidos.add(new ParametroReconocido(34, "alt"));
+        parametrosReconocidos.add(new ParametroReconocido(50, "yellow"));
+        parametrosReconocidos.add(new ParametroReconocido(45, "fuchsia"));
+        parametrosReconocidos.add(new ParametroReconocido(47, "white"));
+        parametrosReconocidos.add(new ParametroReconocido(119, "MENOS UNARIO"));
+        parametrosReconocidos.add(new ParametroReconocido(131, "\'"));
+        parametrosReconocidos.add(new ParametroReconocido(73, "LETIMPAR_NUM"));
+        parametrosReconocidos.add(new ParametroReconocido(93, "integer"));
+        parametrosReconocidos.add(new ParametroReconocido(36, "black"));
+        parametrosReconocidos.add(new ParametroReconocido(109, ">"));
+        parametrosReconocidos.add(new ParametroReconocido(43, "gray"));
+        parametrosReconocidos.add(new ParametroReconocido(105, "=="));
+        parametrosReconocidos.add(new ParametroReconocido(53, "NUMERO MEDIDO EN PIXELES"));
+        parametrosReconocidos.add(new ParametroReconocido(92, "PROCESS_NOBREPROCESO"));
+        parametrosReconocidos.add(new ParametroReconocido(113, "!"));
+        parametrosReconocidos.add(new ParametroReconocido(103, "CARACTER SIMPLE"));
+        parametrosReconocidos.add(new ParametroReconocido(102, "false"));
+        parametrosReconocidos.add(new ParametroReconocido(20, "background"));
+        parametrosReconocidos.add(new ParametroReconocido(62, "center"));
+        parametrosReconocidos.add(new ParametroReconocido(64, "text"));
+        parametrosReconocidos.add(new ParametroReconocido(89, "THENWHILE"));
+        parametrosReconocidos.add(new ParametroReconocido(84, "THEN"));
+        parametrosReconocidos.add(new ParametroReconocido(48, "purple"));
+        parametrosReconocidos.add(new ParametroReconocido(32, "width"));
+        parametrosReconocidos.add(new ParametroReconocido(74, "REVERSE"));
+        parametrosReconocidos.add(new ParametroReconocido(124, ")"));
+        parametrosReconocidos.add(new ParametroReconocido(129, ";"));
+        parametrosReconocidos.add(new ParametroReconocido(123, "("));
+        parametrosReconocidos.add(new ParametroReconocido(30, "class"));
+        parametrosReconocidos.add(new ParametroReconocido(77, "ALERT_INFO"));
+        parametrosReconocidos.add(new ParametroReconocido(10, "C_SELECT"));
+        parametrosReconocidos.add(new ParametroReconocido(65, "number"));
+        parametrosReconocidos.add(new ParametroReconocido(9, "C_TEXTAREA"));
+        parametrosReconocidos.add(new ParametroReconocido(133, "\',\'"));
+        parametrosReconocidos.add(new ParametroReconocido(99, "NUMERO ENTERO"));
+        parametrosReconocidos.add(new ParametroReconocido(79, "REDIRECT"));
+        parametrosReconocidos.add(new ParametroReconocido(76, "NUM_ALEATORIO"));
+        parametrosReconocidos.add(new ParametroReconocido(87, "HUNTIL"));
+        parametrosReconocidos.add(new ParametroReconocido(101, "true"));
+        parametrosReconocidos.add(new ParametroReconocido(120, "="));
+        parametrosReconocidos.add(new ParametroReconocido(37, "olive"));
+        parametrosReconocidos.add(new ParametroReconocido(88, "WHILE"));
+        parametrosReconocidos.add(new ParametroReconocido(28, "cols"));
+        parametrosReconocidos.add(new ParametroReconocido(54, "NUMERO MEDIDO EN PORCENTAJE"));
+        parametrosReconocidos.add(new ParametroReconocido(138, "TEXTO ENTRE COMILLAS SIN RESTRICCIONES"));
+        parametrosReconocidos.add(new ParametroReconocido(96, "char"));
+        parametrosReconocidos.add(new ParametroReconocido(94, "decimal"));
+        parametrosReconocidos.add(new ParametroReconocido(95, "boolean"));
+        parametrosReconocidos.add(new ParametroReconocido(63, "justify"));
+        parametrosReconocidos.add(new ParametroReconocido(24, "text-align"));
+        parametrosReconocidos.add(new ParametroReconocido(8, "C_INPUT"));
+        parametrosReconocidos.add(new ParametroReconocido(137, "CADENA DE CARACTERES ENTRE COMILLAS SIMPLES"));
+        parametrosReconocidos.add(new ParametroReconocido(2, "C_GCIC"));
+        parametrosReconocidos.add(new ParametroReconocido(12, "C_DIV"));
+        parametrosReconocidos.add(new ParametroReconocido(141, "CUALQUIER CARACTER"));
+        parametrosReconocidos.add(new ParametroReconocido(130, ":"));
+        parametrosReconocidos.add(new ParametroReconocido(42, "navy"));
+        parametrosReconocidos.add(new ParametroReconocido(114, "</"));
+        parametrosReconocidos.add(new ParametroReconocido(17, "C_P"));
+        parametrosReconocidos.add(new ParametroReconocido(85, "ELSE"));
+        parametrosReconocidos.add(new ParametroReconocido(126, "]"));
+        parametrosReconocidos.add(new ParametroReconocido(55, "Courier"));
+        parametrosReconocidos.add(new ParametroReconocido(125, "["));
+        parametrosReconocidos.add(new ParametroReconocido(140, "NUMERO ENTRE COMILLAS"));
+        parametrosReconocidos.add(new ParametroReconocido(5, "C_LINK"));
+        parametrosReconocidos.add(new ParametroReconocido(57, "Arial"));
+        parametrosReconocidos.add(new ParametroReconocido(115, "+"));
+        parametrosReconocidos.add(new ParametroReconocido(15, "C_BUTTON"));
+        parametrosReconocidos.add(new ParametroReconocido(86, "REPEAT"));
+        parametrosReconocidos.add(new ParametroReconocido(128, "}"));
+        parametrosReconocidos.add(new ParametroReconocido(7, "C_SPAM"));
+        parametrosReconocidos.add(new ParametroReconocido(127, "{"));
+        parametrosReconocidos.add(new ParametroReconocido(56, "Verdana"));
+        parametrosReconocidos.add(new ParametroReconocido(58, "Geneva"));
+        parametrosReconocidos.add(new ParametroReconocido(18, "C_SCRIPTING"));
+        parametrosReconocidos.add(new ParametroReconocido(31, "src"));
+        parametrosReconocidos.add(new ParametroReconocido(134, "IDENTIFICADOR PARA ETIQUETA VALIDO"));
+        parametrosReconocidos.add(new ParametroReconocido(104, "VALOR VALIDO PARA STRINGS"));
+        parametrosReconocidos.add(new ParametroReconocido(6, "C_BODY"));
+        parametrosReconocidos.add(new ParametroReconocido(19, "href"));
+        parametrosReconocidos.add(new ParametroReconocido(4, "C_TITLE"));
+        parametrosReconocidos.add(new ParametroReconocido(111, "||"));
+        parametrosReconocidos.add(new ParametroReconocido(78, "EXIT"));
+        parametrosReconocidos.add(new ParametroReconocido(116, "-"));
+        parametrosReconocidos.add(new ParametroReconocido(83, "IF"));
+        parametrosReconocidos.add(new ParametroReconocido(71, "DESC"));
+        parametrosReconocidos.add(new ParametroReconocido(26, "id"));
+        parametrosReconocidos.add(new ParametroReconocido(21, "color"));
+        parametrosReconocidos.add(new ParametroReconocido(91, "ON_LOAD"));
+        parametrosReconocidos.add(new ParametroReconocido(3, "C_HEAD"));
+        parametrosReconocidos.add(new ParametroReconocido(82, "END"));
+        parametrosReconocidos.add(new ParametroReconocido(100, "NUMERO DECIMAL VALIDO"));
+        parametrosReconocidos.add(new ParametroReconocido(49, "silver"));
+        parametrosReconocidos.add(new ParametroReconocido(117, "*"));
+        parametrosReconocidos.add(new ParametroReconocido(44, "lime"));
+        parametrosReconocidos.add(new ParametroReconocido(13, "C_IMG"));
+        parametrosReconocidos.add(new ParametroReconocido(22, "font-size"));
+        parametrosReconocidos.add(new ParametroReconocido(66, "radio"));
+        parametrosReconocidos.add(new ParametroReconocido(33, "height"));
+        parametrosReconocidos.add(new ParametroReconocido(14, "C_BR"));
+        parametrosReconocidos.add(new ParametroReconocido(39, "red"));
+        parametrosReconocidos.add(new ParametroReconocido(98, "@global"));
+        parametrosReconocidos.add(new ParametroReconocido(135, "VALOR ALFANUMERICO"));
+        parametrosReconocidos.add(new ParametroReconocido(75, "CARACTER_ALEATORIO"));
+        parametrosReconocidos.add(new ParametroReconocido(106, "!="));
+        parametrosReconocidos.add(new ParametroReconocido(11, "C_OPTION"));
+        parametrosReconocidos.add(new ParametroReconocido(90, "INSERT"));
+        parametrosReconocidos.add(new ParametroReconocido(97, "string"));
+        parametrosReconocidos.add(new ParametroReconocido(35, "onClick"));
+        parametrosReconocidos.add(new ParametroReconocido(112, "&&"));
+        parametrosReconocidos.add(new ParametroReconocido(139, "CADENA DE CARACTERES ENTRE COMILLAS SIN ESPACIOS"));
+        parametrosReconocidos.add(new ParametroReconocido(72, "LETPAR_NUM"));
+        parametrosReconocidos.add(new ParametroReconocido(110, ">="));
+        parametrosReconocidos.add(new ParametroReconocido(80, "getElementById"));
+        parametrosReconocidos.add(new ParametroReconocido(46, "green"));
     }
 
     public void agregarErrorSemantico(String mensaje) {
@@ -511,6 +670,7 @@ texto ::=   ALFANUMERICO:ent                {:RESULT=ent.toString();:}
             | D_DECIMAL:ent                 {:RESULT=ent.toString();:}
             | TRUE:ent                      {:RESULT=ent.toString();:}
             | FALSE:ent                     {:RESULT=ent.toString();:}
+            | BARRA:ent                     {:RESULT=ent.toString();:}
             | D_CHAR:ent                    {:RESULT=ent.toString();:}
             | D_STRING:ent                  {:RESULT=ent.toString();:}
             | ALLCHAR_COMSIMP:ent           {:RESULT=ent.toString();:}
@@ -1363,7 +1523,7 @@ ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_
 /* CONDICION */
 condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.igualIgual(dato1, dato2);
-                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " == " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
+                                                                                System.out.println(dato1.getValor() + " == " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1371,6 +1531,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     DIFERENTE_IGUAL     condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.diferenteIgual(dato1, dato2);
+                                                                                System.out.println(dato1.getValor() + " != " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1378,6 +1539,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     MENOR_QUE           condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.menorQue(dato1, dato2);
+                                                                                System.out.println(dato1.getValor() + " < " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1385,6 +1547,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     MENOR_IGUAL         condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.menorIgual(dato1, dato2);
+                                                                                System.out.println(dato1.getValor() + " <= " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1392,7 +1555,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     MAYOR_QUE           condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.mayorQue(dato1, dato2);
-                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " > " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
+                                                                                System.out.println(dato1.getValor() + " > " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1400,6 +1563,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     MAYOR_IGUAL         condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.mayorIgual(dato1, dato2);
+                                                                                System.out.println(dato1.getValor() + " >= " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1407,6 +1571,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | NOT           condicion:dato                              {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.not(dato);
+                                                                                System.out.println("! " + dato.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + datoleft + " - Columna " + datoright);
                                                                                 }
@@ -1414,7 +1579,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     AND                 condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.and(dato1, dato2);
-                                                                                System.out.println("\n" + dato1.getTipo() + ":" + dato1.getValor() + " && " + dato2.getTipo() + ":" + dato2.getValor() + "\n");
+                                                                                System.out.println(dato1.getValor() + " && " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1422,6 +1587,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     OR                  condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.or(dato1, dato2);
+                                                                                System.out.println(dato1.getValor() + " || " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1430,6 +1596,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                 /* operaciones aritméticas */
                 | RESTA         condicion:dato                              {:
                                                                                 Dato datoMultiplicado = tablaOperaciones.menosUnario(dato);
+                                                                                System.out.println("-" + dato.getValor());
                                                                                 if(datoMultiplicado.getTipo().equals(error)) {
                                                                                     if(datoMultiplicado.getValor() != null) {
                                                                                         agregarErrorSemantico("El dato " + dato.getValor() + " no es compatible para operar de manera unaria.\nConflicto en Linea " + datoleft + " - Columna " + datoright);
@@ -1443,6 +1610,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}%prec UNARY
                 | condicion:dato1     SUMA                condicion:dato2   {:
                                                                                 Dato datoSumado = tablaOperaciones.sumar(dato1, dato2);
+                                                                                System.out.println(dato1.getValor() + " + " + dato2.getValor());
                                                                                 if(datoSumado.getTipo().equals(error)) {
                                                                                     if(datoSumado.getValor() != null) {
                                                                                         agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para sumar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
@@ -1456,6 +1624,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     RESTA               condicion:dato2   {:
                                                                                 Dato datoRestado = tablaOperaciones.restar(dato1, dato2);
+                                                                                System.out.println(dato1.getValor() + " - " + dato2.getValor());
                                                                                 if(datoRestado.getTipo().equals(error)) {
                                                                                     if(datoRestado.getValor() != null) {
                                                                                         agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para restar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
@@ -1469,6 +1638,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     MULTIPLICACION      condicion:dato2   {:
                                                                                 Dato datoMultiplicado = tablaOperaciones.multiplicar(dato1, dato2);
+                                                                                System.out.println(dato1.getValor() + " * " + dato2.getValor());
                                                                                 if(datoMultiplicado.getTipo().equals(error)) {
                                                                                     if(datoMultiplicado.getValor() != null) {
                                                                                         agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para multiplicar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
@@ -1482,6 +1652,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     DIVISION            condicion:dato2   {:
                                                                                 Dato datoDividido = tablaOperaciones.dividir(dato1, dato2);
+                                                                                System.out.println(dato1.getValor() + " / " + dato2.getValor());
                                                                                 if(datoDividido.getTipo().equals(error)) {
                                                                                     if(datoDividido.getValor() != null) {
                                                                                         agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para dividir.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
@@ -1533,6 +1704,7 @@ valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toS
                     | ALLCHARNOSPACE:val    {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
                     | D_STRING:val          {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
                     | ID_ETIQUETA:val       {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | DIGITO_COM:val       {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
                     | TRUE:val              {:RESULT = new Dato(booleano, "true");:}
                     | FALSE:val             {:RESULT = new Dato(booleano, "false");:}
                     | GETBYID PARA ID_ETIQUETA:val PARC     {:
