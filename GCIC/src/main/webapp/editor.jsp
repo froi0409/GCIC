@@ -4,6 +4,10 @@
     Author     : froi-pc
 --%>
 
+<%@page import="com.froi.gcic.manejodesimbolos.Simbolo"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.froi.gcic.manejodesimbolos.TablaDeSimbolos"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -17,6 +21,7 @@
         <%
         String entrada = request.getAttribute("entrada").toString();
         String salida = request.getAttribute("salida").toString();
+        TablaDeSimbolos tabla = (TablaDeSimbolos) request.getAttribute("tabla");
         if(entrada == null) {
             entrada = "";
         }
@@ -75,6 +80,39 @@
             <div class="col-1"></div>
         </div>
         <br><br>
+        <!-- A continuación se genera la tabla de simbolos -->
+        <% if(tabla != null) {%>
+        <div style=" margin-left: 5%; margin-right: 5%">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="table-secondary">
+                    <th scope="col">Identificador</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Modo</th>
+                    <th scope="col">Procedimiento</th>
+                    <th scope="col">No. Ejecucion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <%
+                    ArrayList<Simbolo> tablaDeSimbolos = tabla.getTablaSimbolos();
+                    for(Simbolo element: tablaDeSimbolos){
+                        out.println("<tr>");
+                        out.println("<td>" + element.getIdentificador() + "</td>");
+                        out.println("<td>" + element.getTipo() + "</td>");
+                        out.println("<td>" + element.getValorActual() + "</td>");
+                        out.println("<td>" + element.getModo() + "</td>");
+                        out.println("<td>" + element.getProcedimiento() + "</td>");
+                        out.println("<td>" + element.getNumeroEjecucion() + "</td>");
+                        out.println("</tr>");
+                    }
+                    %>
+                </tbody>
+            </table>
+        </div>
+        <br><br>
+        <%}%>
         <%@include file = "scripts.html"%>
     </body>
 </html>

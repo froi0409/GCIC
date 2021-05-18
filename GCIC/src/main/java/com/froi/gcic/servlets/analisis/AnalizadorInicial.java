@@ -58,6 +58,7 @@ public class AnalizadorInicial extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setAttribute("tabla", null);
         request.setAttribute("entrada", "");
         request.setAttribute("salida", "");
         request.getRequestDispatcher("editor.jsp").forward(request, response);

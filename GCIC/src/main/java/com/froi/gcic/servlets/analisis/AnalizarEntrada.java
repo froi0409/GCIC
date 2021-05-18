@@ -10,6 +10,7 @@ import com.froi.gcic.entidades.Captcha;
 import com.froi.gcic.gramaticas.etiquetado.EtiquetadoLexer;
 import com.froi.gcic.gramaticas.etiquetado.EtiquetadoParser;
 import com.froi.gcic.herramientas.ManejadorBD;
+import com.froi.gcic.manejodesimbolos.TablaDeSimbolos;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -77,7 +78,7 @@ public class AnalizarEntrada extends HttpServlet {
         for(Captcha captcha : listaCaptchas) {
             System.out.println("El captcha " + captcha.getId());
         }
-        
+        TablaDeSimbolos tabla = null;
         try {
             etiquetadoParser.parse();
             
@@ -99,6 +100,7 @@ public class AnalizarEntrada extends HttpServlet {
                     captcha.setLink(generarLink(captcha.getId()));
                     captcha.setPath("Captchas/Codigo/" + identificador + ".html");
                     salida += "Link del Captcha: " + captcha.getLink();
+                    tabla = captcha.getTablaSimbolos();
                     listaCaptchas.add(captcha);
                 } catch (Exception e) {
                     System.err.println("Error al escribir HTML del captcha: " + e.getMessage());
@@ -114,6 +116,7 @@ public class AnalizarEntrada extends HttpServlet {
         
         db.guardarCaptchas(listaCaptchas);
         
+        request.setAttribute("tabla", tabla);
         request.setAttribute("salida", salida);
         request.setAttribute("entrada", entrada);
         request.getRequestDispatcher("editor.jsp").forward(request, response);
