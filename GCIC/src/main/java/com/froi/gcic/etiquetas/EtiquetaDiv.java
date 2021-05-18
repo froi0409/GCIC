@@ -43,19 +43,28 @@ public class EtiquetaDiv extends EtiquetaTextual {
     
     @Override
     public void setByString(Parametro parametro, ArrayList<Advertencia> listaErrores) {
-        
+        switch(parametro.getNombre()) {
+            case "class":
+                setClase(parametro.getValor());
+                break;
+            case "background":
+                setBackground(parametro.getValor());
+                break;
+        }
     }
     
     @Override
     public String generarParametros() {
         String parametros = "";
+        parametros += " class=\"" + clase + "\"";
+        parametros += " style=\" background-color: " + background + ";\"";
         return parametros;
     }
     
     @Override
     public String generarHTML() {
         String codigo = "";
-        codigo += "<div>\n";
+        codigo += "<div" + generarParametros() + ">\n";
         for(Etiqueta element: getEtiquetasInternas()) {
             codigo += element.generarHTML() + "\n";
         }
