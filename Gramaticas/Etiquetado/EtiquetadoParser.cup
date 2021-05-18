@@ -48,6 +48,7 @@ parser code {:
     private String procesoActual;
     private String codigoScripting;
     private String insertCompletoPorProceso;
+    private String condicionalAuxiliar = "";
     private int cantOnLoad;
     private int totalOnLoad;
     private int procesoRepetido;
@@ -441,14 +442,14 @@ non terminal String parametros_etiquetas_texuales_p;
 /* NO TERMINALES ESPECIALES DEL SCRIPTING */
 non terminal String funciones_especiales;
 non terminal funciones_strings;
-non terminal condicion_if;
+non terminal String condicion_if;
 
 non terminal ciclo_repeat;
 non terminal repetir_declaracion, repetir_limite, igual_repeat;
 
 non terminal ciclo_while;
-non terminal condicion_else_if, parametros_else_if;
-non terminal condicion_else;
+non terminal String condicion_else_if, parametros_else_if;
+non terminal String condicion_else;
 non terminal String asignacion_valor;
 
 non terminal Dato condicion;
@@ -505,6 +506,9 @@ non terminal apertura_if;
 non terminal apertura_if_complete;
 
 non terminal String apertura_proceso;
+
+non terminal String p_suma, p_resta, p_multiplicacion, p_division, p_not, p_or, p_and, p_menor, p_mayor, p_menor_igual, p_mayor_igual, p_igual_igual, p_diferente_igual, p_para, p_parc;
+non terminal String p_if, p_then, p_reverse, p_letimpar_num, p_letpar_num, p_desc, p_asc, p_getbyid, p_id_etiqueta;
 
 /* CIERRES */
 //non terminal cierre_gcic;
@@ -1139,9 +1143,9 @@ cuerpo_parametros_proceso ::=   cuerpo_parametros_proceso:l parametros_proceso:p
 parametros_proceso ::=  parametros_proceso_simples:par      {:
                                                                 RESULT = par + "\n";
                                                             :}
-                        | condicion_if                      {:RESULT = "IF";:}
-                        | ciclo_repeat                      {:RESULT = "REPEAT";:}
-                        | ciclo_while                       {:RESULT = "WHILE";:}
+                        | condicion_if:cif                      {:RESULT = cif;:}
+                        | ciclo_repeat                      {:RESULT = "";:}
+                        | ciclo_while                       {:RESULT = "";:}
                         | error PUNTO_COMA
                         ;
 
@@ -1150,7 +1154,7 @@ parametros_proceso_simples ::=  variables:var PUNTO_COMA                {:RESULT
                                 | funciones_especiales:fun PUNTO_COMA   {:RESULT = fun;:}
                                 ;
 
-funciones_especiales ::=    funciones_strings
+funciones_especiales ::=    funciones_strings                           {:RESULT = "";:}
                             | CARACTER_ALEATORIO PARA PARC              {:RESULT = "";:}
                             | NUM_ALEATORIO PARA PARC                   {:RESULT = "";:}
                             | ALERT_INFO:ini PARA condicion:con PARC    {:
@@ -1353,10 +1357,13 @@ asignacion_valor ::=    cuerpo_identificadores:ids IGUAL condicion:con      {:
                                                                                 if(comprobante) {
                                                                                     int contador = 0;
                                                                                     for(String id: ids) {
+                                                                                        System.out.println("hay " + contador + " ids");
                                                                                         if(contador > 0) {
                                                                                             variablesImpresas += ", ";
                                                                                         }
+                                                                                        System.out.println("antes (se usa id) " + id);
                                                                                         variablesImpresas += id;
+                                                                                        System.out.println("despues (se usa variablesimp) " + variablesImpresas);
                                                                                         if(con.getTipo().equals(string)) {
                                                                                             if(con.getValor().contains("getElementById"))
                                                                                                 variablesImpresas += " = " + con.getValor();
@@ -1367,7 +1374,8 @@ asignacion_valor ::=    cuerpo_identificadores:ids IGUAL condicion:con      {:
                                                                                         }
                                                                                         contador++;
                                                                                     }
-                                                                                    variablesImpresas = ";";
+                                                                                    variablesImpresas += ";";
+                                                                                    System.out.println("varimpresas " + variablesImpresas);
                                                                                 }
                                                                                 RESULT = variablesImpresas;
                                                                             :}
@@ -1383,59 +1391,70 @@ valores_de_asignacion ::=   expresion_aritmetica
                             ;
 */
 /* CONDICION IF */
-condicion_if ::=    apertura_if_complete  cuerpo_parametros_proceso PUNTOS LLAC END condicion_else_if condicion_else
-                    | apertura_if parametros_proceso_simples condicion_else_if condicion_else
+p_if ::=    IF  {:condicionalAuxiliar = "";:}
+            ;
+
+p_then ::=  THEN {:RESULT = condicionalAuxiliar;:}
+            ;
+
+condicion_if ::=    apertura_if_complete:aic  cuerpo_parametros_proceso:crp PUNTOS LLAC END condicion_else_if:ei condicion_else:e       {:RESULT = aic + crp + "\n}\n" + ei + e;:}
+                    | apertura_if:aic parametros_proceso_simples:pps condicion_else_if:ei condicion_else:e                              {:RESULT = aic + pps + "\n}\n" + ei + e;:}
                     ;
 
-apertura_if_complete ::=    IF PARA condicion:con PARC THEN INIT LLAA PUNTOS        {:System.out.println("\n\nCondicion: " + con.toString() + "\n");:}
-                            | IF PARA error PARC THEN INIT LLAA PUNTOS
-                            | error PARA condicion PARC THEN INIT LLAA PUNTOS   {:listaErrores.get(listaErrores.size()-1).setSolucion("IF");:}
-                            | IF error condicion PARC THEN INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("(");:}
-                            | IF PARA condicion error THEN INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion(")");:}
-                            | IF PARA condicion PARC error INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("THEN");:}
-                            | IF PARA condicion PARC THEN error LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("INIT");:}
-                            | IF PARA condicion PARC THEN INIT error PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("{");:}
-                            | IF PARA condicion PARC THEN INIT LLAA error       {:listaErrores.get(listaErrores.size()-1).setSolucion(":");:}
+apertura_if_complete ::=    p_if PARA condicion:con PARC p_then:thn INIT LLAA PUNTOS        {:RESULT = "if (" + thn.toString() + ") {\n";:}
+                            | p_if PARA error PARC p_then INIT LLAA PUNTOS
+                            | error PARA condicion PARC p_then INIT LLAA PUNTOS   {:listaErrores.get(listaErrores.size()-1).setSolucion("IF");:}
+                            | p_if error condicion PARC p_then INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("(");:}
+                            | p_if PARA condicion error p_then INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion(")");:}
+                            | p_if PARA condicion PARC error INIT LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("THEN");:}
+                            | p_if PARA condicion PARC p_then error LLAA PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("INIT");:}
+                            | p_if PARA condicion PARC p_then INIT error PUNTOS     {:listaErrores.get(listaErrores.size()-1).setSolucion("{");:}
+                            | p_if PARA condicion PARC p_then INIT LLAA error       {:listaErrores.get(listaErrores.size()-1).setSolucion(":");:}
                             ;
 
-apertura_if ::=     IF PARA condicion PARC THEN
+apertura_if ::=     p_if PARA condicion PARC p_then:thn     {:RESULT = "if(" + thn.toString() + ") {\n";:}
                     ;
 
-condicion_else_if ::=   condicion_else_if parametros_else_if
-                        | 
+condicion_else_if ::=   condicion_else_if:cei parametros_else_if:p  {:RESULT = cei + p + "\n";:}
+                        |                                           {:RESULT = "";:}
                         ;
 
-parametros_else_if ::=  ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
-                        | ELSE IF PARA condicion PARC THEN parametros_proceso_simples
+parametros_else_if ::=  ELSE p_if PARA condicion PARC p_then:thn INIT LLAA PUNTOS cuerpo_parametros_proceso:crp PUNTOS LLAC END {:RESULT = "else if (" + thn + ") {\n" + crp + "\n}\n";:}
+                        | ELSE p_if PARA condicion PARC p_then:thn parametros_proceso_simples:pps                               {:RESULT = "else if (" + thn + ") {\n" + pps + "\n}\n";:}
                         //errores para else if complete
-                        | ELSE error PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
-                        | ELSE IF error condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
-                        | ELSE IF PARA error PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
-                        | ELSE IF PARA condicion error THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
-                        | ELSE IF PARA condicion PARC error INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
-                        | ELSE IF PARA condicion PARC THEN error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
-                        | ELSE IF PARA condicion PARC THEN INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
-                        | ELSE IF PARA condicion PARC THEN INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END
-                        | ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
-                        | ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
-                        | ELSE IF PARA condicion PARC THEN INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
+                        | ELSE error PARA condicion PARC p_then INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE p_if error condicion PARC p_then INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE p_if PARA error PARC p_then INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE p_if PARA condicion error p_then INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE p_if PARA condicion PARC error INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE p_if PARA condicion PARC p_then error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE p_if PARA condicion PARC p_then INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE p_if PARA condicion PARC p_then INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END
+                        | ELSE p_if PARA condicion PARC p_then INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END
+                        | ELSE p_if PARA condicion PARC p_then INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END
+                        | ELSE p_if PARA condicion PARC p_then INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error
                         //errores para else if simple
-                        | ELSE error PARA condicion PARC THEN parametros_proceso_simples
-                        | ELSE IF error condicion PARC THEN parametros_proceso_simples
-                        | ELSE IF PARA error PARC THEN parametros_proceso_simples
-                        | ELSE IF PARA condicion error THEN parametros_proceso_simples
-                        | ELSE IF PARA condicion PARC error parametros_proceso_simples
+                        | ELSE error PARA condicion PARC p_then parametros_proceso_simples
+                        | ELSE p_if error condicion PARC p_then parametros_proceso_simples
+                        | ELSE p_if PARA error PARC p_then parametros_proceso_simples
+                        | ELSE p_if PARA condicion error p_then parametros_proceso_simples
+                        | ELSE p_if PARA condicion PARC error parametros_proceso_simples
                         ;
 
-condicion_else ::=  ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END                        
-                    | ELSE parametros_proceso_simples
-                    |
-                    | ELSE error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END 
-                    | ELSE INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END   
-                    | ELSE INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END   
-                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END   
-                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END   
-                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error   
+p_else ::=  ELSE    {:condicionalAuxiliar = "";:}
+            ;
+
+
+
+condicion_else ::=  ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso:cpp PUNTOS LLAC END     {:RESULT = "else {\n" + cpp + "\n}\n";:}                        
+                    | ELSE parametros_proceso_simples:pps                                   {:RESULT = "else {\n" + pps + "\n}\n";:}    
+                    |                                                                       {:RESULT = "";:}
+                    | ELSE error LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END      {:RESULT = "";:}
+                    | ELSE INIT error PUNTOS cuerpo_parametros_proceso PUNTOS LLAC END      {:RESULT = "";:}
+                    | ELSE INIT LLAA error cuerpo_parametros_proceso PUNTOS LLAC END        {:RESULT = "";:}
+                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso error LLAC END        {:RESULT = "";:}
+                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS error END      {:RESULT = "";:}
+                    | ELSE INIT LLAA PUNTOS cuerpo_parametros_proceso PUNTOS LLAC error     {:RESULT = "";:}
                     ;
 
 /* CICLO REPEAT */
@@ -1522,7 +1541,7 @@ ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_
                     ;
 
 /* CONDICION */
-condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
+condicion ::=   condicion:dato1       p_igual_igual       condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.igualIgual(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " == " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
@@ -1530,7 +1549,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 }
                                                                                 RESULT = datoCondicionado;
                                                                             :}
-                | condicion:dato1     DIFERENTE_IGUAL     condicion:dato2   {:
+                | condicion:dato1     p_diferente_igual   condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.diferenteIgual(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " != " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
@@ -1538,7 +1557,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 }
                                                                                 RESULT = datoCondicionado;
                                                                             :}
-                | condicion:dato1     MENOR_QUE           condicion:dato2   {:
+                | condicion:dato1     p_menor             condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.menorQue(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " < " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
@@ -1546,7 +1565,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 }
                                                                                 RESULT = datoCondicionado;
                                                                             :}
-                | condicion:dato1     MENOR_IGUAL         condicion:dato2   {:
+                | condicion:dato1     p_menor_igual       condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.menorIgual(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " <= " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
@@ -1554,7 +1573,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 }
                                                                                 RESULT = datoCondicionado;
                                                                             :}
-                | condicion:dato1     MAYOR_QUE           condicion:dato2   {:
+                | condicion:dato1     p_mayor             condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.mayorQue(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " > " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
@@ -1562,7 +1581,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 }
                                                                                 RESULT = datoCondicionado;
                                                                             :}
-                | condicion:dato1     MAYOR_IGUAL         condicion:dato2   {:
+                | condicion:dato1     p_mayor_igual       condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.mayorIgual(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " >= " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
@@ -1570,7 +1589,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 }
                                                                                 RESULT = datoCondicionado;
                                                                             :}
-                | NOT           condicion:dato                              {:
+                | p_not           condicion:dato                              {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.not(dato);
                                                                                 //System.out.println("! " + dato.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
@@ -1578,7 +1597,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 }
                                                                                 RESULT = datoCondicionado;
                                                                             :}
-                | condicion:dato1     AND                 condicion:dato2   {:
+                | condicion:dato1     p_and                 condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.and(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " && " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
@@ -1586,7 +1605,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 }
                                                                                 RESULT = datoCondicionado;
                                                                             :}
-                | condicion:dato1     OR                  condicion:dato2   {:
+                | condicion:dato1     p_or                  condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.or(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " || " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
@@ -1595,7 +1614,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 RESULT = datoCondicionado;
                                                                             :}
                 /* operaciones aritméticas */
-                | RESTA         condicion:dato                              {:
+                | p_resta       condicion:dato                              {:
                                                                                 Dato datoMultiplicado = tablaOperaciones.menosUnario(dato);
                                                                                 //System.out.println("-" + dato.getValor());
                                                                                 if(datoMultiplicado.getTipo().equals(error)) {
@@ -1609,7 +1628,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                     RESULT = datoMultiplicado;
                                                                                 }
                                                                             :}%prec UNARY
-                | condicion:dato1     SUMA                condicion:dato2   {:
+                | condicion:dato1     p_suma              condicion:dato2   {:
                                                                                 Dato datoSumado = tablaOperaciones.sumar(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " + " + dato2.getValor());
                                                                                 if(datoSumado.getTipo().equals(error)) {
@@ -1623,7 +1642,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                     RESULT = datoSumado;
                                                                                 }
                                                                             :}
-                | condicion:dato1     RESTA               condicion:dato2   {:
+                | condicion:dato1     p_resta             condicion:dato2   {:
                                                                                 Dato datoRestado = tablaOperaciones.restar(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " - " + dato2.getValor());
                                                                                 if(datoRestado.getTipo().equals(error)) {
@@ -1637,7 +1656,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                     RESULT = datoRestado;
                                                                                 }
                                                                             :}
-                | condicion:dato1     MULTIPLICACION      condicion:dato2   {:
+                | condicion:dato1     p_multiplicacion    condicion:dato2   {:
                                                                                 Dato datoMultiplicado = tablaOperaciones.multiplicar(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " * " + dato2.getValor());
                                                                                 if(datoMultiplicado.getTipo().equals(error)) {
@@ -1651,7 +1670,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                     RESULT = datoMultiplicado;
                                                                                 }
                                                                             :}
-                | condicion:dato1     DIVISION            condicion:dato2   {:
+                | condicion:dato1     p_division          condicion:dato2   {:
                                                                                 Dato datoDividido = tablaOperaciones.dividir(dato1, dato2);
                                                                                 //System.out.println(dato1.getValor() + " / " + dato2.getValor());
                                                                                 if(datoDividido.getTipo().equals(error)) {
@@ -1666,7 +1685,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 }
                                                                             :}
                 | valor_condicion:dato                                      {:RESULT = dato;:}
-                | PARA condicion:dato PARC                                  {:RESULT = dato;:}
+                | p_para condicion:dato p_parc                                  {:RESULT = dato;:}
                 ;
 
 valor_condicion ::= valor_numerico:val  {:RESULT = val;:}
@@ -1684,10 +1703,11 @@ expresion_aritmetica ::=    RESTA                           expresion_aritmetica
                             ;
 */
 
-valor_numerico ::=  D_INTEGER:val           {:System.out.println(val.toString()); RESULT = new Dato(integer, val.toString());:}
-                    | D_DECIMAL:val         {:System.out.println(val.toString()); RESULT = new Dato(decimal, val.toString());:}
+valor_numerico ::=  D_INTEGER:val           {:condicionalAuxiliar += val.toString(); RESULT = new Dato(integer, val.toString());:}
+                    | D_DECIMAL:val         {:condicionalAuxiliar += val.toString(); RESULT = new Dato(decimal, val.toString());:}
                     | IDENTIFICADOR:val     {:
                                                 Dato nuevoDato = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                condicionalAuxiliar += val.toString();
                                                 System.out.println(val.toString());
                                                 if(nuevoDato.getTipo().equals(error)) {
                                                     agregarErrorSemantico(nuevoDato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
@@ -1696,26 +1716,28 @@ valor_numerico ::=  D_INTEGER:val           {:System.out.println(val.toString())
                                             :}
                     | ALFANUMERICO:val      {:
                                                 Dato nuevoDato = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                condicionalAuxiliar += val.toString();
                                                 System.out.println(val.toString());
                                                 if(nuevoDato.getTipo().equals(error)) {
                                                     agregarErrorSemantico(nuevoDato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
                                                 }
                                                 RESULT = nuevoDato;
                                             :}
-                    | D_CHAR:val            {:System.out.println(val.toString());String caracterSt = val.toString().substring(1,2); RESULT = new Dato(character, caracterSt);:}
-                    | ALLCHAR:val           {:System.out.println(val.toString());RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | ALLCHARNOSPACE:val    {:System.out.println(val.toString());RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | D_STRING:val          {:System.out.println(val.toString());RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | ID_ETIQUETA:val       {:System.out.println(val.toString());RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | DIGITO_COM:val        {:System.out.println(val.toString());RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | TRUE:val              {:System.out.println(val.toString());RESULT = new Dato(booleano, "true");:}
-                    | FALSE:val             {:System.out.println(val.toString());RESULT = new Dato(booleano, "false");:}
-                    | GETBYID PARA ID_ETIQUETA:val PARC     {:
+                    | D_CHAR:val            {:condicionalAuxiliar += val.toString(); String caracterSt = val.toString().substring(1,2); RESULT = new Dato(character, caracterSt);:}
+                    | ALLCHAR:val           {:condicionalAuxiliar += val.toString(); RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | ALLCHARNOSPACE:val    {:condicionalAuxiliar += val.toString(); RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | D_STRING:val          {:condicionalAuxiliar += val.toString(); RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | ID_ETIQUETA:val       {:condicionalAuxiliar += val.toString(); RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | DIGITO_COM:val        {:condicionalAuxiliar += val.toString(); RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | TRUE:val              {:condicionalAuxiliar += val.toString(); RESULT = new Dato(booleano, "true");:}
+                    | FALSE:val             {:condicionalAuxiliar += val.toString(); RESULT = new Dato(booleano, "false");:}
+                    | p_getbyid p_para p_id_etiqueta:val p_parc     {:
                                                                 System.out.println(val.toString());
+                                                                condicionalAuxiliar += ".value";
                                                                 RESULT = new Dato(string, "document.getElementById(\"" + val.toString().replace("\"", "").trim() + "\").value");
                                                             :}
                     
-                    | ASC PARA condicion:val PARC           {:
+                    | p_asc p_para condicion:val p_parc           {:
                                                                 Dato dato = funcionesEspeciales.asc(val);
                                                                 System.out.println(val.toString());
                                                                 if(!dato.getTipo().equals(string)) {
@@ -1723,14 +1745,14 @@ valor_numerico ::=  D_INTEGER:val           {:System.out.println(val.toString())
                                                                 }
                                                                 RESULT = dato;
                                                             :}
-                    | DESC PARA condicion:val PARC          {:
+                    | p_desc p_para condicion:val p_parc          {:
                                                                 Dato dato = funcionesEspeciales.desc(val);
                                                                 if(!dato.getTipo().equals(string)) {
                                                                     agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
                                                                 }
                                                                 RESULT = dato;
                                                             :}
-                    | LETPAR_NUM PARA condicion:val PARC    {:
+                    | p_letpar_num p_para condicion:val p_parc    {:
                                                                 Dato dato = funcionesEspeciales.letparNum(val);
                                                                 System.out.println(val.toString());
                                                                 if(!dato.getTipo().equals(string)) {
@@ -1738,7 +1760,7 @@ valor_numerico ::=  D_INTEGER:val           {:System.out.println(val.toString())
                                                                 }
                                                                 RESULT = dato;
                                                             :}
-                    | LETIMPAR_NUM PARA condicion:val PARC  {:
+                    | p_letimpar_num p_para condicion:val p_parc  {:
                                                                 Dato dato = funcionesEspeciales.letimparNum(val);
                                                                 System.out.println(val.toString());
                                                                 if(!dato.getTipo().equals(string)) {
@@ -1746,7 +1768,7 @@ valor_numerico ::=  D_INTEGER:val           {:System.out.println(val.toString())
                                                                 }
                                                                 RESULT = dato;
                                                             :}
-                    | REVERSE PARA condicion:val PARC       {:
+                    | p_reverse p_para condicion:val p_parc       {:
                                                                 Dato dato = funcionesEspeciales.reverse(val);
                                                                 System.out.println(val.toString());
                                                                 if(!dato.getTipo().equals(string)) {
@@ -1772,3 +1794,68 @@ valor_numerico ::=  D_INTEGER:val           {:System.out.println(val.toString())
                                                             :}
                     ;
  
+p_id_etiqueta ::=  ID_ETIQUETA:val     {:condicionalAuxiliar += val.toString(); RESULT = val.toString();:}
+                   ;
+
+p_reverse ::=   REVERSE     {:condicionalAuxiliar += "REVERSE";:}
+                ;
+
+p_letimpar_num ::=  LETIMPAR_NUM    {:condicionalAuxiliar += "LETIMPAR_NUM";:}
+                    ;
+
+p_letpar_num ::=    LETPAR_NUM      {:condicionalAuxiliar += "LETPAR_NUM";:}
+                    ;
+
+p_desc ::=  DESC    {:condicionalAuxiliar += "DESC";:}
+            ;
+
+p_asc ::=   ASC     {:condicionalAuxiliar += "ASC";:}
+            ;
+
+p_getbyid ::=   GETBYID     {:condicionalAuxiliar += "document.getElementById";:}
+                ;
+
+p_suma ::=  SUMA        {:condicionalAuxiliar += "+";:}
+            ;
+
+p_resta ::= RESTA       {:condicionalAuxiliar += "-";:}
+            ;
+
+p_multiplicacion ::=    MULTIPLICACION  {:condicionalAuxiliar += "*";:}
+                        ;
+
+p_division ::=  DIVISION        {:condicionalAuxiliar += "/";:}
+                ;
+
+p_mayor ::= MAYOR_QUE       {:condicionalAuxiliar += " > ";:}
+            ;
+
+p_menor ::= MENOR_QUE       {:condicionalAuxiliar += " < ";:}
+            ;
+
+p_mayor_igual ::=   MAYOR_IGUAL     {:condicionalAuxiliar += " >= ";:}
+                    ;
+
+p_menor_igual ::=   MENOR_IGUAL     {:condicionalAuxiliar += " <= ";:}
+                    ;
+
+p_igual_igual ::=   IGUAL_IGUAL     {:condicionalAuxiliar += " == ";:}
+                    ;
+
+p_diferente_igual ::=   DIFERENTE_IGUAL     {:condicionalAuxiliar += " != ";:}
+                        ;
+
+p_and ::=   AND     {:condicionalAuxiliar += " && ";:}
+            ;
+
+p_not ::=   NOT     {:condicionalAuxiliar += "!";:}
+            ;
+
+p_or ::=    OR      {:condicionalAuxiliar += " || ";:}
+            ;
+
+p_para ::=  PARA    {:condicionalAuxiliar += "(";:}
+            ;
+
+p_parc ::=  PARC    {:condicionalAuxiliar += ")";:}
+            ;
