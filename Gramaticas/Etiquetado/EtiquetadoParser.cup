@@ -749,7 +749,7 @@ cuerpo_parametros_link ::=  cuerpo_parametros_link parametros_link
                             | cuerpo_parametros_link error        
                             ;
 
-parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE:link CORC    {:parametros.add("href"); captchaSolicitado.setLinkRedirect(link.toString().replace("\"", "").trim(););:}
+parametros_link ::=     CORA HREF IGUAL ALLCHARNOSPACE:link CORC    {:parametros.add("href"); captchaSolicitado.setLinkRedirect(link.toString().replace("\"", "").trim());:}
                         ;
 
 texto_comillas_complete ::= ALLCHAR:par             {:RESULT = par.toString().replace("\"", "").trim();:}
@@ -1000,8 +1000,8 @@ funciones_especiales ::=    funciones_strings
                                                                                     RESULT = "alert(" + con.getValor() + ");";
                                                                             }
                                                                         :}
-                            | EXIT PARA PARC                            {:RESULT = "EXIT";:}
-                            | REDIRECT PARA PARC                        {:RESULT = "RESULT";:}
+                            | EXIT PARA PARC                            {:RESULT = "location.href = \"http://localhost:8080/GCIC/Redireccionamiento?id=" + captchaSolicitado.getId() + "\"";:}
+                            | REDIRECT PARA PARC                        {:RESULT = "location.href = \"http://localhost:8080/GCIC/Redireccionamiento?id=" + captchaSolicitado.getId() + "\"";:}
                             | INSERT PARA cuerpo_insert:bod PARC         {:insertCompletoPorProceso += bod + "\n";:}
                             ;
 

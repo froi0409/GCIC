@@ -4,7 +4,7 @@
 <C_GCIC [id= "captcha_matematico_1"] [name= "Captcha Matemático 1"]>
     !! El encabezado de la página que tendrá mi captcha
     <C_HEAD>
-        <C_LINK [href="www.facebook.com"]> </C_LINK>
+        <C_LINK [href="https://www.twitch.tv/"]> </C_LINK>
         <C_TITLE>Hola Mundo</C_TITLE>
         <C_SCRIPTING></C_SCRIPTING>
         <C_SCRIPTING></C_SCRIPTING>
@@ -64,6 +64,7 @@
         PROCESS_calc() [
             string holadasf = getElementById("hola_mundo");
             ALERT_INFO(holadasf);
+            EXIT();
         ]
     </C_SCRIPTING>
 </C_GCIC>

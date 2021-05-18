@@ -4467,7 +4467,10 @@ class CUP$EtiquetadoParser$actions {
           case 128: // parametros_link ::= CORA HREF IGUAL ALLCHARNOSPACE CORC 
             {
               Parametro RESULT =null;
-		parametros.add("href");
+		int linkleft = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).left;
+		int linkright = ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).right;
+		Object link = (Object)((java_cup.runtime.Symbol) CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-1)).value;
+		parametros.add("href"); captchaSolicitado.setLinkRedirect(link.toString().replace("\"", "").trim());
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("parametros_link",41, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-4)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5939,7 +5942,7 @@ class CUP$EtiquetadoParser$actions {
           case 250: // funciones_especiales ::= EXIT PARA PARC 
             {
               String RESULT =null;
-		RESULT = "EXIT";
+		RESULT = "location.href = \"http://localhost:8080/GCIC/Redireccionamiento?id=" + captchaSolicitado.getId() + "\"";
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("funciones_especiales",75, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
@@ -5948,7 +5951,7 @@ class CUP$EtiquetadoParser$actions {
           case 251: // funciones_especiales ::= REDIRECT PARA PARC 
             {
               String RESULT =null;
-		RESULT = "RESULT";
+		RESULT = "location.href = \"http://localhost:8080/GCIC/Redireccionamiento?id=" + captchaSolicitado.getId() + "\"";
               CUP$EtiquetadoParser$result = parser.getSymbolFactory().newSymbol("funciones_especiales",75, ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.elementAt(CUP$EtiquetadoParser$top-2)), ((java_cup.runtime.Symbol)CUP$EtiquetadoParser$stack.peek()), RESULT);
             }
           return CUP$EtiquetadoParser$result;
