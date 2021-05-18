@@ -62,7 +62,7 @@
     </C_BODY>
     <C_SCRIPTING> 
         PROCESS_calc() [
-            string holadasf = getElementById("hola_mundo");
+            string holadasf = getElemenById("hola_mundo");
             ALERT_INFO(holadasf);
             EXIT();
         ]

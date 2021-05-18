@@ -671,6 +671,7 @@ texto ::=   ALFANUMERICO:ent                {:RESULT=ent.toString();:}
             | TRUE:ent                      {:RESULT=ent.toString();:}
             | FALSE:ent                     {:RESULT=ent.toString();:}
             | BARRA:ent                     {:RESULT=ent.toString();:}
+            | PUNTOS:ent                    {:RESULT=ent.toString();:}
             | D_CHAR:ent                    {:RESULT=ent.toString();:}
             | D_STRING:ent                  {:RESULT=ent.toString();:}
             | ALLCHAR_COMSIMP:ent           {:RESULT=ent.toString();:}
@@ -1523,7 +1524,7 @@ ciclo_while ::=     WHILE PARA condicion PARC THENWHILE INIT LLAA PUNTOS cuerpo_
 /* CONDICION */
 condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.igualIgual(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " == " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " == " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1531,7 +1532,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     DIFERENTE_IGUAL     condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.diferenteIgual(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " != " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " != " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1539,7 +1540,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     MENOR_QUE           condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.menorQue(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " < " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " < " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1547,7 +1548,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     MENOR_IGUAL         condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.menorIgual(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " <= " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " <= " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1555,7 +1556,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     MAYOR_QUE           condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.mayorQue(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " > " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " > " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1563,7 +1564,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     MAYOR_IGUAL         condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.mayorIgual(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " >= " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " >= " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1571,7 +1572,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | NOT           condicion:dato                              {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.not(dato);
-                                                                                System.out.println("! " + dato.getValor());
+                                                                                //System.out.println("! " + dato.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + datoleft + " - Columna " + datoright);
                                                                                 }
@@ -1579,7 +1580,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     AND                 condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.and(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " && " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " && " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1587,7 +1588,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     OR                  condicion:dato2   {:
                                                                                 Dato datoCondicionado = operacionesBooleanas.or(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " || " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " || " + dato2.getValor());
                                                                                 if(datoCondicionado.getTipo().equals(error)) {
                                                                                     agregarErrorSemantico(datoCondicionado.getValor() + ".\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
                                                                                 }
@@ -1596,7 +1597,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                 /* operaciones aritméticas */
                 | RESTA         condicion:dato                              {:
                                                                                 Dato datoMultiplicado = tablaOperaciones.menosUnario(dato);
-                                                                                System.out.println("-" + dato.getValor());
+                                                                                //System.out.println("-" + dato.getValor());
                                                                                 if(datoMultiplicado.getTipo().equals(error)) {
                                                                                     if(datoMultiplicado.getValor() != null) {
                                                                                         agregarErrorSemantico("El dato " + dato.getValor() + " no es compatible para operar de manera unaria.\nConflicto en Linea " + datoleft + " - Columna " + datoright);
@@ -1610,7 +1611,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}%prec UNARY
                 | condicion:dato1     SUMA                condicion:dato2   {:
                                                                                 Dato datoSumado = tablaOperaciones.sumar(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " + " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " + " + dato2.getValor());
                                                                                 if(datoSumado.getTipo().equals(error)) {
                                                                                     if(datoSumado.getValor() != null) {
                                                                                         agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para sumar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
@@ -1624,7 +1625,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     RESTA               condicion:dato2   {:
                                                                                 Dato datoRestado = tablaOperaciones.restar(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " - " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " - " + dato2.getValor());
                                                                                 if(datoRestado.getTipo().equals(error)) {
                                                                                     if(datoRestado.getValor() != null) {
                                                                                         agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para restar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
@@ -1638,7 +1639,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     MULTIPLICACION      condicion:dato2   {:
                                                                                 Dato datoMultiplicado = tablaOperaciones.multiplicar(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " * " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " * " + dato2.getValor());
                                                                                 if(datoMultiplicado.getTipo().equals(error)) {
                                                                                     if(datoMultiplicado.getValor() != null) {
                                                                                         agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para multiplicar.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
@@ -1652,7 +1653,7 @@ condicion ::=   condicion:dato1       IGUAL_IGUAL         condicion:dato2   {:
                                                                             :}
                 | condicion:dato1     DIVISION            condicion:dato2   {:
                                                                                 Dato datoDividido = tablaOperaciones.dividir(dato1, dato2);
-                                                                                System.out.println(dato1.getValor() + " / " + dato2.getValor());
+                                                                                //System.out.println(dato1.getValor() + " / " + dato2.getValor());
                                                                                 if(datoDividido.getTipo().equals(error)) {
                                                                                     if(datoDividido.getValor() != null) {
                                                                                         agregarErrorSemantico("Los datos " + dato1.getValor() + " y " + dato2.getValor() + " no son compatibles para dividir.\nConflicto en Linea " + dato1left + " - Columna " + dato1right);
@@ -1683,10 +1684,11 @@ expresion_aritmetica ::=    RESTA                           expresion_aritmetica
                             ;
 */
 
-valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toString());:}
-                    | D_DECIMAL:val         {:RESULT = new Dato(decimal, val.toString());:}
+valor_numerico ::=  D_INTEGER:val           {:System.out.println(val.toString()); RESULT = new Dato(integer, val.toString());:}
+                    | D_DECIMAL:val         {:System.out.println(val.toString()); RESULT = new Dato(decimal, val.toString());:}
                     | IDENTIFICADOR:val     {:
                                                 Dato nuevoDato = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                System.out.println(val.toString());
                                                 if(nuevoDato.getTipo().equals(error)) {
                                                     agregarErrorSemantico(nuevoDato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
                                                 }
@@ -1694,25 +1696,28 @@ valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toS
                                             :}
                     | ALFANUMERICO:val      {:
                                                 Dato nuevoDato = tablaSimbolos.obtenerDato(val.toString(), procesoActual);
+                                                System.out.println(val.toString());
                                                 if(nuevoDato.getTipo().equals(error)) {
                                                     agregarErrorSemantico(nuevoDato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
                                                 }
                                                 RESULT = nuevoDato;
                                             :}
-                    | D_CHAR:val            {:String caracterSt = val.toString().substring(1,2); RESULT = new Dato(character, caracterSt);:}
-                    | ALLCHAR:val           {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | ALLCHARNOSPACE:val    {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | D_STRING:val          {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | ID_ETIQUETA:val       {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | DIGITO_COM:val       {:RESULT = new Dato(string, val.toString().replace("\"", ""));:}
-                    | TRUE:val              {:RESULT = new Dato(booleano, "true");:}
-                    | FALSE:val             {:RESULT = new Dato(booleano, "false");:}
+                    | D_CHAR:val            {:System.out.println(val.toString());String caracterSt = val.toString().substring(1,2); RESULT = new Dato(character, caracterSt);:}
+                    | ALLCHAR:val           {:System.out.println(val.toString());RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | ALLCHARNOSPACE:val    {:System.out.println(val.toString());RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | D_STRING:val          {:System.out.println(val.toString());RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | ID_ETIQUETA:val       {:System.out.println(val.toString());RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | DIGITO_COM:val        {:System.out.println(val.toString());RESULT = new Dato(string, val.toString().replace("\"", ""));:}
+                    | TRUE:val              {:System.out.println(val.toString());RESULT = new Dato(booleano, "true");:}
+                    | FALSE:val             {:System.out.println(val.toString());RESULT = new Dato(booleano, "false");:}
                     | GETBYID PARA ID_ETIQUETA:val PARC     {:
+                                                                System.out.println(val.toString());
                                                                 RESULT = new Dato(string, "document.getElementById(\"" + val.toString().replace("\"", "").trim() + "\").value");
                                                             :}
                     
                     | ASC PARA condicion:val PARC           {:
                                                                 Dato dato = funcionesEspeciales.asc(val);
+                                                                System.out.println(val.toString());
                                                                 if(!dato.getTipo().equals(string)) {
                                                                     agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
                                                                 }
@@ -1727,6 +1732,7 @@ valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toS
                                                             :}
                     | LETPAR_NUM PARA condicion:val PARC    {:
                                                                 Dato dato = funcionesEspeciales.letparNum(val);
+                                                                System.out.println(val.toString());
                                                                 if(!dato.getTipo().equals(string)) {
                                                                     agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
                                                                 }
@@ -1734,6 +1740,7 @@ valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toS
                                                             :}
                     | LETIMPAR_NUM PARA condicion:val PARC  {:
                                                                 Dato dato = funcionesEspeciales.letimparNum(val);
+                                                                System.out.println(val.toString());
                                                                 if(!dato.getTipo().equals(string)) {
                                                                     agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
                                                                 }
@@ -1741,6 +1748,7 @@ valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toS
                                                             :}
                     | REVERSE PARA condicion:val PARC       {:
                                                                 Dato dato = funcionesEspeciales.reverse(val);
+                                                                System.out.println(val.toString());
                                                                 if(!dato.getTipo().equals(string)) {
                                                                     agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
                                                                 }
@@ -1748,6 +1756,7 @@ valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toS
                                                             :}
                     | CARACTER_ALEATORIO:val PARA PARC      {:
                                                                 Dato dato = funcionesEspeciales.caracterAleatorio();
+                                                                System.out.println(val.toString());
                                                                 if(!dato.getTipo().equals(character)) {
                                                                     agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
                                                                 }
@@ -1755,6 +1764,7 @@ valor_numerico ::=  D_INTEGER:val           {:RESULT = new Dato(integer, val.toS
                                                             :}
                     | NUM_ALEATORIO:val PARA PARC           {:
                                                                 Dato dato = funcionesEspeciales.numAleatorio();
+                                                                System.out.println(val.toString());
                                                                 if(!dato.getTipo().equals(integer)) {
                                                                     agregarErrorSemantico(dato.getValor() + ".\nConflicto en Linea: " + valleft + " - Columna: " + valright);
                                                                 }
